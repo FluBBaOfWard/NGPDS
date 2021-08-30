@@ -19,7 +19,6 @@
 		9C367C982668B7CA0017B4F6 /* SN76496.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SN76496.h; sourceTree = "<group>"; };
 		9C367C992668B7CA0017B4F6 /* SN76496.i */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c.preprocessed; path = SN76496.i; sourceTree = "<group>"; };
 		9C367C9A2668B7CA0017B4F6 /* SN76496_todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SN76496_todo.txt; sourceTree = "<group>"; };
-		9C367C9B2668B7CA0017B4F6 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		9C367C9C2668B7CA0017B4F6 /* History.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = History.txt; sourceTree = "<group>"; };
 		9C3D5ADD25E3F2ED00E8CD56 /* ARMZ80.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARMZ80.h; sourceTree = "<group>"; };
 		9C3D5ADE25E3F2ED00E8CD56 /* ARMZ80mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARMZ80mac.h; sourceTree = "<group>"; };
@@ -75,6 +74,7 @@
 		9C7BB95D25FFF08400EA9C9C /* NeoGeoPocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoGeoPocket.h; sourceTree = "<group>"; };
 		9C8F33EE248ACA2E00996E5A /* nds_asm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nds_asm.h; sourceTree = "<group>"; };
 		9C99548D263408DB00CE2B94 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		9CBC0C8C26DD79270039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CC013FC2668FDD9005714F7 /* Emubase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emubase.h; sourceTree = "<group>"; };
 		9CC013FE26694C6C005714F7 /* TLCS900H_int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLCS900H_int.h; sourceTree = "<group>"; };
 		9CC0F92B26B87B570035478F /* NGPHW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NGPHW.png; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 		9C367C952668B7CA0017B4F6 /* K2Audio */ = {
 			isa = PBXGroup;
 			children = (
-				9C367C9B2668B7CA0017B4F6 /* ReadMe.txt */,
+				9CBC0C8C26DD79270039D17E /* README.md */,
 				9C367C9A2668B7CA0017B4F6 /* SN76496_todo.txt */,
 				9C367C9C2668B7CA0017B4F6 /* History.txt */,
 				9C367C962668B7CA0017B4F6 /* Version.h */,

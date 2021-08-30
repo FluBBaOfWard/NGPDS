@@ -98,15 +98,15 @@ T6W28_L_W:				;@ Sound left write
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r3,snptr,lr}
 	ldr snptr,=k2Audio_0
-	bl sn76496W
+	bl sn76496L_W
 	ldmfd sp!,{r3,snptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 T6W28_R_W:				;@ Sound right write
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r3,snptr,lr}
-//	ldr snptr,=k2Audio_0
-//	bl sn76496W
+	ldr snptr,=k2Audio_0
+	bl sn76496W
 	ldmfd sp!,{r3,snptr,lr}
 	bx lr
 

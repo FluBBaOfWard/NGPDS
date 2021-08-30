@@ -1,0 +1,1 @@
+copy GreenBeretDS.nds h:\apps

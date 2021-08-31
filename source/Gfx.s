@@ -369,9 +369,9 @@ vblIrqHandler:
 	bl k2GEConvertTiles
 	mov r0,#BG_GFX
 	bl k2GEConvertTileMaps
-nothingNew:
 	mov r0,#0
 	str r0,frameDone
+nothingNew:
 
 	blx scanKeys
 	ldmfd sp!,{r4-r8,pc}

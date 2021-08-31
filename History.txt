@@ -2,6 +2,9 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.4.8 - 2021-08-30 (FluBBa)
+	Added stereo sound.
+
 V0.4.7 - 2021-08-29 (FluBBa)
 	Various cpu fixes.
 	Fixed auto power on/off.

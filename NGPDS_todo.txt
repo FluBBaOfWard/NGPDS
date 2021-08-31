@@ -1,6 +1,5 @@
 NGPDS Todo
 
-	Fix sound stereo mode.
 	Fix graphics. Use dbuffer for tilemaps?
 	Fix cpu stuff.
 	Fix saving of (changed) flash memory. Must remember changed blocks forever.

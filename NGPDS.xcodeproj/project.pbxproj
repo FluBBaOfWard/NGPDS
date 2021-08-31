@@ -73,8 +73,10 @@
 		9C7BB95C25FFF08400EA9C9C /* NeoGeoPocket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NeoGeoPocket.c; sourceTree = "<group>"; };
 		9C7BB95D25FFF08400EA9C9C /* NeoGeoPocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoGeoPocket.h; sourceTree = "<group>"; };
 		9C8F33EE248ACA2E00996E5A /* nds_asm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nds_asm.h; sourceTree = "<group>"; };
-		9C99548D263408DB00CE2B94 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		9CBC0C8C26DD79270039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9CBC0C8D26DD7BD50039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9CBC0C8E26DD7C2A0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9CBC0C8F26DD7D0F0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CC013FC2668FDD9005714F7 /* Emubase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emubase.h; sourceTree = "<group>"; };
 		9CC013FE26694C6C005714F7 /* TLCS900H_int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLCS900H_int.h; sourceTree = "<group>"; };
 		9CC0F92B26B87B570035478F /* NGPHW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NGPHW.png; sourceTree = "<group>"; };
@@ -88,7 +90,6 @@
 		A49D343A1757E54900BD9B4B /* Equates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equates.h; sourceTree = "<group>"; };
 		A49D34401757E54900BD9B4B /* io.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = io.s; sourceTree = "<group>"; };
 		A4AA02141B04077F0043E4D4 /* History.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = History.txt; sourceTree = "<group>"; };
-		A4AA02151B05DCEB0043E4D4 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		A4D0E10A208930D100401463 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
 		A4D0E10B208930D100401463 /* FileHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHelper.h; sourceTree = "<group>"; };
 		A4D0E10D208930D100401463 /* unzipnds.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzipnds.c; sourceTree = "<group>"; };
@@ -119,7 +120,7 @@
 			children = (
 				A4DA29B117651A3800810B12 /* NGPDS_todo.txt */,
 				A4AA02141B04077F0043E4D4 /* History.txt */,
-				A4AA02151B05DCEB0043E4D4 /* readme.txt */,
+				9CBC0C8E26DD7C2A0039D17E /* README.md */,
 				A42D0269205FEC6E00515C72 /* Docs */,
 				746D78E014ED9A6D00CC738F /* makefile */,
 				A48CC0251618E65200465E20 /* source */,
@@ -154,7 +155,7 @@
 		9C5081E425D314C900A8E1BA /* ARMZ80 */ = {
 			isa = PBXGroup;
 			children = (
-				9C99548D263408DB00CE2B94 /* ReadMe.txt */,
+				9CBC0C8F26DD7D0F0039D17E /* README.md */,
 				9C5081E825D314C900A8E1BA /* ARMZ80_todo.txt */,
 				9C3D5AE125E3F2ED00E8CD56 /* History.txt */,
 				9C3D5AE025E3F2ED00E8CD56 /* Version.h */,
@@ -192,6 +193,7 @@
 		9C71513B26550C1E0084BE99 /* K2GE */ = {
 			isa = PBXGroup;
 			children = (
+				9CBC0C8D26DD7BD50039D17E /* README.md */,
 				9C71513D26550C1E0084BE99 /* K2GE_todo.txt */,
 				9C71513E26550C1E0084BE99 /* History.txt */,
 				9C71513C26550C1E0084BE99 /* Version.h */,

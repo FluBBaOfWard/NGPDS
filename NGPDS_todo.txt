@@ -1,6 +1,6 @@
 NGPDS Todo
 
-	Fix graphics. Use dbuffer for tilemaps?
+	Use CLZ for memory mapping. 
 	Fix cpu stuff.
 	Fix saving of (changed) flash memory. Must remember changed blocks forever.
 	Fix savestates!
@@ -21,7 +21,6 @@ NGPDS Todo
 	Convert bios font to png. Done.
 
 GFX:
-	Fetch sprites in the middle of the screen.
 	Optimize color transfer?
 
 GUI:

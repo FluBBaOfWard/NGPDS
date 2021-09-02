@@ -1,10 +1,11 @@
-# NGPDS V0.4.7
---------------------------------------------------------------------------------
+# NGPDS V0.4.8
+
+<img align="right" width="220" src="./logo.png" />
+
 This is a SNK Neogeo Pocket (Color) emulator for the Nintendo DS.
 
---------------------------------------------------------------------------------
-How to use:
---------------------------------------------------------------------------------
+## How to use:
+
 First DLDI patch the emulator for your flashcard.
 Create a folder named "ngpds" in either the root of your flash card or in the
 data folder. Now put game files into a folder where you have roms.
@@ -16,11 +17,9 @@ to select an option, B or the top of the screen to go back a step.
 
 To select between the tabs use R & L or the touchscreen.
 
---------------------------------------------------------------------------------
-Menu:
---------------------------------------------------------------------------------
-File:
------
+## Menu:
+
+### File:
 	Load Game: Select a game to load.
 	Load State: Load a previously saved state of the currently running game.
 	Save State: Save a state of the currently running game.
@@ -29,8 +28,7 @@ File:
 	Save Settings: Save the current settings.
 	Reset Game: Reset the currently running game.
 
-Options:
---------
+### Options:
 	Controller:
 		Autofire: Select if you want autofire.
 		Controller: 2P start a 2 player game.
@@ -69,22 +67,18 @@ Options:
 		Debug Output: Show an FPS meter for now.
 		Autosleep: Doesn't work.
 
-About:
-------
+### About:
 	Some dumb info about the game and emulator...
 
---------------------------------------------------------------------------------
-Credits:
---------------------------------------------------------------------------------
+## Credits:
+
 Huge thanks to Loopy for the incredible PocketNES, without it this emu would
 probably never have been made.
 Thanks to:
 Dwedit for help and inspiration with a lot of things.
 
 
---------------------------------------
 Fredrik Ahlström
 Twitter @TheRealFluBBa
 http://www.github.com/FluBBaOfWard
---------------------------------------
 

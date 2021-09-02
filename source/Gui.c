@@ -16,7 +16,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.4.8 2021-08-30"
+#define EMUVERSION "V0.4.8 2021-08-31"
 
 #define HALF_CPU_SPEED		(1<<16)
 

@@ -16,9 +16,10 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.4.8 2021-08-31"
+#define EMUVERSION "V0.4.8 2021-09-09"
 
 #define HALF_CPU_SPEED		(1<<16)
+#define ALLOW_SPEED_HACKS	(1<<17)
 
 static void paletteChange(void);
 static void languageSet(void);
@@ -26,7 +27,6 @@ static void cpuHalfSet(void);
 static void machineSet(void);
 static void batteryChange(void);
 static void subBatteryChange(void);
-
 
 static void uiMachine(void);
 
@@ -50,17 +50,17 @@ const u8 menuXback[] = {0,0,0,0,2,2,2,2,1,1};
 int emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM;
 u8 g_gammaValue = 0;
 
-const char *const autoTxt[] = {"Off", "On", "With R"};
+const char *const autoTxt[]  = {"Off", "On", "With R"};
 const char *const speedTxt[] = {"Normal", "200%", "Max", "50%"};
 const char *const sleepTxt[] = {"5min", "10min", "30min", "Off"};
 const char *const brighTxt[] = {"I", "II", "III", "IIII", "IIIII"};
-const char *const ctrlTxt[] = {"1P", "2P"};
-const char *const dispTxt[] = {"Unscaled", "Scaled"};
+const char *const ctrlTxt[]  = {"1P", "2P"};
+const char *const dispTxt[]  = {"Unscaled", "Scaled"};
 const char *const flickTxt[] = {"No Flicker", "Flicker"};
-const char *const bordTxt[] = {"Black", "Border Color", "None"};
-const char *const palTxt[] = {"Black & White", "Red", "Green", "Blue", "Classic"};
-const char *const langTxt[] = {"Japanese", "English"};
-const char *const machTxt[] = {"NeoGeo Pocket Color", "NeoGeo Pocket"};
+const char *const bordTxt[]  = {"Black", "Border Color", "None"};
+const char *const palTxt[]   = {"Black & White", "Red", "Green", "Blue", "Classic"};
+const char *const langTxt[]  = {"Japanese", "English"};
+const char *const machTxt[]  = {"NeoGeo Pocket Color", "NeoGeo Pocket"};
 
 
 void setupGUI() {

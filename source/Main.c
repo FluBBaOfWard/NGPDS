@@ -25,9 +25,7 @@ static void setupStream(void);
 
 bool enableExit = false;
 bool gameInserted = false;
-bool pauseEmulation = false;
 int selectedGame = 0;
-int sleepTime = 60*60*5;			// 5 min
 static int sleepTimer = 60*60*5;	// 5 min
 static bool vBlankOverflow = false;
 

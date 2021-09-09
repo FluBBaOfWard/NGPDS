@@ -1,5 +1,6 @@
 NGPDS Todo
 
+	Emulate second flash chip!
 	Use CLZ for memory mapping. 
 	Fix cpu stuff.
 	Fix saving of (changed) flash memory. Must remember changed blocks forever.

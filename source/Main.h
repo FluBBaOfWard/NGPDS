@@ -7,9 +7,7 @@ extern "C" {
 
 extern bool enableExit;
 extern bool gameInserted;
-extern bool pauseEmulation;
 extern int powerButton;
-extern int sleepTime;
 extern int selectedGame;
 extern uint16 *map0sub;
 

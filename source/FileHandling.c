@@ -135,7 +135,7 @@ int loadSettings() {
 	}
 
 	g_gammaValue = cfg.gammaValue;
-	emuSettings  = cfg.emuSettings &~ 0xC0;			// Clear speed setting.
+	emuSettings  = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
 	sleepTime    = cfg.sleepTime;
 	joyCfg       = (joyCfg & ~0x400)|((cfg.controller & 1)<<10);
 	strlcpy(currentDir, cfg.currentPath, sizeof(currentDir));
@@ -148,7 +148,7 @@ void saveSettings() {
 
 	strcpy(cfg.magic,"cfg");
 	cfg.gammaValue  = g_gammaValue;
-	cfg.emuSettings = emuSettings &~ 0xC0;			// Clear speed setting.
+	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;		// Clear speed setting.
 	cfg.sleepTime   = sleepTime;
 	cfg.controller  = (joyCfg>>10)&1;
 	strlcpy(cfg.currentPath, currentDir, sizeof(cfg.currentPath));

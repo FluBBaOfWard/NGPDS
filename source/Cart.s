@@ -108,6 +108,7 @@ loadCart: 		;@ Called from C:  r0=emuflags
 	ldr r0,g_romSize
 	ldr r1,romSpacePtr
 	bl ngpFlashReset
+	bl hacksInit
 
 	ldr r0,g_BIOSBASE_COLOR
 	cmp r0,#0
@@ -210,10 +211,6 @@ ngpRAM:
 	.space 0x4000
 biosSpace:
 	.space 0x10000
-emptySpace:
-	.space 0x2000
-//ROM_Space:
-//	.space 0x200000
 ;@----------------------------------------------------------------------------
 	.end
 #endif // #ifdef __arm__

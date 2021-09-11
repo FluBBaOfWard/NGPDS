@@ -16,17 +16,20 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.4.8 2021-09-09"
+#define EMUVERSION "V0.4.8 2021-09-11"
 
 #define HALF_CPU_SPEED		(1<<16)
 #define ALLOW_SPEED_HACKS	(1<<17)
 
+void hacksInit(void);
+
 static void paletteChange(void);
 static void languageSet(void);
-static void cpuHalfSet(void);
 static void machineSet(void);
 static void batteryChange(void);
 static void subBatteryChange(void);
+static void speedHackSet(void);
+static void cpuHalfSet(void);
 
 static void uiMachine(void);
 
@@ -38,7 +41,7 @@ const fptr fnList2[] = {ui4, ui5, ui6, ui7};
 const fptr fnList3[] = {uiDummy};
 const fptr fnList4[] = {autoBSet, autoASet, controllerSet, swapABSet};
 const fptr fnList5[] = {/*scalingSet, flickSet,*/ gammaSet, paletteChange, fgrLayerSet, bgrLayerSet, sprLayerSet};
-const fptr fnList6[] = {languageSet, machineSet, cpuHalfSet, batteryChange, subBatteryChange, selectColorBios};
+const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, cpuHalfSet, selectColorBios};
 const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, debugTextSet, sleepSet};
 const fptr fnList8[] = {quickSelectGame};
 const fptr fnList9[] = {uiDummy};
@@ -47,7 +50,6 @@ const u8 menuXitems[] = {ARRSIZE(fnList0), ARRSIZE(fnList1), ARRSIZE(fnList2), A
 const fptr drawuiX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDummy, uiDummy};
 const u8 menuXback[] = {0,0,0,0,2,2,2,2,1,1};
 
-int emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM;
 u8 g_gammaValue = 0;
 
 const char *const autoTxt[]  = {"Off", "On", "With R"};
@@ -64,6 +66,7 @@ const char *const machTxt[]  = {"NeoGeo Pocket Color", "NeoGeo Pocket"};
 
 
 void setupGUI() {
+	emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS;
 	keysSetRepeat(25, 4);	// delay, repeat.
 	openMenu();
 }
@@ -149,9 +152,10 @@ static void uiMachine() {
 	setupSubMenu("Machine Settings");
 	drawSubItem("Language: ",langTxt[g_lang]);
 	drawSubItem("Machine: ",machTxt[g_machine]);
-	drawSubItem("Half cpu speed: ",autoTxt[(emuSettings&HALF_CPU_SPEED)>>16]);
 	drawMenuItem(" Change Batteries");
 	drawMenuItem(" Change Sub Battery");
+	drawSubItem("Cpu speed hacks: ",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
+	drawSubItem("Half cpu speed: ",autoTxt[(emuSettings&HALF_CPU_SPEED)>>16]);
 	drawMenuItem(" Bios Settings ->");
 }
 
@@ -257,8 +261,14 @@ void machineSet() {
 	g_machine ^= 0x01;
 }
 
+void speedHackSet() {
+	emuSettings ^= ALLOW_SPEED_HACKS;
+	emuSettings &= ~HALF_CPU_SPEED;
+	hacksInit();
+}
 void cpuHalfSet() {
 	emuSettings ^= HALF_CPU_SPEED;
+	emuSettings &= ~ALLOW_SPEED_HACKS;
 	tweakCpuSpeed(emuSettings & HALF_CPU_SPEED);
 }
 

@@ -2,9 +2,11 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.4.8 - 2021-08-31 (FluBBa)
+V0.4.8 - 2021-09-11 (FluBBa)
 	Added stereo sound.
+	Added speed hacks.
 	Optimized VRAM transfers a bit.
+	Optimized memory accesses a bit.
 
 V0.4.7 - 2021-08-29 (FluBBa)
 	Various cpu fixes.

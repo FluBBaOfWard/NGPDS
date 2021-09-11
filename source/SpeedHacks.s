@@ -17,6 +17,7 @@
 	.align 2
 ;@----------------------------------------------------------------------------
 hacksInit:
+	.type   hacksInit STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r6,lr}
 
@@ -138,7 +139,7 @@ SpeedHacks:
 	.byte 0x00,0x00	;@ #042
 	.byte 0x00,0x00	;@ #043
 	.byte 0x68,0x00	;@ #044 Pocket Love If (J) (C)
-	.byte 0x14,0x00	;@ #045 Dark Arms - Beast Buster 1999 (W) (C)
+	.byte 0x00,0x00	;@ #045 Dark Arms - Beast Buster 1999 (W) (C), 0x14?
 	.byte 0x69,0x00	;@ #046 Pachinko Hisshou Guide - Pocket Parlor (J) (C)
 	.byte 0x00,0x00	;@ #047
 	.byte 0x68,0x00	;@ #048 Magical Drop Pocket (J) (C)

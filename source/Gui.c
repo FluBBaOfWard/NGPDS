@@ -32,6 +32,7 @@ static void speedHackSet(void);
 static void cpuHalfSet(void);
 
 static void uiMachine(void);
+static void updateGameInfo(void);
 
 const fptr fnMain[] = {nullUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI};
 
@@ -51,6 +52,7 @@ const fptr drawuiX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, 
 const u8 menuXback[] = {0,0,0,0,2,2,2,2,1,1};
 
 u8 g_gammaValue = 0;
+char gameInfoString[32];
 
 const char *const autoTxt[]  = {"Off", "On", "With R"};
 const char *const speedTxt[] = {"Normal", "200%", "Max", "50%"};
@@ -118,11 +120,14 @@ void uiOptions() {
 
 void uiAbout() {
 	cls(1);
+	updateGameInfo();
 	drawTabs();
 	drawText(" B:        NGP A button", 4, 0);
 	drawText(" A:        NGP B button", 5, 0);
 	drawText(" Y/Select: Power button", 6, 0);
 	drawText(" X/Start:  Start button", 7, 0);
+
+	drawText(gameInfoString, 9, 0);
 
 	drawText(" NGPDS        " EMUVERSION, 19, 0);
 	drawText(" ARMZ80       " ARMZ80VERSION, 20, 0);
@@ -193,7 +198,10 @@ void resetGame() {
 	loadCart(0);
 }
 
-
+void updateGameInfo() {
+	NgpHeader *header = romSpacePtr;
+	strlMerge(gameInfoString, " Game name: ", header->name, sizeof(gameInfoString));
+}
 //---------------------------------------------------------------------------------
 /// Switch between Player 1 & Player 2 controls
 void controllerSet() {				// See io.s: refreshEMUjoypads

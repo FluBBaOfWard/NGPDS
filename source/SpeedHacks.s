@@ -81,8 +81,8 @@ InstallHack:
 	str r3,[r1,#4]
 	ldr r3,[r2,#8]
 	str r3,[r1,#8]
-	ldrb r3,[r2,#11]
-	strb r3,[r1,#11]
+	ldrb r3,[r2,#15]
+	strb r3,[r1,#15]
 	add r0,r0,#0x60
 	b tlcs900HRedirectOpcode	;@ Insert new pointer to hack opcode in optable
 
@@ -139,7 +139,7 @@ SpeedHacks:
 	.byte 0x00,0x00	;@ #042
 	.byte 0x00,0x00	;@ #043
 	.byte 0x68,0x00	;@ #044 Pocket Love If (J) (C)
-	.byte 0x00,0x00	;@ #045 Dark Arms - Beast Buster 1999 (W) (C), 0x14?
+	.byte 0x14,0x00	;@ #045 Dark Arms - Beast Buster 1999 (W) (C)
 	.byte 0x69,0x00	;@ #046 Pachinko Hisshou Guide - Pocket Parlor (J) (C)
 	.byte 0x00,0x00	;@ #047
 	.byte 0x68,0x00	;@ #048 Magical Drop Pocket (J) (C)
@@ -284,6 +284,8 @@ nz_end:
 ;@----------------------------------------------------------------------------
 sngJR_nc_hack:				;@ 0x6F
 ;@----------------------------------------------------------------------------
+	mov r0,r0
+	mov r0,r0
 	tst t9f,#PSR_C
 	bne nc_end
 nc_end:

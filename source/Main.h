@@ -7,8 +7,6 @@ extern "C" {
 
 extern bool enableExit;
 extern bool gameInserted;
-extern int powerButton;
-extern int selectedGame;
 extern uint16 *map0sub;
 
 void waitVBlank(void);

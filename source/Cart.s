@@ -43,6 +43,7 @@ ROM_Space:
 //	.incbin "ngproms/Fatal Fury F-Contact (JUE) (M2).ngc"
 //	.incbin "ngproms/Last Blade, The - Beyond the Destiny (E).ngc"
 //	.incbin "ngproms/Metal Slug - 1st Mission (JUE) (M2).ngc"
+//	.incbin "ngproms/SNK Gals' Fighters (UE).ngc"
 //	.incbin "ngproms/Sonic the Hedgehog - Pocket Adventure (JUE).ngc"
 //biosSpace:
 //	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket Color (JE).ngp"

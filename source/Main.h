@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-extern bool enableExit;
 extern bool gameInserted;
 extern uint16 *map0sub;
 

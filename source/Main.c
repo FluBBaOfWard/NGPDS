@@ -4,6 +4,7 @@
 
 #include "Main.h"
 #include "Shared/EmuMenu.h"
+#include "Shared/FileHelper.h"
 #include "Shared/AsmExtra.h"
 #include "Gui.h"
 #include "FileHandling.h"
@@ -23,7 +24,6 @@ static void checkTimeOut(void);
 static void setupGraphics(void);
 static void setupStream(void);
 
-bool enableExit = false;
 bool gameInserted = false;
 static int sleepTimer = 60*60*5;	// 5 min
 static bool vBlankOverflow = false;

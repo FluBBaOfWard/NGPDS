@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-#include "Shared/FileHelper.h"
 #include "Emubase.h"
 
 #define FILEEXTENSIONS ".ngp.ngc"

@@ -10,6 +10,7 @@
 #include "FileHandling.h"
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
+#include "Shared/FileHelper.h"
 #include "Shared/unzip/unzipnds.h"
 #include "Main.h"
 #include "Gui.h"

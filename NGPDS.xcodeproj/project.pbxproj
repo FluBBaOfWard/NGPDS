@@ -11,7 +11,6 @@
 		35E683AF1C664A6D00FCFE8A /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		746D78E114ED9A8400CC738F /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = Makefile; sourceTree = "<group>"; };
 		9C1FFFA72684A277005851ED /* EmuSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmuSettings.h; sourceTree = "<group>"; };
-		9C294956260F55FC00EDA7C9 /* ArcadeRoms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArcadeRoms.h; sourceTree = "<group>"; };
 		9C367C932667CC760017B4F6 /* NGPBorder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NGPBorder.png; sourceTree = "<group>"; };
 		9C367C942667CC760017B4F6 /* NGPBorder.grit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NGPBorder.grit; sourceTree = "<group>"; };
 		9C367C962668B7CA0017B4F6 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
@@ -228,16 +227,15 @@
 				9C7BB94925FCD73C00EA9C9C /* graphics */,
 				A4D0E10C208930D100401463 /* unzip */,
 				9C8F33EE248ACA2E00996E5A /* nds_asm.h */,
+				9C1FFFA72684A277005851ED /* EmuSettings.h */,
 				A47F092B20863AF5004E1DA6 /* EmuMenu.h */,
 				A47F092C20863AF5004E1DA6 /* EmuMenu.c */,
-				9C1FFFA72684A277005851ED /* EmuSettings.h */,
 				A4D0E10B208930D100401463 /* FileHelper.h */,
 				A4D0E112208930D100401463 /* FileHelper.c */,
 				A4D0E10A208930D100401463 /* crc32.h */,
 				A4D0E111208930D100401463 /* crc32.c */,
 				A4D0E11D2089E28D00401463 /* AsmExtra.h */,
 				A4D0E11C2089E28D00401463 /* AsmExtra.s */,
-				9C294956260F55FC00EDA7C9 /* ArcadeRoms.h */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

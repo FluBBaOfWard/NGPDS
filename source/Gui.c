@@ -16,7 +16,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.4.8 2021-09-11"
+#define EMUVERSION "V0.4.9 2021-09-12"
 
 #define HALF_CPU_SPEED		(1<<16)
 #define ALLOW_SPEED_HACKS	(1<<17)
@@ -68,7 +68,7 @@ const char *const machTxt[]  = {"NeoGeo Pocket Color", "NeoGeo Pocket"};
 
 
 void setupGUI() {
-	emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS;
+	emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS | AUTOSLEEP_OFF;
 	keysSetRepeat(25, 4);	// delay, repeat.
 	openMenu();
 }

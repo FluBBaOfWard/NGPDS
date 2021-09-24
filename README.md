@@ -6,10 +6,11 @@ This is a SNK Neogeo Pocket (Color) emulator for the Nintendo DS.
 
 ## How to use:
 
-First DLDI patch the emulator for your flashcard if that is needed.
+Depending on your flashcart you might have to DLDI patch the emulator.
 Create a folder named "ngpds" in either the root of your flash card or in the
 data folder. Now put game/bios files into a folder where you have roms.
 Note! You need a bios to be able to save in game.
+The save file should be compatible with most other NeoGeo Pocket emulators.
 
 When the emulator starts, you can either press L+R or tap on the screen to open
 up the menu.
@@ -78,6 +79,7 @@ To select between the tabs use R & L or the touchscreen.
 Huge thanks to Loopy for the incredible PocketNES, without it this emu would
 probably never have been made.
 Thanks to:
+Flavor & Koyote for NGP info.
 Dwedit for help and inspiration with a lot of things.
 
 

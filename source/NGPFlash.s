@@ -9,6 +9,14 @@
 	.global FlashWriteLO
 	.global FlashWriteHI
 	.global getSaveStartAddress
+	.global getFlashLOBlocksAddress
+	.global getFlashHIBlocksAddress
+	.global isBlockDirty
+	.global markBlockDirty
+	.global getBlockOffset
+	.global getBlockSize
+	.global getBlockFromAddress
+	.global flashSize
 
 	.syntax unified
 	.arm
@@ -23,27 +31,42 @@ ngpFlashInit:			;@ Only need to be called once
 ;@----------------------------------------------------------------------------
 ngpFlashReset:			;@ r0=flash size in bytes, r1 = flash mem ptr, r12=fptr
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r0-r3,lr}
+	stmfd sp!,{r4,lr}
 	str r1,flashMemory
 	mov r1,#0x2F			;@ flashId 16Mbit
 	mov r2,#0x1F			;@ sizeMask 16Mbit
-	mov r3,#34				;@ Last block
 //	cmp r0,#0x400000
 //	cmpne r0,#0x200000
 	cmp r0,#0x100000
 	moveq r1,#0x2C			;@ flashId 8Mbit
 	moveq r2,#0x0F			;@ sizeMask 8Mbit
-	moveq r3,#18			;@ Last block
 	cmp r0,#0x80000
 	moveq r1,#0xAB			;@ flashId 4Mbit
 	moveq r2,#0x07			;@ sizeMask 4Mbit
-	moveq r3,#10			;@ Last block
 	str r0,flashSize
 	strb r1,flashSizeId
 	strb r2,flashSizeMask
-	strb r3,lastBlock
+	add r4,r2,#3			;@ Last block is split into 4 parts.
+	strb r4,lastBlock
 
-	ldmfd sp!,{r0-r3,lr}
+	ldr r0,=flashBlocks
+	mov r1,#2				;@ Write enabled
+	mov r2,#MAX_BLOCKS
+	bl memset
+
+	ldr r0,=flashBlocks2
+	mov r1,#2				;@ Write enabled
+	mov r2,#MAX_BLOCKS
+	bl memset
+
+//	ldr r0,=flashBlocks
+//	add r0,r0,r4
+//	sub r0,r0,#11			;@ Number of blocks that should be writable
+//	mov r1,#2
+//	mov r2,#12
+//	bl memset
+
+	ldmfd sp!,{r4,lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------
@@ -76,6 +99,37 @@ ngpFlashGetStateSize:	;@ Out r0=state size.
 
 
 ;@----------------------------------------------------------------------------
+getFlashHIBlocksAddress:
+	.type   getFlashHIBlocksAddress STT_FUNC
+;@----------------------------------------------------------------------------
+;@----------------------------------------------------------------------------
+getFlashLOBlocksAddress:
+	.type   getFlashLOBlocksAddress STT_FUNC
+;@----------------------------------------------------------------------------
+	ldr r0,=flashBlocks
+	bx lr
+;@----------------------------------------------------------------------------
+isBlockDirty:				;@ In r0=chip, r1=block. Out r0=true/false
+	.type   isBlockDirty STT_FUNC
+;@----------------------------------------------------------------------------
+	cmp r0,#0
+	ldreq r2,=flashBlocks
+	ldrne r2,=flashBlocks2
+	ldrb r0,[r2,r1]
+	and r0,r0,#0x80			;@ Check modified.
+	bx lr
+;@----------------------------------------------------------------------------
+markBlockDirty:				;@ In r0=chip, r1=block.
+	.type   markBlockDirty STT_FUNC
+;@----------------------------------------------------------------------------
+	cmp r0,#0
+	ldreq r2,=flashBlocks
+	ldrne r2,=flashBlocks2
+	ldrb r0,[r2,r1]
+	orr r0,r0,#0x80			;@ Mark modified.
+	strb r0,[r2,r1]
+	bx lr
+;@----------------------------------------------------------------------------
 getSaveStartAddress:
 	.type   getSaveStartAddress STT_FUNC
 ;@----------------------------------------------------------------------------
@@ -84,7 +138,7 @@ getSaveStartAddress:
 saveSLoop:
 	ldr r2,=flashBlocks
 	ldrb r1,[r2,r0]
-	tst r1,#0x81			;@ Modified or needs saving.
+	tst r1,#0x80			;@ Check modified.
 	bne saveFound
 	add r0,r0,#1
 	cmp r0,r3
@@ -92,14 +146,16 @@ saveSLoop:
 	mov r0,#0
 	bx lr
 saveFound:
-	b getAddressFromBlock
+//	b getBlockOffset
 ;@----------------------------------------------------------------------------
-getAddressFromBlock:	;@ In r0=blockNr, out r0=address
+getBlockOffset:		;@ In r0=blockNr. Out r0=offset
+	.type   getBlockOffset STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldrb r2,flashSizeMask
 	subs r1,r0,r2			;@ Over the last 64kB block?
 	mov r0,r0,lsl#16
 	ble adrDone
+	mov r0,r2,lsl#16
 	add r0,r0,#0x8000
 	cmp r1,#2
 	addeq r0,r0,#0x2000
@@ -114,11 +170,27 @@ markBlockModifiedFromAddress:	;@ In r0=address, out r0=address
 	bl getBlockFromAddress
 	ldr r2,=flashBlocks
 	ldrb r1,[r2,r0]
-	orr r1,r1,#0x81			;@ Both modified and needs saving.
+	orr r1,r1,#0x80			;@ Modified.
 	strb r1,[r2,r0]
 	ldmfd sp!,{r0-r2,pc}
 ;@----------------------------------------------------------------------------
+getBlockSize:			;@ In r0=blockNr, out r0=size
+	.type   getBlockSize STT_FUNC
+;@----------------------------------------------------------------------------
+	ldrb r2,flashSizeMask
+	subs r1,r0,r2			;@ Over the last 64kB block?
+	mov r0,#0x10000			;@ Block size
+	bmi sizeDone
+	moveq r0,#0x8000
+	cmp r1,#1
+	movpl r0,#0x2000
+	cmp r1,#3
+	moveq r0,#0x4000
+sizeDone:
+	bx lr
+;@----------------------------------------------------------------------------
 getBlockFromAddress:	;@ In r0=address, out r0=blockNr
+	.type   getBlockFromAddress STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldrb r2,flashSizeMask
 	and r1,r2,r0,lsr#16
@@ -160,15 +232,23 @@ blockInfDone:
 ;@----------------------------------------------------------------------------
 ReadFlashInfo:			;@ In r0=address.
 ;@----------------------------------------------------------------------------
-	mov r11,r11
 	ands r1,r0,#0x03
 	moveq r0,#0x98			;@ 0x00 Manufacturer, 98 = Toshiba, EC = Samsung, B0 = Sharp.
 	bxeq lr
 	cmp r1,#2
 	ldrbmi r0,flashSizeId	;@ 0x01 Size, AB = 4Mbit, 2C = 8Mbit, 2F = 16Mbit
-	moveq r0,#0x02			;@ 0x02 Block not protected
-	movhi r0,#0x80			;@ 0x03 ??? 0x80
+	beq checkProtectFromAdr	;@ 0x02 Block protected
+	movhi r0,#0x80			;@ 0x03 Factory protection 0x80
 	bx lr
+;@----------------------------------------------------------------------------
+checkProtectFromAdr:	;@ In r0=address, out r0=block protect; 0=read only 2=writeable
+;@----------------------------------------------------------------------------
+	stmfd sp!,{lr}
+	bl getBlockFromAddress
+	ldr r1,=flashBlocks
+	ldrb r0,[r1,r0]
+	and r0,r0,#2			;@ Protected?
+	ldmfd sp!,{pc}
 ;@----------------------------------------------------------------------------
 FlashWriteLO:			;@ In r0=value, r1=address.
 ;@----------------------------------------------------------------------------
@@ -241,12 +321,17 @@ FlashErase:
 	cmp r0,#CMD_ERASE_BLOCK
 	bne FlashEraseChip
 FlashEraseBlock:
-	mov r0,r1
+	mov r4,r1
+	mov r0,r4
+	bl checkProtectFromAdr
+	tst r0,#2
+	beq FlashSetRead
+	mov r0,r4
 	bl markBlockModifiedFromAddress
 	bl getBlockInfoFromAddress
 	ldr r2,flashMemory
 	add r0,r0,r2
-	mov r2,r1			;@ Length
+	mov r2,r1				;@ Length
 	mov r1,#-1
 	bl memset
 	b FlashSetRead
@@ -254,7 +339,7 @@ FlashEraseBlock:
 FlashEraseChip:
 	ldr r3,=0x5555
 	cmp r4,r3
-	bne FlashSetRead	;@ Or just end?
+	bne FlashSetRead		;@ Or just end?
 	mov r11,r11
 	b FlashCycEnd
 
@@ -265,7 +350,7 @@ FlashProtect:
 	bl getBlockFromAddress
 	ldr r3,=flashBlocks
 	ldrb r1,[r3,r0]
-	orr r1,r1,#0x02			;@ Protect bit
+	bic r1,r1,#0x02			;@ Protect bit
 	strb r1,[r3,r0]
 	b FlashCycEnd
 
@@ -273,9 +358,14 @@ FlashProtect:
 FlashWrite:				;@ F_ID_READ
 ;@----------------------------------------------------------------------------
 	mov r4,r0
-	mov r0,r1
+	mov r5,r1				;@ Save address in r5
+	mov r0,r5
+	bl checkProtectFromAdr
+	tst r0,#2
+	beq FlashSetRead
+	mov r0,r5
 	bl markBlockModifiedFromAddress
-	bic r1,r1,#0xFE00000
+	bic r1,r5,#0xFE00000
 	ldr r2,flashMemory
 	ldrb r3,[r2,r1]
 	and r3,r3,r4
@@ -311,10 +401,19 @@ currentCommand:
 lastBlock:
 	.byte 0
 
-flashBlocks:	;@ Bit 0=modified, bit 1=protected, bit 7=should be saved.
+flashBlocks:		;@ Bit 1=write neabled, bit 7=modified.
+	.space MAX_BLOCKS
+flashBlocks2:		;@ Bit 1=write neabled, bit 7=modified.
 	.space MAX_BLOCKS
 // Padding
 	.align 2
 
+
+gameFlashInfo:
+	.short 0x0082	// Game id
+	.byte 3			// Number of unprotected blocks
+	.byte 7
+	.byte 8
+	.byte 10
 ;@----------------------------------------------------------------------------
 #endif // #ifdef __arm__

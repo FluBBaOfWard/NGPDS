@@ -243,10 +243,10 @@ t9LoadEvenW:				;@ r0=address
 	cmp r2,#2
 	beq tlcs_vram_W_R
 	mov r2,r2,lsr#7
-	cmp r2,#1
-	beq tlcs_rom_W_R
-	cmp r2,#4
-	beq tlcs_romH_W_R
+//	cmp r2,#1
+//	beq tlcs_rom_W_R
+//	cmp r2,#4
+//	beq tlcs_romH_W_R
 	cmp r2,#7
 	beq tlcs_bios_W_R
 	b t9LoadWAsB

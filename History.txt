@@ -2,7 +2,8 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.4.9 - 2021-09-12 (FluBBa)
+V0.4.9 - 2021-09-24 (FluBBa)
+	Much better flash emulation.
 
 V0.4.8 - 2021-09-11 (FluBBa)
 	Added stereo sound.

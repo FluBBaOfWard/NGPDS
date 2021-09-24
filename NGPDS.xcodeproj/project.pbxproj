@@ -77,6 +77,8 @@
 		9CBC0C8D26DD7BD50039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBC0C8E26DD7C2A0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBC0C8F26DD7D0F0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9CBEE11526FBB7F30095347A /* GameInfo.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = GameInfo.s; sourceTree = "<group>"; };
+		9CBEE17A26FCE7F10095347A /* NGPFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGPFlash.h; sourceTree = "<group>"; };
 		9CC013FC2668FDD9005714F7 /* Emubase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emubase.h; sourceTree = "<group>"; };
 		9CC013FE26694C6C005714F7 /* TLCS900H_int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLCS900H_int.h; sourceTree = "<group>"; };
 		9CC0F92B26B87B570035478F /* NGPHW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NGPHW.png; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				9CC0F92E26D1073F0035478F /* AsmHleBios.s */,
 				9C50820525D45A9A00A8E1BA /* Cart.h */,
 				9C50820F25D45A9B00A8E1BA /* Cart.s */,
+				9CBEE17A26FCE7F10095347A /* NGPFlash.h */,
 				9C790E762670EDAA000A3506 /* NGPFlash.i */,
 				9C790E752670EDA9000A3506 /* NGPFlash.s */,
 				35E683AD1C66453300FCFE8A /* cpu.h */,
@@ -279,6 +282,7 @@
 				9C50820B25D45A9B00A8E1BA /* FileHandling.h */,
 				9C50820A25D45A9B00A8E1BA /* FileHandling.c */,
 				9C4C21C226E12781007D0280 /* SpeedHacks.s */,
+				9CBEE11526FBB7F30095347A /* GameInfo.s */,
 			);
 			path = source;
 			sourceTree = "<group>";

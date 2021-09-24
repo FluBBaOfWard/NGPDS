@@ -3,7 +3,6 @@
 #include "Gui.h"
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
-#include "Shared/AsmExtra.h"
 #include "Main.h"
 #include "FileHandling.h"
 #include "Cart.h"
@@ -16,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.4.9 2021-09-12"
+#define EMUVERSION "V0.4.9 2021-09-24"
 
 #define HALF_CPU_SPEED		(1<<16)
 #define ALLOW_SPEED_HACKS	(1<<17)
@@ -199,8 +198,12 @@ void resetGame() {
 }
 
 void updateGameInfo() {
-	NgpHeader *header = romSpacePtr;
+	char catalog[8];
+	NgpHeader *header = (NgpHeader *)romSpacePtr;
 	strlMerge(gameInfoString, " Game name: ", header->name, sizeof(gameInfoString));
+	strlcat(gameInfoString, " #", sizeof(gameInfoString));
+	short2HexStr(catalog, header->catalog);
+	strlcat(gameInfoString, catalog, sizeof(gameInfoString));
 }
 //---------------------------------------------------------------------------------
 /// Switch between Player 1 & Player 2 controls
@@ -226,6 +229,7 @@ void gammaSet() {
 	paletteInit(g_gammaValue);
 	paletteTxAll();					// Make new palette visible
 	setupMenuPalette();
+	settingsChanged = true;
 }
 
 /// Turn on/off rendering of foreground
@@ -246,10 +250,10 @@ void paletteChange() {
 	if (g_paletteBank > 4) {
 		g_paletteBank = 0;
 	}
-	settingsChanged = true;
 	monoPalInit();
 	paletteTxAll();
 	fixBiosSettings();
+	settingsChanged = true;
 }
 /*
 void borderSet() {

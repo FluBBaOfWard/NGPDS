@@ -16,7 +16,7 @@ extern u8 g_lang;
 extern u8 g_paletteBank;
 
 extern u8 biosSpace[0x10000];
-extern void *romSpacePtr;
+extern u8 *romSpacePtr;
 extern void *g_BIOSBASE_COLOR;
 extern void *g_BIOSBASE_BW;
 

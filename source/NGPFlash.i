@@ -48,13 +48,13 @@ bios does some tests on this last block to see if the flash functionality is
 working. It does this on every boot!
 */
 
-//Toshiba  0x98
-//Sharp    0xb0
-//Samsung  0xec
+// Toshiba  0x98
+// Sharp    0xb0
+// Samsung  0xec
 
-// 4mbit   0xab
-// 8mbit   0x2c
-//16mbit   0x2f
+//  4mbit   0xab
+//  8mbit   0x2c
+// 16mbit   0x2f
 
 // Flash_command
 	.equ CMD_READ, 0xF0           // xxxx F0 or 5555 AA, 2AAA 55, 5555 F0
@@ -69,7 +69,7 @@ working. It does this on every boot!
 						;@ NGPFlash.s
 	.struct 0
 NGPFlashState:				;@
-flashMem:		.long 0		;@ Pointer to memory
+flashMem:		.long 0		;@ Pointer to flash chip memory
 vendorID:		.byte 0		;@ Flash vendor ID
 sizeID:			.byte 0		;@ Flash size ID
 selectedBlock:	.byte 0		;@ Currently selected block

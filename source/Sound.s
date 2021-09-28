@@ -7,6 +7,7 @@
 	.global VblSound2
 	.global setMuteSoundGUI
 	.global setMuteSoundChip
+	.global setMuteT6W28
 	.global T6W28_L_W
 	.global T6W28_R_W
 	.global k2Audio_0
@@ -48,6 +49,13 @@ setMuteSoundGUI:
 	ldrb r0,[r1]
 	strb r0,muteSoundGUI
 	bx lr
+;@----------------------------------------------------------------------------
+setMuteT6W28:
+;@----------------------------------------------------------------------------
+	cmp r0,#0xAA
+	cmpne r0,#0x55
+	bxne lr
+	and r0,r0,#0xAA
 ;@----------------------------------------------------------------------------
 setMuteSoundChip:
 ;@----------------------------------------------------------------------------

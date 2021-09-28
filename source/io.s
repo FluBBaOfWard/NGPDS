@@ -8,6 +8,9 @@
 	.global Z80In
 	.global Z80Out
 	.global refreshEMUjoypads
+	.global ioSaveState
+	.global ioLoadState
+	.global ioGetStateSize
 
 	.global joyCfg
 	.global EMUinput
@@ -34,20 +37,55 @@
 ;@----------------------------------------------------------------------------
 ioReset:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4,lr}
+	stmfd sp!,{lr}
 
-	ldr r3,=SysMemDefault
-	mov r4,#0xFF
-ioResetLoop:
-	ldrb r0,[r3,r4]
-	mov r1,r4
-	bl t9StoreB
-	subs r4,r4,#1
-	bpl ioResetLoop
-
+	ldr r0,=SysMemDefault
+	bl initSysMem
 	bl transferTime
 
-	ldmfd sp!,{r4,lr}
+	ldmfd sp!,{pc}
+;@----------------------------------------------------------------------------
+initSysMem:					;@ In r0=values ptr.
+;@----------------------------------------------------------------------------
+	stmfd sp!,{r4-r5,lr}
+
+	mov r4,r0
+	mov r5,#0xFF
+initMemLoop:
+	ldrb r0,[r4,r5]
+	mov r1,r5
+	bl t9StoreB_Low
+	subs r5,r5,#1
+	bpl initMemLoop
+
+	ldmfd sp!,{r4-r5,pc}
+;@----------------------------------------------------------------------------
+ioSaveState:			;@ In r0=destination. Out r0=size.
+	.type   ioSaveState STT_FUNC
+;@----------------------------------------------------------------------------
+	stmfd sp!,{lr}
+
+	ldr r1,=systemMemory
+	mov r2,#0x100
+	bl memcpy
+
+	ldmfd sp!,{lr}
+	mov r0,#0x100
+	bx lr
+;@----------------------------------------------------------------------------
+ioLoadState:			;@ In r0=source. Out r0=size.
+	.type   ioLoadState STT_FUNC
+;@----------------------------------------------------------------------------
+	stmfd sp!,{lr}
+
+	bl initSysMem
+
+	ldmfd sp!,{lr}
+;@----------------------------------------------------------------------------
+ioGetStateSize:		;@ Out r0=state size.
+	.type   ioGetStateSize STT_FUNC
+;@----------------------------------------------------------------------------
+	mov r0,#0x100
 	bx lr
 ;@----------------------------------------------------------------------------
 transferTime:
@@ -120,22 +158,14 @@ refreshEMUjoypads:			;@ Call every frame
 joyCfg: .long 0x00ff01ff	;@ byte0=auto mask, byte1=(saves R), byte2=R auto mask
 							;@ bit 31=single/multi, 30,29=1P/2P, 27=(multi) link active, 24=reset signal received
 playerCount:.long 0			;@ Number of players in multilink.
-joySerial:	.byte 0
-joy0State:	.byte 0
-joy1State:	.byte 0
-joy2State:	.byte 0
+			.byte 0
+			.byte 0
+			.byte 0
+			.byte 0
 rlud2lrud:		.byte 0x00,0x08,0x04,0x0C, 0x01,0x09,0x05,0x0D, 0x02,0x0A,0x06,0x0E, 0x03,0x0B,0x07,0x0F
 
 EMUinput:			;@ This label here for main.c to use
 	.long 0			;@ EMUjoypad (this is what Emu sees)
-
-;@----------------------------------------------------------------------------
-input0_R:		;@ Player 1
-;@----------------------------------------------------------------------------
-;@	mov r11,r11					;@ No$GBA breakpoint
-	ldrb r0,joy0State
-	eor r0,r0,#0xFF
-	bx lr
 
 ;@----------------------------------------------------------------------------
 z80ReadLatch:
@@ -174,7 +204,22 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	strb r0,rtcTimer
 	bxpl lr
 
+	ldr r0,batteryLevel
+	subs r0,r0,#1
+	movmi r0,#1
+	str r0,batteryLevel
+
+	ldr r1,=g_subBatteryLevel
+	ldr r0,[r1]
+	subs r0,r0,#0x00000100
+	movmi r0,#0x00001000
+	str r0,[r1]
+
 	ldr r2,=systemMemory
+	ldrb r0,[r2,#0x90]			;@ RTC control
+	tst r0,#1					;@ Enabled?
+	bxeq lr
+
 	ldrb r0,[r2,#0x96]			;@ Seconds
 	add r0,r0,#0x01
 	and r1,r0,#0x0F
@@ -183,36 +228,48 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	cmp r0,#0x60
 	movpl r0,#0
 	strb r0,[r2,#0x96]			;@ Seconds
-	
+	bmi checkForAlarm
+
 	ldrb r0,[r2,#0x95]			;@ Minutes
-	addpl r0,r0,#0x01
+	add r0,r0,#0x01
 	and r1,r0,#0x0F
 	cmp r1,#0x0A
 	addpl r0,r0,#0x06
 	cmp r0,#0x60
 	movpl r0,#0
 	strb r0,[r2,#0x95]			;@ Minutes
-	
+	bmi checkForAlarm
+
 	ldrb r0,[r2,#0x94]			;@ Hours
-	addpl r0,r0,#0x01
+	add r0,r0,#0x01
 	and r1,r0,#0x0F
 	cmp r1,#0x0A
 	addpl r0,r0,#0x06
 	cmp r0,#0x24
 	movpl r0,#0
 	strb r0,[r2,#0x94]			;@ Hours
+	bmi checkForAlarm
 
 	ldrb r0,[r2,#0x93]			;@ Days
-	addpl r0,r0,#0x01
+	add r0,r0,#0x01
 	and r1,r0,#0x0F
 	cmp r1,#0x0A
 	addpl r0,r0,#0x06
 	cmp r0,#0x32
 	movpl r0,#0
 	strb r0,[r2,#0x93]			;@ Days
+	bmi checkForAlarm
 
+	ldrb r0,[r2,#0x92]			;@ Months
+	add r0,r0,#0x01
+	and r1,r0,#0x0F
+	cmp r1,#0x0A
+	addpl r0,r0,#0x06
+	cmp r0,#0x13
+	movpl r0,#1
+	strb r0,[r2,#0x92]			;@ Months
 
-								;@ Check for Alarm
+checkForAlarm:
 	ldrb r0,[r2,#0x96]			;@ Seconds
 	cmp r0,#0x00
 	ldrbeq r0,[r2,#0x95]		;@ RTC Minutes
@@ -226,23 +283,15 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	moveq r0,#0x0A
 	beq TestIntHDMA_External
 
-	ldr r0,batteryLevel
-	subs r0,r0,#1
-	movmi r0,#1
-	str r0,batteryLevel
-
-	ldr r1,=g_subBatteryLevel
-	ldr r0,[r1]
-	subs r0,r0,#0x00000100
-	movmi r0,#0x00001000
-	str r0,[r1]
-
 	bx lr
 
 ;@----------------------------------------------------------------------------
 t9StoreB_Low:
 ;@----------------------------------------------------------------------------
 	ldr t9optbl,=tlcs900HState	;@ !!!This should not be needed when called from asm.
+	ldr r2,=systemMemory
+	strb r0,[r2,r1]
+
 	cmp r1,#0x50				;@ Serial channel 0 buffer.
 	strbeq r0,sc0Buf
 	bxeq lr
@@ -253,8 +302,7 @@ t9StoreB_Low:
 	bxeq lr
 
 	cmp r1,#0xB8				;@ Soundchip enable/disable, 0x55 On 0xAA Off.
-	andeq r0,r0,#2
-	beq setMuteSoundChip
+	beq setMuteT6W28
 
 	cmp r1,#0xB9				;@ Z80 enable/disable, 0x55 On 0xAA Off.
 	beq Z80_SetEnable
@@ -288,25 +336,11 @@ t9StoreB_Low:
 	cmp r2,#0x20
 	beq timer_write8
 
-	cmp r2,#0x90
-	beq rtc_write8
-
 	and r0,r0,#0xFF
 	cmp r2,#0x70
 	beq int_write8
 
-	cmp r1,#0xB3				;@ Power button NMI on/off.
-//	beq lowW_cont
-
-//	bx lr
-lowW_cont:
-	ldr r2,=systemMemory
-	strb r0,[r2,r1]
-	bx lr
-
-rtc_write8:
-	ldr r2,=systemMemory
-	strb r0,[r2,r1]
+//	cmp r1,#0xB3				;@ Power button NMI on/off.
 	bx lr
 
 ;@----------------------------------------------------------------------------
@@ -344,12 +378,9 @@ t9LoadB_Low:
 	cmp r1,#0x70
 	beq int_read8
 
-	cmp r1,#0x90
-	beq rtc_read8
-
 	cmp r1,#0x20
 	beq timer_read8
-lowR_cont:
+
 	cmp r0,#0x50				;@ Serial channel 0 buffer.
 	ldrbeq r0,sc0Buf
 	bxeq lr
@@ -358,17 +389,13 @@ lowR_cont:
 	ldrbeq r0,commByte
 	bxeq lr
 
-rtc_read8:
-lowR_end:
 	ldr r2,=systemMemory
 	ldrb r0,[r2,r0]
 	bx lr
 
 ;@----------------------------------------------------------------------------
 systemMemory:
-;@	% 0x80
-;@g_cpuSpeed:
-;@	% 0x80
+	.space 0x100
 
 
 SysMemDefault:
@@ -388,7 +415,6 @@ SysMemDefault:
 	.byte 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x17, 0x17, 0x03, 0x03, 0x02, 0x00, 0x10, 0x4E
 	;@ 0x70													;@ 0x78
 	.byte 0x02, 0x32, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-g_cpuSpeed:
 	;@ 0x80													;@ 0x88
 	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	;@ 0x90													;@ 0x98

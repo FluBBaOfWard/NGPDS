@@ -404,6 +404,9 @@ void resetBios(NgpHeader *ngpHeader)
 		t9StoreB(snkLogo[i], 0xA1C0 + i);
 	}
 
+	// Enable sound
+	t9StoreB(0x55, 0xB8);
+
 	// Do some setup for the interrupt priorities.
 	BIOSHLE_Reset();
 }

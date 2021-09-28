@@ -171,8 +171,6 @@ void saveSettings() {
 }
 
 void loadNVRAM_() {
-//	int adr;
-//	int len;
 	void *space;
 	FILE *file;
 	char flashName[FILENAMEMAXLENGTH];
@@ -200,38 +198,80 @@ void loadNVRAM_() {
 	return;
 }
 
-void saveNVRAM_() {
-	int adr = getSaveStartAddress();
-	int len = g_romSize - adr;
-	void *space = romSpacePtr + adr;
-	FILE *file;
+//void loadSaveGameFile()
+void loadNVRAM() {
+	// Find the .fla file and read it in
+	FILE *ngfFile;
+	int i;
+	NgfHeader header;
+	NgfBlock block;
 	char flashName[FILENAMEMAXLENGTH];
-	NgpFlashFile flashHdr;
-
-	flashHdr.magic = NGPF_MAGIC;
-	memcpy(&flashHdr.blocksLOInfo, getFlashLOBlocksAddress(), 35);
-	memcpy(&flashHdr.blocksHIInfo, getFlashHIBlocksAddress(), 35);
-	flashHdr.addressLO = adr;
-	flashHdr.sizeLO = len;
-	flashHdr.addressHI = 0;
-	flashHdr.sizeHI = 0;
+	bool canCopy;
 
 	if (findFolder(folderName)) {
 		return;
 	}
 	strlcpy(flashName, currentFilename, sizeof(flashName));
 	strlcat(flashName, ".fla", sizeof(flashName));
-	if ( (file = fopen(flashName, "w")) ) {
-		fwrite(&flashHdr, 1, sizeof(flashHdr), file);
-		fwrite(space, 1, flashHdr.sizeLO, file);
-		if ( flashHdr.sizeHI != 0) {
-			fwrite(space, 1, flashHdr.sizeHI, file);
-		}
-		infoOutput("Saved flash.");
-		fclose(file);
+	if ( !(ngfFile = fopen(flashName, "r")) ) {
+		infoOutput("Couldn't open flash file:");
+		infoOutput(flashName);
+		return;
 	}
-}
 
+	if (fread(&header, 1, sizeof(NgfHeader), ngfFile) != sizeof(NgfHeader)) {
+		infoOutput("Bad flash file:");
+		infoOutput(flashName);
+		fclose(ngfFile);
+		return;
+	}
+
+	if (header.version != 0x53) {
+		infoOutput("Bad flash file version:");
+		infoOutput(flashName);
+		fclose(ngfFile);
+		return;
+	}
+
+    if (header.blockCount > MAX_BLOCKS) {
+		infoOutput("Too many blocks in flash file:");
+		infoOutput(flashName);
+		fclose(ngfFile);
+		return;
+    }
+
+	// Loop through the blocks and insert them into mainrom
+	for (i=0; i < header.blockCount; i++) {
+		if (fread(&block, 1, sizeof(NgfBlock), ngfFile) != sizeof(NgfBlock)) {
+			infoOutput("Couldn't read correct number of header bytes.");
+			fclose(ngfFile);
+			return;
+		}
+
+		canCopy = false;
+		if ((block.ngpAddr >= 0x800000 && block.ngpAddr < 0xA00000)) {
+			block.ngpAddr -= 0x600000;
+			canCopy = markBlockDirty(1, getBlockFromAddress(block.ngpAddr));
+		}
+		else if ((block.ngpAddr >= 0x200000 && block.ngpAddr < 0x400000)) {
+			block.ngpAddr -= 0x200000;
+			canCopy = markBlockDirty(0, getBlockFromAddress(block.ngpAddr));
+		}
+		if (!canCopy) {
+			fseek(ngfFile, block.len, SEEK_CUR);
+			infoOutput("Invalid block header in flash.");
+            continue;
+        }
+		if (fread(&romSpacePtr[block.ngpAddr], 1, block.len, ngfFile) != block.len) {
+			infoOutput("Couldn't read correct number of block bytes.");
+			fclose(ngfFile);
+			return;
+		}
+	}
+
+	infoOutput("Loaded flash.");
+	fclose(ngfFile);
+}
 
 //void writeSaveGameFile() {
 void saveNVRAM() {
@@ -317,83 +357,6 @@ void saveNVRAM() {
 	fclose(ngfFile);
 }
 
-//void loadSaveGameFile()
-void loadNVRAM() {
-	// Find the NGF file and read it in
-	FILE *ngfFile;
-	int i;
-	NgfHeader header;
-	NgfBlock block;
-	char flashName[FILENAMEMAXLENGTH];
-
-	if (findFolder(folderName)) {
-		return;
-	}
-	strlcpy(flashName, currentFilename, sizeof(flashName));
-	strlcat(flashName, ".fla", sizeof(flashName));
-	if ( !(ngfFile = fopen(flashName, "r")) ) {
-		infoOutput("Couldn't open flash file:");
-		infoOutput(flashName);
-		return;
-	}
-
-	if (fread(&header, 1, sizeof(NgfHeader), ngfFile) != sizeof(NgfHeader)) {
-		infoOutput("Bad flash file:");
-		infoOutput(flashName);
-		fclose(ngfFile);
-		return;
-	}
-
-	if (header.version != 0x53) {
-		infoOutput("Bad flash file version:");
-		infoOutput(flashName);
-		fclose(ngfFile);
-		return;
-	}
-
-    if (header.blockCount > MAX_BLOCKS) {
-		infoOutput("Too many blocks in flash file:");
-		infoOutput(flashName);
-		fclose(ngfFile);
-		return;
-    }
-
-	// Loop through the blocks and insert them into mainrom
-	for (i=0; i < header.blockCount; i++) {
-		if (fread(&block, 1, sizeof(NgfBlock), ngfFile) != sizeof(NgfBlock)) {
-			infoOutput("Couldn't read correct number of header bytes.");
-			fclose(ngfFile);
-			return;
-		}
-
-        if (!((block.ngpAddr >= 0x200000 && block.ngpAddr < 0x400000)
-			|| (block.ngpAddr >= 0x800000 && block.ngpAddr < 0xA00000) )) {
-			infoOutput("Invalid block header in flash.");
-			char errAdr[8];
-			int2HexStr(errAdr, block.ngpAddr);
-			infoOutput(errAdr);
-			fclose(ngfFile);
-            return;
-        }
-		if (block.ngpAddr >= 0x800000) {
-			block.ngpAddr -= 0x600000;
-            markBlockDirty(1, getBlockFromAddress(block.ngpAddr-0x200000));
-		}
-		else if (block.ngpAddr >= 0x200000) {
-			block.ngpAddr -= 0x200000;
-            markBlockDirty(0, getBlockFromAddress(block.ngpAddr));
-		}
-		if (fread(&romSpacePtr[block.ngpAddr], 1, block.len, ngfFile) != block.len) {
-			infoOutput("Couldn't read correct number of block bytes.");
-			fclose(ngfFile);
-			return;
-		}
-	}
-
-	infoOutput("Loaded flash.");
-	fclose(ngfFile);
-}
-
 void loadState(void) {
 	u32 *statePtr;
 	FILE *file;
@@ -416,6 +379,7 @@ void loadState(void) {
 		}
 		fclose(file);
 	}
+	return;
 }
 
 void saveState(void) {
@@ -487,11 +451,11 @@ bool loadGame(const char *gameName) {
 			setEmuSpeed(0);
 			loadCart(emuFlags);
 			gameInserted = true;
+			if ( emuSettings & AUTOLOAD_NVRAM ) {
+				loadNVRAM();
+			}
 			if ( emuSettings & AUTOLOAD_STATE ) {
 				loadState();
-			}
-			else if ( emuSettings & AUTOLOAD_NVRAM ) {
-				loadNVRAM();
 			}
 			drawText("     Please wait, power on.", 11, 0);
 			turnPowerOn();

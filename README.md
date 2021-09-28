@@ -49,8 +49,8 @@ To select between the tabs use R & L or the touchscreen.
 		Change Batteries: Change to new main batteries (AA/LR6).
 		Change Sub Battery: Change to a new sub battery (CR2032).
 		Cpu speed hacks: Allow speed hacks.
-		Half cpu speed: This is not realy recommended.
-		Bios Settings: Load a real NGP Bios.
+		Half cpu speed: This is not realy recommended anymore.
+		Bios Settings: Load a real NGP Bios, recommended.
 	Settings:
 		Speed: Switch between speed modes.
 			Normal: Game runs at it's normal speed.

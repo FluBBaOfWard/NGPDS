@@ -8,7 +8,6 @@
 	.global ngpFlashReset
 	.global FlashWriteLO
 	.global FlashWriteHI
-	.global getSaveStartAddress
 	.global getFlashLOBlocksAddress
 	.global getFlashHIBlocksAddress
 	.global isBlockDirty
@@ -32,6 +31,7 @@ ngpFlashInit:			;@ Only need to be called once
 ngpFlashReset:			;@ r0=flash size in bytes, r1 = flash mem ptr, r12=fptr
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4,lr}
+	str r0,flashSize
 	str r1,flashMemory
 	mov r1,#0x2F			;@ flashId 16Mbit
 	mov r2,#0x1F			;@ sizeMask 16Mbit
@@ -43,28 +43,31 @@ ngpFlashReset:			;@ r0=flash size in bytes, r1 = flash mem ptr, r12=fptr
 	cmp r0,#0x80000
 	moveq r1,#0xAB			;@ flashId 4Mbit
 	moveq r2,#0x07			;@ sizeMask 4Mbit
-	str r0,flashSize
 	strb r1,flashSizeId
 	strb r2,flashSizeMask
 	add r4,r2,#3			;@ Last block is split into 4 parts.
 	strb r4,lastBlock
 
 	ldr r0,=flashBlocks
-	mov r1,#2				;@ Write enabled
+	mov r1,#0				;@ Read only
 	mov r2,#MAX_BLOCKS
 	bl memset
 
 	ldr r0,=flashBlocks2
-	mov r1,#2				;@ Write enabled
+	mov r1,#0				;@ Read only
 	mov r2,#MAX_BLOCKS
 	bl memset
 
-//	ldr r0,=flashBlocks
-//	add r0,r0,r4
-//	sub r0,r0,#11			;@ Number of blocks that should be writable
-//	mov r1,#2
-//	mov r2,#12
-//	bl memset
+	ldr r0,=flashBlocks+6	;@ Block 6 is the first writable block in any released game.
+	mov r1,#2				;@ Write enabled
+	sub r2,r4,#5
+	bl memset
+
+	ldr r0,flashSize
+	cmp r0,#0x400000		;@ Only enable on 4MB games.
+	ldreq r0,=flashBlocks2
+	moveq r1,#2				;@ Write enabled
+	strbeq r1,[r0,#34]		;@ Only last block is write enabled on second chip.
 
 	ldmfd sp!,{r4,lr}
 	bx lr
@@ -119,36 +122,19 @@ isBlockDirty:				;@ In r0=chip, r1=block. Out r0=true/false
 	and r0,r0,#0x80			;@ Check modified.
 	bx lr
 ;@----------------------------------------------------------------------------
-markBlockDirty:				;@ In r0=chip, r1=block.
+markBlockDirty:			;@ In r0=chip, r1=block.
 	.type   markBlockDirty STT_FUNC
 ;@----------------------------------------------------------------------------
 	cmp r0,#0
 	ldreq r2,=flashBlocks
 	ldrne r2,=flashBlocks2
 	ldrb r0,[r2,r1]
-	orr r0,r0,#0x80			;@ Mark modified.
-	strb r0,[r2,r1]
+	ands r0,r0,#0x02		;@ Protect bit
+	orrne r0,r0,#0x80		;@ Mark modified.
+	strbne r0,[r2,r1]
 	bx lr
 ;@----------------------------------------------------------------------------
-getSaveStartAddress:
-	.type   getSaveStartAddress STT_FUNC
-;@----------------------------------------------------------------------------
-	ldrb r3,lastBlock
-	mov r0,#0
-saveSLoop:
-	ldr r2,=flashBlocks
-	ldrb r1,[r2,r0]
-	tst r1,#0x80			;@ Check modified.
-	bne saveFound
-	add r0,r0,#1
-	cmp r0,r3
-	ble saveSLoop
-	mov r0,#0
-	bx lr
-saveFound:
-//	b getBlockOffset
-;@----------------------------------------------------------------------------
-getBlockOffset:		;@ In r0=blockNr. Out r0=offset
+getBlockOffset:			;@ In r0=blockNr. Out r0=offset
 	.type   getBlockOffset STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldrb r2,flashSizeMask
@@ -394,11 +380,11 @@ flashSizeMask:
 	.byte 0
 flashSizeId:
 	.byte 0
+lastBlock:
+	.byte 0
 currentWriteCycle:
 	.byte 0
 currentCommand:
-	.byte 0
-lastBlock:
 	.byte 0
 
 flashBlocks:		;@ Bit 1=write neabled, bit 7=modified.
@@ -409,11 +395,5 @@ flashBlocks2:		;@ Bit 1=write neabled, bit 7=modified.
 	.align 2
 
 
-gameFlashInfo:
-	.short 0x0082	// Game id
-	.byte 3			// Number of unprotected blocks
-	.byte 7
-	.byte 8
-	.byte 10
 ;@----------------------------------------------------------------------------
 #endif // #ifdef __arm__

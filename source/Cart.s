@@ -88,12 +88,10 @@ machineInit: 	;@ Called from C
 	cmp r0,#0
 	beq skipBiosSettings
 
-	bl run
-	bl transferTime
-
-	ldr r1,=fixBiosSettings
-	mov lr,pc
-	bx r1
+	bl run					;@ Settings are cleared when new batteries are inserted.
+	bl transferTime			;@ So set up time
+	ldr r1,=fixBiosSettings	;@ And Bios settings after the first run.
+	blx r1
 skipBiosSettings:
 	ldmfd sp!,{r4-r11,lr}
 	bx lr
@@ -122,8 +120,7 @@ loadCart: 		;@ Called from C:  r0=emuflags
 	bl cpuReset
 	ldr r0,ngpHeader			;@ First argument
 	ldr r1,=resetBios
-	mov lr,pc
-	bx r1
+	blx r1
 skipHWSetup:
 	ldmfd sp!,{r4-r11,lr}
 	bx lr

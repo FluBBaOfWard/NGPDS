@@ -16,6 +16,26 @@ extern u32 batteryLevel;
 void transferTime(void);
 
 /**
+ * Saves the state of io to the destination.
+ * @param  *destination: Where to save the state.
+ * @return The size of the state.
+ */
+int ioSaveState(void *destination);
+
+/**
+ * Loads the state of io from the source.
+ * @param  *source: Where to load the state from.
+ * @return The size of the state.
+ */
+int ioLoadState(const void *source);
+
+/**
+ * Gets the state size of an io state.
+ * @return The size of the state.
+ */
+int ioGetStateSize(void);
+
+/**
  * Reads a byte from the other system. If no data is available or no
  * high-level communications have been established, then return FALSE.
  * If buffer is NULL, then no data is read, only status is returned

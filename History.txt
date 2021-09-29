@@ -2,6 +2,9 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.5.0 - 2021-09-29 (FluBBa)
+	Fixed sound mute handling.
+
 V0.4.9 - 2021-09-28 (FluBBa)
 	Better flash emulation/saving/loading.
 	Fixed save/load state.
@@ -29,7 +32,7 @@ V0.4.5 - 2021-06-28 (FluBBa)
 	Sound working.
 
 V0.4.0 - 2021-05-18 (FluBBa)
-	Started port to Nintendo DS.
+	Started port to Nintendo DS & dekitPro.
 
 V0.3.0 - 2008-10-01 (FluBBa)
 	Fixed copy protection in "Metal Slug 2" (SNK logo in VRAM).

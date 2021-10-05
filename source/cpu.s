@@ -179,13 +179,11 @@ cpu1SetIRQ:
 	bl Z80SetIRQPin
 	ldmfd sp!,{z80optbl,pc}
 ;@----------------------------------------------------------------------------
-tweakCpuSpeed:				;@ in r0=0 normal / !=0 half speed.
+setCpuSpeed:				;@ in r0=0 normal / !=0 half speed.
 	.type   tweakCpuSpeed STT_FUNC
 ;@----------------------------------------------------------------------------
-	cmp r0,#0
 ;@---Speed - 6.144MHz / 60Hz / 198 lines	;NGP TLCS-900H.
 	ldr r0,=T9_HINT_RATE				;@ 515
-	movne r0,r0,lsr#1
 	str r0,tlcs900hCyclesPerScanline
 ;@---Speed - 3.072MHz / 60Hz / 198 lines	;NGP Z80.
 	mov r0,r0,lsr#1
@@ -196,10 +194,7 @@ cpuReset:					;@ Called by loadCart/resetGame
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 
-	ldr r0,=emuSettings
-	ldr r0,[r0]
-	and r0,r0,#0x10000
-	bl tweakCpuSpeed
+	bl setCpuSpeed
 	ldr t9optbl,=tlcs900HState
 	bl tlcs900HReset
 

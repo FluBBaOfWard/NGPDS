@@ -15,9 +15,8 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.0 2021-09-29"
+#define EMUVERSION "V0.5.1 2021-10-05"
 
-#define HALF_CPU_SPEED		(1<<16)
 #define ALLOW_SPEED_HACKS	(1<<17)
 
 void hacksInit(void);
@@ -28,7 +27,6 @@ static void machineSet(void);
 static void batteryChange(void);
 static void subBatteryChange(void);
 static void speedHackSet(void);
-static void cpuHalfSet(void);
 
 static void uiMachine(void);
 static void updateGameInfo(void);
@@ -41,7 +39,7 @@ const fptr fnList2[] = {ui4, ui5, ui6, ui7};
 const fptr fnList3[] = {uiDummy};
 const fptr fnList4[] = {autoBSet, autoASet, controllerSet, swapABSet};
 const fptr fnList5[] = {/*scalingSet, flickSet,*/ gammaSet, paletteChange, fgrLayerSet, bgrLayerSet, sprLayerSet};
-const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, cpuHalfSet, selectColorBios};
+const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, selectColorBios};
 const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, debugTextSet, sleepSet};
 const fptr fnList8[] = {quickSelectGame};
 const fptr fnList9[] = {uiDummy};
@@ -159,7 +157,6 @@ static void uiMachine() {
 	drawMenuItem(" Change Batteries");
 	drawMenuItem(" Change Sub Battery");
 	drawSubItem("Cpu speed hacks: ",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
-	drawSubItem("Half cpu speed: ",autoTxt[(emuSettings&HALF_CPU_SPEED)>>16]);
 	drawMenuItem(" Bios Settings ->");
 }
 
@@ -275,13 +272,7 @@ void machineSet() {
 
 void speedHackSet() {
 	emuSettings ^= ALLOW_SPEED_HACKS;
-	emuSettings &= ~HALF_CPU_SPEED;
 	hacksInit();
-}
-void cpuHalfSet() {
-	emuSettings ^= HALF_CPU_SPEED;
-	emuSettings &= ~ALLOW_SPEED_HACKS;
-	tweakCpuSpeed(emuSettings & HALF_CPU_SPEED);
 }
 
 void batteryChange() {

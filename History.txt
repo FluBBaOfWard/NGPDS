@@ -2,6 +2,10 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.5.1 - 2021-10-05 (FluBBa)
+	Fixed timers/HInt and scrolling.
+	Fixed DAA opcode.
+
 V0.5.0 - 2021-09-29 (FluBBa)
 	Fixed sound mute handling.
 

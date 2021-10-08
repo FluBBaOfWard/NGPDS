@@ -274,7 +274,7 @@ void iBIOSHLE(int vector)
 
 		// Restore $PC after BIOS-HLE instruction
 //		tlcs_pc = pop32();
-		TestIntHDMA_External(0x18);
+		setInterruptExternal(0x18);
 		return;
 
 	// VECT_COMGETDATA (0xFF2CB4)
@@ -289,7 +289,7 @@ void iBIOSHLE(int vector)
 			t9StoreB(data, 0x50);
 
 //			tlcs_pc = pop32();
-			TestIntHDMA_External(0x19);
+			setInterruptExternal(0x19);
 			return;
 		}
 		else {
@@ -333,7 +333,7 @@ void iBIOSHLE(int vector)
 			rCodeB(0x35)--;	// RB3 = Count Left
 		}
 //		tlcs_pc = pop32();
-		TestIntHDMA_External(0x18);
+		setInterruptExternal(0x18);
 		return;
 
 	// VECT_COMGETBUFDATA (0xFF2D85)
@@ -349,7 +349,7 @@ void iBIOSHLE(int vector)
 				// Comms. Read interrupt
 				t9StoreB(data, 0x50);
 //				tlcs_pc = pop32();
-				TestIntHDMA_External(0x19);
+				setInterruptExternal(0x19);
 				return;
 			}
 			else {

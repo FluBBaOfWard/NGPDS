@@ -178,8 +178,8 @@ FF0000 -> FFFFFF	BIOS
 005F B		: ??? MAMR3?	0xFF ChipSelect3 mask?
 
 0060 W	R	: Battery status (AD), this is shifted down 6 steps by the bios before written to 6F80.
-				Bit 0    = A/D conversion data storage flag, 1=conversion result stored?
-				Bit 1-5  = 1?
+				Bit 0    = A/D conversion data storage flag, 1=conversion result stored. Cleared to 0 after read.
+				Bit 1-5  = 1.
 				Bit 6-15 = A/D conversion result.
 
 0068 B		: B0CS	0x17 Written by Bios at reset?
@@ -212,7 +212,7 @@ FF0000 -> FFFFFF	BIOS
 				Bit 5 = repeat
 				Bit 6 = busy
 				Bit 7 = end
-006E B		: Watchdog timer control?
+006E B		: Watchdog Timer Mode Control (WDMOD)?
 				Bit 0 = Pin control at STOP mode, 1 drives pin even during STOP mode?
 				Bit 1 = Internal reset on runaway?
 				Bit 2-3 = Selects HALT mode?
@@ -227,13 +227,14 @@ FF0000 -> FFFFFF	BIOS
 					10 = 2^20/fc?
 					11 = 2^22/fc?
 				Bit 7 = Watchdog enable/disable?
+
 				0xF0 Written by Bios at game bootup?
 				0x14 Written by Bios at startup.
 				0x04 Written by Bios at reset?
 				AND 0xF2, OR 0x14...
 				Bit 4 = Tested by vector 0x08 IRQ.
 
-006F B		: Watch Dog Timer.
+006F B		: Watch Dog Timer (WDCR).
 				Requires 0x4E to be written every 100ms otherwise the NGPC will reset.
 				0xB1   = Disable code.
 				0x4E   = Clear code.

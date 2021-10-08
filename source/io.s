@@ -281,7 +281,7 @@ checkForAlarm:
 	ldrbeq r0,[r2,#0x93]		;@ RTC Days
 	ldrbeq r1,[r2,#0x98]		;@ ALARM Days
 	moveq r0,#0x0A
-	beq TestIntHDMA_External
+	beq setInterrupt
 
 	bx lr
 
@@ -350,9 +350,10 @@ ADStart:
 	bxeq lr
 	ldr r0,batteryLevel
 	ldr r1,=systemMemory
+	orr r0,r0,#0x3F				;@ bit 0=ready, bit 1-5=1.
 	strh r0,[r1,#0x60]
 	mov r0,#0x1C
-	b setInterruptNoTest
+	b setInterrupt
 
 ;@----------------------------------------------------------------------------
 cpuSpeedW:

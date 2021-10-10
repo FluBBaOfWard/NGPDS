@@ -1,7 +1,6 @@
 NGPDS Todo
 
-	Emulate second flash chip!
-	Use CLZ for memory mapping. 
+	Use CLZ for memory mapping.
 	Fix cpu stuff.
 	Connect NDS battery level to NGP battery level?
 	Timers? http://forum.fobby.net/index.php?t=msg&th=796&start=0&
@@ -9,6 +8,7 @@ NGPDS Todo
 	Add another jump table for reg opcodes?
 	Optimize dst opcodes, "and r12,r0,#0x07" in fetch.
 	Save settings for Swap A-B.
+	Emulate second flash chip!
 
 	Add SWI & Interrupt to BiosHLE.
 	Rewrite BiosHLE to asm?

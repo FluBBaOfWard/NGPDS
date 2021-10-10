@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.1 2021-10-05"
+#define EMUVERSION "V0.5.1 2021-10-10"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 

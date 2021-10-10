@@ -4,8 +4,7 @@ NGPDS Todo
 	Use CLZ for memory mapping. 
 	Fix cpu stuff.
 	Connect NDS battery level to NGP battery level?
-	Timers?
-		http://forum.fobby.net/index.php?t=msg&th=796&start=0&
+	Timers? http://forum.fobby.net/index.php?t=msg&th=796&start=0&
 	Push instructions might write to 32bit address.
 	Add another jump table for reg opcodes?
 	Optimize dst opcodes, "and r12,r0,#0x07" in fetch.

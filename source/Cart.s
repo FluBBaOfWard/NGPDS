@@ -37,6 +37,7 @@
 
 ROM_Space:
 //	.incbin "ngproms/Bust-A-Move Pocket (U).ngc"
+//	.incbin "ngproms/Cool Boarders Pocket (JE) (M2).ngc"
 //	.incbin "ngproms/Dark Arms - Beast Buster 1999 (JUE) (M2).ngc"
 //	.incbin "ngproms/Evolution - Eternal Dungeons (E).ngc"
 //	.incbin "ngproms/Fantastic Night Dreams Cotton (E).ngc"

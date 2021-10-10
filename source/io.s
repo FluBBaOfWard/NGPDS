@@ -318,8 +318,8 @@ t9StoreB_Low:
 	beq T6W28_R_W
 	cmp r1,#0xA1				;@ T6W28, Left
 	beq T6W28_L_W
-;@	cmp r1,#0xA2				;@ T6W28 DAC, Left
-;@	beq T6W28_DAC_L_W
+	cmp r1,#0xA2				;@ T6W28 DAC, Left
+	beq T6W28_DAC_L_W
 ;@	cmp r1,#0xA3				;@ T6W28 DAC, Right
 ;@	beq T6W28_DAC_R_W
 

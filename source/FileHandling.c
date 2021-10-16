@@ -467,7 +467,7 @@ bool loadGame(const char *gameName) {
 }
 
 void selectGame() {
-	pauseEmulation = 1;
+	pauseEmulation = true;
 	setSelectedMenu(9);
 	const char *gameName = browseForFileType(FILEEXTENSIONS".zip");
 	if ( loadGame(gameName) ) {
@@ -530,7 +530,7 @@ static bool selectBios(char *dest, const char *fileTypes) {
 }
 
 void selectColorBios() {
-	pauseEmulation = 1;
+	pauseEmulation = true;
 	if ( selectBios(cfg.biosPath, ".ngp.ngc.zip") ) {
 		loadColorBIOS();
 		machineInit();

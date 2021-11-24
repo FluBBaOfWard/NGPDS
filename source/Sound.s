@@ -35,8 +35,7 @@ soundInit:
 soundReset:
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
-	mov r0,#0
-	ldr snptr,=k2Audio_0
+	ldr r0,=k2Audio_0
 	bl sn76496Reset			;@ sound
 	ldmfd sp!,{lr}
 	bx lr
@@ -71,7 +70,7 @@ VblSound2:					;@ r0=length, r1=pointer
 //	cmp r2,#0
 //	bne playSamples
 
-	ldr snptr,=k2Audio_0
+	ldr r2,=k2Audio_0
 	mov r0,r0,lsl#2
 	bl sn76496Mixer
 	ldmfd sp!,{r0,r1,lr}
@@ -131,18 +130,18 @@ T6W28_DAC_L_W:
 ;@----------------------------------------------------------------------------
 T6W28_L_W:				;@ Sound left write
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r3,snptr,lr}
-	ldr snptr,=k2Audio_0
+	stmfd sp!,{r3,lr}
+	ldr r1,=k2Audio_0
 	bl sn76496L_W
-	ldmfd sp!,{r3,snptr,lr}
+	ldmfd sp!,{r3,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 T6W28_R_W:				;@ Sound right write
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r3,snptr,lr}
-	ldr snptr,=k2Audio_0
+	stmfd sp!,{r3,lr}
+	ldr r1,=k2Audio_0
 	bl sn76496W
-	ldmfd sp!,{r3,snptr,lr}
+	ldmfd sp!,{r3,lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------

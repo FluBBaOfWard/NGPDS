@@ -1,5 +1,6 @@
 NGPDS Todo
 
+	Add selection of 2 BIOS's.
 	Use CLZ for memory mapping.
 	Fix cpu stuff.
 	Connect NDS battery level to NGP battery level?

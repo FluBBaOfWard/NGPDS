@@ -5,8 +5,6 @@
 #include "Gfx.h"
 #include "Sound.h"
 #include "io.h"
-#include "K2Audio/SN76496.h"
-#include "K2GE/K2GE.h"
 #include "TLCS900H/TLCS900H.h"
 #include "ARMZ80/ARMZ80.h"
 

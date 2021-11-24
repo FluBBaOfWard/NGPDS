@@ -39,7 +39,7 @@ int initSettings() {
 	cfg.birthMonth = PersonalData->birthMonth;
 	cfg.birthYear = 99;
 	cfg.language = (PersonalData->language == 0) ? 0 : 1;
-	int col = 0;
+	int col = 0;		// Black n White
 	switch (PersonalData->theme & 0xF) {
 		case 1:
 		case 4:
@@ -170,35 +170,6 @@ void saveSettings() {
 	}
 }
 
-void loadNVRAM_() {
-	void *space;
-	FILE *file;
-	char flashName[FILENAMEMAXLENGTH];
-	NgpFlashFile flashHdr;
-
-	if (findFolder(folderName)) {
-		return;
-	}
-	strlcpy(flashName, currentFilename, sizeof(flashName));
-	strlcat(flashName, ".fla", sizeof(flashName));
-	if ( (file = fopen(flashName, "r")) ) {
-		fread(&flashHdr, 1, sizeof(flashHdr), file);
-		if (flashHdr.magic == NGPF_MAGIC) {
-			memcpy(getFlashLOBlocksAddress(), &flashHdr.blocksLOInfo, 35);
-			memcpy(getFlashHIBlocksAddress(), &flashHdr.blocksHIInfo, 35);
-			space = romSpacePtr + flashHdr.addressLO;
-			fread(space, 1, flashHdr.sizeLO, file);
-			if ( flashHdr.sizeHI != 0) {
-				fread(space, 1, flashHdr.sizeHI, file);
-			}
-			infoOutput("Loaded flash.");
-		}
-		fclose(file);
-	}
-	return;
-}
-
-//void loadSaveGameFile()
 void loadNVRAM() {
 	// Find the .fla file and read it in
 	FILE *ngfFile;
@@ -370,6 +341,8 @@ void loadState(void) {
 	int stateSize = getStateSize();
 	if ( (file = fopen(stateName, "r")) ) {
 		if ( (statePtr = malloc(stateSize)) ) {
+			cls(0);
+			drawText("        Loading state...", 11, 0);
 			fread(statePtr, 1, stateSize, file);
 			unpackState(statePtr);
 			free(statePtr);
@@ -395,6 +368,8 @@ void saveState(void) {
 	int stateSize = getStateSize();
 	if ( (file = fopen(stateName, "w")) ) {
 		if ( (statePtr = malloc(stateSize)) ) {
+			cls(0);
+			drawText("        Saving state...", 11, 0);
 			packState(statePtr);
 			fwrite(statePtr, 1, stateSize, file);
 			free(statePtr);

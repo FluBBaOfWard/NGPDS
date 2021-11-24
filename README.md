@@ -44,8 +44,6 @@ To select between the tabs use R & L or the touchscreen.
 	Machine Settings:
 		Language: Select between Japanese and English.
 		Machine: Select the emulated machine.
-		Half cpu speed: This halves the emulated cpu speed.
-			Can make games faster.
 		Change Batteries: Change to new main batteries (AA/LR6).
 		Change Sub Battery: Change to a new sub battery (CR2032).
 		Cpu speed hacks: Allow speed hacks.

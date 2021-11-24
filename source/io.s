@@ -17,8 +17,6 @@
 
 	.global t9LoadB_Low
 	.global t9StoreB_Low
-	.global serialinterrupt
-	.global resetSIO
 	.global updateSlowIO
 	.global z80ReadLatch
 	.global g_subBatteryLevel

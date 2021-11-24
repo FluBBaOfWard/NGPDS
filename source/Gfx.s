@@ -48,16 +48,11 @@ gfxInit:					;@ Called from machineInit
 	mov r1,#0x200+SCREEN_HEIGHT
 	mov r2,#0x100
 	bl memset_
-	adr r0,scaleParms
-	bl setupSpriteScaling
 
 	bl k2GEInit
 
 	ldmfd sp!,{pc}
 
-;@----------------------------------------------------------------------------
-scaleParms:					;@  NH     FH     NV     FV
-	.long OAM_BUFFER1,0x0000,0x0100,0xff01,0x0120,0xfee1
 ;@----------------------------------------------------------------------------
 gfxReset:					;@ Called with CPU reset
 ;@----------------------------------------------------------------------------
@@ -72,9 +67,11 @@ gfxReset:					;@ Called with CPU reset
 	bl memclr_					;@ Clear GFX regs
 
 	mov r1,#REG_BASE
-	ldr r0,=0x30D0				;@ start-end
+	;@ Horizontal start-end
+	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<16)+(SCREEN_WIDTH+GAME_WIDTH)/2
 	strh r0,[r1,#REG_WIN0H]
-	ldr r0,=0x1400+(SCREEN_HEIGHT+GAME_HEIGHT)/2	;@ start-end
+	;@ Vertical start-end
+	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<16)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
 	strh r0,[r1,#REG_WIN0V]
 
 	mov r0,#0x003F				;@ WinIN0, Everything enabled inside Win0
@@ -354,8 +351,8 @@ vblIrqHandler:
 	ldrb r0,[geptr,#kgeBGPrio]
 	tst r0,#0x80
 	ldr r0,GFX_BG0CNT
-	orrne r0,r0,#0x00001
-	orreq r0,r0,#0x10000
+	orrne r0,r0,#0x00001		;@ BG 0 low prio
+	orreq r0,r0,#0x10000		;@ BG 1 low prio
 	str r0,[r6,#REG_BG0CNT]
 
 	ldr r0,[geptr,#windowData]

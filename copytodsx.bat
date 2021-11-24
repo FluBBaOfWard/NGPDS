@@ -1,1 +1,1 @@
-copy GreenBeretDS.nds h:\apps
+copy NGPDS.nds h:\apps

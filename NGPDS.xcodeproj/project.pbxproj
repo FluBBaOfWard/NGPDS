@@ -25,6 +25,7 @@
 		9C3D5AE025E3F2ED00E8CD56 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		9C3D5AE125E3F2ED00E8CD56 /* History.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = History.txt; sourceTree = "<group>"; };
 		9C3D5AE225E3F2ED00E8CD56 /* ARMZ80.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = ARMZ80.s; sourceTree = "<group>"; };
+		9C443D7A278AE4720029EE11 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C4C21C226E12781007D0280 /* SpeedHacks.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = SpeedHacks.s; sourceTree = "<group>"; };
 		9C5081E825D314C900A8E1BA /* ARMZ80_todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ARMZ80_todo.txt; sourceTree = "<group>"; };
 		9C50820525D45A9A00A8E1BA /* Cart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cart.h; sourceTree = "<group>"; };
@@ -226,7 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				9C7BB94925FCD73C00EA9C9C /* graphics */,
-				A4D0E10C208930D100401463 /* unzip */,
+				A4D0E10C208930D100401463 /* Unzip */,
 				9C8F33EE248ACA2E00996E5A /* nds_asm.h */,
 				9C1FFFA72684A277005851ED /* EmuSettings.h */,
 				A47F092B20863AF5004E1DA6 /* EmuMenu.h */,
@@ -285,15 +286,16 @@
 			path = source;
 			sourceTree = "<group>";
 		};
-		A4D0E10C208930D100401463 /* unzip */ = {
+		A4D0E10C208930D100401463 /* Unzip */ = {
 			isa = PBXGroup;
 			children = (
+				9C443D7A278AE4720029EE11 /* README.md */,
 				A4D0E10E208930D100401463 /* puff.h */,
 				A4D0E110208930D100401463 /* puff.c */,
 				A4D0E10F208930D100401463 /* unzipnds.h */,
 				A4D0E10D208930D100401463 /* unzipnds.c */,
 			);
-			path = unzip;
+			path = Unzip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

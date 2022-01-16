@@ -5,15 +5,13 @@
 extern "C" {
 #endif
 
-extern u32 g_romSize;
+extern u32 gRomSize;
 extern u32 maxRomSize;
 extern u32 emuFlags;
-extern u8 g_cartFlags;
-extern u8 g_configSet;
-extern u8 g_config;
-extern u8 g_machine;
-extern u8 g_lang;
-extern u8 g_paletteBank;
+extern u8 gConfig;
+extern u8 gMachine;
+extern u8 gLang;
+extern u8 gPaletteBank;
 
 extern u8 ngpRAM[0x4000];
 extern u8 biosSpace[0x10000];

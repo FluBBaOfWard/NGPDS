@@ -68,7 +68,7 @@ runStart:
 ;@----------------------------------------------------------------------------
 ngpFrameLoop:
 ;@----------------------------------------------------------------------------
-	ldrh r0,z80enabled
+	ldrh r0,z80Enabled
 	ands r0,r0,r0,lsr#8
 	beq NoZ80Now
 
@@ -119,8 +119,8 @@ waitMaskIn:			.byte 0
 waitCountOut:		.byte 0
 waitMaskOut:		.byte 0
 
-z80enabled:			.byte 0
-g_z80onoff:			.byte 1
+z80Enabled:			.byte 0
+gZ80OnOff:			.byte 1
 					.byte 0,0
 
 ;@----------------------------------------------------------------------------
@@ -152,7 +152,7 @@ Z80_SetEnable:				;@ Address 0xB9 of the TLCS-900H, r0=enabled
 	cmpne r0,#0xAA				;@ Off
 	bxne lr
 	and r0,r0,#1
-	strb r0,z80enabled
+	strb r0,z80Enabled
 	eor r0,r0,#1
 	stmfd sp!,{z80optbl,lr}
 	ldr z80optbl,=Z80OpTable
@@ -162,7 +162,7 @@ Z80_SetEnable:				;@ Address 0xB9 of the TLCS-900H, r0=enabled
 ;@----------------------------------------------------------------------------
 Z80_nmi_do:					;@ Address 0xBA of the TLCS-900H
 ;@----------------------------------------------------------------------------
-	ldrb r1,z80enabled
+	ldrb r1,z80Enabled
 	cmp r1,#0
 	bxeq lr
 	stmfd sp!,{z80optbl,lr}

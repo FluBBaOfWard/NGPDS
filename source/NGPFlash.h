@@ -8,7 +8,6 @@ extern "C" {
 #define MAX_BLOCKS (35)
 
 extern u32 flashSize;
-extern u8 g_paletteBank;
 
 /**
  * Check if a flash block is modifed compared to original file.

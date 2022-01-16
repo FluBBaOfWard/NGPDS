@@ -2,7 +2,7 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.2 - 2021-11-24 (FluBBa)
+V0.5.2 - 2022-01-16 (FluBBa)
 
 V0.5.1 - 2021-10-10 (FluBBa)
 	Fixed timers, interrupts and scrolling.

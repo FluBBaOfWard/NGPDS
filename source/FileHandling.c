@@ -64,7 +64,7 @@ int initSettings() {
 			break;
 	}
 	cfg.palette = col;
-	g_paletteBank = col;
+	gPaletteBank = col;
 	return 0;
 }
 
@@ -102,13 +102,13 @@ bool updateSettingsFromNGP() {
 	val = t9LoadB(0x6F87) & 1;
 	if (cfg.language != val) {
 		cfg.language = val;
-		g_lang = val;
+		gLang = val;
 		changed = true;
 	}
 	val = t9LoadB(0x6F94) & 7;
 	if (cfg.palette != val) {
 		cfg.palette = val;
-		g_paletteBank = val;
+		gPaletteBank = val;
 		changed = true;
 	}
 	settingsChanged |= changed;
@@ -136,7 +136,7 @@ int loadSettings() {
 		return 1;
 	}
 
-	g_gammaValue = cfg.gammaValue;
+	gGammaValue = cfg.gammaValue;
 	emuSettings  = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
 	sleepTime    = cfg.sleepTime;
 	joyCfg       = (joyCfg & ~0x400)|((cfg.controller & 1)<<10);
@@ -150,7 +150,7 @@ void saveSettings() {
 	FILE *file;
 
 	strcpy(cfg.magic,"cfg");
-	cfg.gammaValue  = g_gammaValue;
+	cfg.gammaValue  = gGammaValue;
 	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;		// Clear speed setting.
 	cfg.sleepTime   = sleepTime;
 	cfg.controller  = (joyCfg>>10)&1;
@@ -421,8 +421,8 @@ bool loadGame(const char *gameName) {
 			turnPowerOff();
 		}
 		drawText("     Please wait, loading.", 11, 0);
-		g_romSize = loadROM(romSpacePtr, gameName, maxRomSize);
-		if ( g_romSize ) {
+		gRomSize = loadROM(romSpacePtr, gameName, maxRomSize);
+		if ( gRomSize ) {
 			setEmuSpeed(0);
 			loadCart(emuFlags);
 			gameInserted = true;
@@ -452,8 +452,8 @@ void selectGame() {
 
 //---------------------------------------------------------------------------------
 void ejectCart() {
-	g_romSize = 0x200000;
-	memset(romSpacePtr, -1, g_romSize);
+	gRomSize = 0x200000;
+	memset(romSpacePtr, -1, gRomSize);
 	gameInserted = false;
 }
 

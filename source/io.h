@@ -7,7 +7,7 @@ extern "C" {
 
 extern u32 joyCfg;
 extern u32 EMUinput;
-extern u32 g_subBatteryLevel;
+extern u32 gSubBatteryLevel;
 extern u32 batteryLevel;
 
 /**

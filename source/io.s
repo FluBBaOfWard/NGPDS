@@ -19,7 +19,7 @@
 	.global t9StoreB_Low
 	.global updateSlowIO
 	.global z80ReadLatch
-	.global g_subBatteryLevel
+	.global gSubBatteryLevel
 	.global batteryLevel
 	.global commByte
 	.global system_comms_read
@@ -145,7 +145,7 @@ refreshEMUjoypads:			;@ Call every frame
 	tst r4,#0x04				;@ NDS Select
 	tsteq r4,#0x800				;@ NDS Y
 	bicne r0,r0,#0x01			;@ NGP Power
-	ldr r1,=g_subBatteryLevel
+	ldr r1,=gSubBatteryLevel
 	ldr r1,[r1]
 	tst r1,#0x2000000			;@ highest bit of subbattery level
 	biceq r0,r0,#0x02
@@ -207,7 +207,7 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	movmi r0,#1
 	str r0,batteryLevel
 
-	ldr r1,=g_subBatteryLevel
+	ldr r1,=gSubBatteryLevel
 	ldr r0,[r1]
 	subs r0,r0,#0x00000100
 	movmi r0,#0x00001000
@@ -449,7 +449,7 @@ Z80Out:
 	mov r0,#0
 	b Z80SetIRQPin
 ;@----------------------------------------------------------------------------
-g_subBatteryLevel:
+gSubBatteryLevel:
 	.long 0x3000000				;@ subBatteryLevel
 batteryLevel:
 	.long 0xFFFF				;@ Max = 0xFFFF (0x3FF)

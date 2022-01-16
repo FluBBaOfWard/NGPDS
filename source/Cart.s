@@ -21,12 +21,12 @@
 	.global g_BIOSBASE_COLOR
 	.global g_BIOSBASE_BW
 	.global ngpRAM
-	.global g_romSize
+	.global gRomSize
 	.global maxRomSize
-	.global g_config
-	.global g_machine
-	.global g_lang
-	.global g_paletteBank
+	.global gConfig
+	.global gMachine
+	.global gLang
+	.global gPaletteBank
 
 
 	.syntax unified
@@ -106,7 +106,7 @@ loadCart: 		;@ Called from C:  r0=emuflags
 	stmfd sp!,{r4-r11,lr}
 	str r0,emuFlags
 
-	ldr r0,g_romSize
+	ldr r0,gRomSize
 	ldr r1,romSpacePtr
 	bl ngpFlashReset
 	bl hacksInit
@@ -181,13 +181,13 @@ emuFlags:
 	.byte 0,0					;@ (sprite follow val)
 cartFlags:
 	.byte 0 					;@ cartflags
-g_config:
+gConfig:
 	.byte 0						;@ Config, bit 7=BIOS on/off
-g_machine:
+gMachine:
 	.byte 0						;@ machine
-g_lang:
+gLang:
 	.byte 1						;@ language
-g_paletteBank:
+gPaletteBank:
 	.byte 0						;@ palettebank
 isBiosLoaded:
 	.byte 0
@@ -200,7 +200,7 @@ g_BIOSBASE_COLOR:
 	.long 0
 g_BIOSBASE_BW:
 	.long 0
-g_romSize:
+gRomSize:
 romSize:
 	.long 0
 maxRomSize:

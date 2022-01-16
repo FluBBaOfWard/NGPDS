@@ -26,7 +26,7 @@ TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source	\
 				source/Shared \
-				source/Shared/unzip \
+				source/Shared/Unzip \
 				source/TLCS900H \
 				source/ARMZ80 \
 				source/K2GE \

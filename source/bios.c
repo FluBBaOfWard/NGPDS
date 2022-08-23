@@ -17,7 +17,7 @@
 #include "bios.h"
 #include "K2GE/K2GE.h"
 #include "Shared/EmuMenu.h"
-#include "Filehandling.h"
+#include "FileHandling.h"
 #include "TLCS900H/TLCS900H.h"
 
 //=============================================================================

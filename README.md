@@ -29,6 +29,7 @@ To select between the tabs use R & L or the touchscreen.
 	Save Flash RAM: Save flash ram for the currently running game.
 	Save Settings: Save the current settings.
 	Reset Game: Reset the currently running game.
+	Quit Emulator: (If your card supports it.)
 
 ### Options:
 	Controller:

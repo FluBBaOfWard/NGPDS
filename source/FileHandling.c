@@ -11,7 +11,7 @@
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
 #include "Shared/FileHelper.h"
-#include "Shared/unzip/unzipnds.h"
+#include "Shared/Unzip/unzipnds.h"
 #include "Main.h"
 #include "Gui.h"
 #include "Cart.h"
@@ -247,10 +247,10 @@ void loadNVRAM() {
 //void writeSaveGameFile() {
 void saveNVRAM() {
 	// Find the dirty blocks and write them to the .fla file
+	FILE *ngfFile;
 	int totalBlocks = MAX_BLOCKS;
 	int i;
 	int chip;
-	FILE *ngfFile;
 	char flashName[FILENAMEMAXLENGTH];
 
 	int bytes;
@@ -329,8 +329,8 @@ void saveNVRAM() {
 }
 
 void loadState(void) {
-	u32 *statePtr;
 	FILE *file;
+	u32 *statePtr;
 	char stateName[FILENAMEMAXLENGTH];
 
 	if (findFolder(folderName)) {
@@ -356,8 +356,8 @@ void loadState(void) {
 }
 
 void saveState(void) {
-	u32 *statePtr;
 	FILE *file;
+	u32 *statePtr;
 	char stateName[FILENAMEMAXLENGTH];
 
 	if (findFolder(folderName)) {

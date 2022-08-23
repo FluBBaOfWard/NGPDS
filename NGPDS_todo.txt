@@ -41,6 +41,7 @@ Misc:
 Games Non Working:
 
 Games With Glitches:
+	Rockman battles: No sound.
 	Super Real Mahjong - Premium Collection: Graphic bugs on intro.
 	Memories of - Pure: Glitches everywhere.
 	Sonic first boss disapears.

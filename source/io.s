@@ -278,6 +278,7 @@ checkForAlarm:
 	cmpeq r0,r1
 	ldrbeq r0,[r2,#0x93]		;@ RTC Days
 	ldrbeq r1,[r2,#0x98]		;@ ALARM Days
+	cmpeq r0,r1
 	moveq r0,#0x0A
 	beq setInterrupt
 

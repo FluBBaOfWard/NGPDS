@@ -89,7 +89,6 @@
 		A47F092B20863AF5004E1DA6 /* EmuMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmuMenu.h; sourceTree = "<group>"; };
 		A47F092C20863AF5004E1DA6 /* EmuMenu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = EmuMenu.c; sourceTree = "<group>"; };
 		A49D34381757E54900BD9B4B /* cpu.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = cpu.s; sourceTree = "<group>"; };
-		A49D343A1757E54900BD9B4B /* Equates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equates.h; sourceTree = "<group>"; };
 		A49D34401757E54900BD9B4B /* io.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = io.s; sourceTree = "<group>"; };
 		A4AA02141B04077F0043E4D4 /* History.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = History.txt; sourceTree = "<group>"; };
 		A4D0E10A208930D100401463 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
@@ -143,8 +142,8 @@
 		9C367C952668B7CA0017B4F6 /* K2Audio */ = {
 			isa = PBXGroup;
 			children = (
-				9CBC0C8C26DD79270039D17E /* README.md */,
 				9C367C9A2668B7CA0017B4F6 /* SN76496_todo.txt */,
+				9CBC0C8C26DD79270039D17E /* README.md */,
 				9C367C9C2668B7CA0017B4F6 /* History.txt */,
 				9C367C962668B7CA0017B4F6 /* Version.h */,
 				9C367C982668B7CA0017B4F6 /* SN76496.h */,
@@ -157,8 +156,8 @@
 		9C5081E425D314C900A8E1BA /* ARMZ80 */ = {
 			isa = PBXGroup;
 			children = (
-				9CBC0C8F26DD7D0F0039D17E /* README.md */,
 				9C5081E825D314C900A8E1BA /* ARMZ80_todo.txt */,
+				9CBC0C8F26DD7D0F0039D17E /* README.md */,
 				9C3D5AE125E3F2ED00E8CD56 /* History.txt */,
 				9C3D5AE025E3F2ED00E8CD56 /* Version.h */,
 				9C3D5ADD25E3F2ED00E8CD56 /* ARMZ80.h */,
@@ -172,8 +171,8 @@
 		9C7151232654F0650084BE99 /* TLCS900H */ = {
 			isa = PBXGroup;
 			children = (
-				9CC0F93A26D6C4740035478F /* README.md */,
 				9C7151382654F0E90084BE99 /* TLCS900H_todo.txt */,
+				9CC0F93A26D6C4740035478F /* README.md */,
 				9C7151392654F0E90084BE99 /* History.txt */,
 				9C71513A2654F0E90084BE99 /* Version.h */,
 				9C71512C2654F0650084BE99 /* TLCS900H.h */,
@@ -195,8 +194,8 @@
 		9C71513B26550C1E0084BE99 /* K2GE */ = {
 			isa = PBXGroup;
 			children = (
-				9CBC0C8D26DD7BD50039D17E /* README.md */,
 				9C71513D26550C1E0084BE99 /* K2GE_todo.txt */,
+				9CBC0C8D26DD7BD50039D17E /* README.md */,
 				9C71513E26550C1E0084BE99 /* History.txt */,
 				9C71513C26550C1E0084BE99 /* Version.h */,
 				9C71514026550C1E0084BE99 /* K2GE.h */,
@@ -251,11 +250,12 @@
 				9C367C952668B7CA0017B4F6 /* K2Audio */,
 				A47F092A20863AF5004E1DA6 /* Shared */,
 				9CC013FC2668FDD9005714F7 /* Emubase.h */,
-				A49D343A1757E54900BD9B4B /* Equates.h */,
 				9C50820725D45A9A00A8E1BA /* Main.h */,
 				9C50820C25D45A9B00A8E1BA /* Main.c */,
 				9C50821025D45A9B00A8E1BA /* Gui.h */,
 				9C50820D25D45A9B00A8E1BA /* Gui.c */,
+				9C50820B25D45A9B00A8E1BA /* FileHandling.h */,
+				9C50820A25D45A9B00A8E1BA /* FileHandling.c */,
 				9C7BB95D25FFF08400EA9C9C /* NeoGeoPocket.h */,
 				9C7BB95C25FFF08400EA9C9C /* NeoGeoPocket.c */,
 				9C715145265645DD0084BE99 /* NGPHeader.h */,
@@ -278,8 +278,6 @@
 				9C50820825D45A9A00A8E1BA /* Gfx.s */,
 				9C715146265661CE0084BE99 /* Memory.h */,
 				9C50820E25D45A9B00A8E1BA /* Memory.s */,
-				9C50820B25D45A9B00A8E1BA /* FileHandling.h */,
-				9C50820A25D45A9B00A8E1BA /* FileHandling.c */,
 				9C4C21C226E12781007D0280 /* SpeedHacks.s */,
 				9CBEE11526FBB7F30095347A /* GameInfo.s */,
 			);
@@ -356,7 +354,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVKITARM = $DEVKITPRO/devkitarm;
-				DEVKITPRO = /opt/devkitpro_old;
+				DEVKITPRO = /opt/devkitpro;
 				PRODUCT_NAME = NGPDS;
 			};
 			name = Debug;

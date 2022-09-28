@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.2 2022-08-23"
+#define EMUVERSION "V0.5.2 2022-09-28"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -29,44 +29,47 @@ static void subBatteryChange(void);
 static void speedHackSet(void);
 
 static void uiMachine(void);
+static void uiDebug(void);
 static void updateGameInfo(void);
 
 const fptr fnMain[] = {nullUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI};
 
 const fptr fnList0[] = {uiDummy};
-const fptr fnList1[] = {selectGame, loadState, saveState, loadNVRAM, saveNVRAM, saveSettings, ejectGame, resetGame, ui8};
-const fptr fnList2[] = {ui4, ui5, ui6, ui7};
+const fptr fnList1[] = {selectGame, loadState, saveState, loadNVRAM, saveNVRAM, saveSettings, ejectGame, resetGame, ui9};
+const fptr fnList2[] = {ui4, ui5, ui6, ui7, ui8};
 const fptr fnList3[] = {uiDummy};
 const fptr fnList4[] = {autoBSet, autoASet, controllerSet, swapABSet};
-const fptr fnList5[] = {/*scalingSet, flickSet,*/ gammaSet, paletteChange, fgrLayerSet, bgrLayerSet, sprLayerSet};
+const fptr fnList5[] = {gammaSet, paletteChange};
 const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, selectColorBios};
-const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, debugTextSet, sleepSet};
-const fptr fnList8[] = {exitEmulator, backOutOfMenu};
-const fptr fnList9[] = {uiDummy};
-const fptr *const fnListX[] = {fnList0, fnList1, fnList2, fnList3, fnList4, fnList5, fnList6, fnList7, fnList8, fnList9};
-u8 menuXItems[] = {ARRSIZE(fnList0), ARRSIZE(fnList1), ARRSIZE(fnList2), ARRSIZE(fnList3), ARRSIZE(fnList4), ARRSIZE(fnList5), ARRSIZE(fnList6), ARRSIZE(fnList7), ARRSIZE(fnList8), ARRSIZE(fnList9)};
-const fptr drawUIX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDummy, uiDummy};
-const u8 menuXBack[] = {0,0,0,0,2,2,2,2,1,1};
+const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, sleepSet};
+const fptr fnList8[] = {debugTextSet, fgrLayerSet, bgrLayerSet, sprLayerSet, stepFrame};
+const fptr fnList9[] = {exitEmulator, backOutOfMenu};
+const fptr fnList10[] = {uiDummy};
+const fptr *const fnListX[] = {fnList0, fnList1, fnList2, fnList3, fnList4, fnList5, fnList6, fnList7, fnList8, fnList9, fnList10};
+u8 menuXItems[] = {ARRSIZE(fnList0), ARRSIZE(fnList1), ARRSIZE(fnList2), ARRSIZE(fnList3), ARRSIZE(fnList4), ARRSIZE(fnList5), ARRSIZE(fnList6), ARRSIZE(fnList7), ARRSIZE(fnList8), ARRSIZE(fnList9), ARRSIZE(fnList10)};
+const fptr drawUIX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDebug, uiDummy, uiDummy};
+const u8 menuXBack[] = {0,0,0,0,2,2,2,2,2,1,1};
 
 u8 gGammaValue = 0;
 char gameInfoString[32];
 
 const char *const autoTxt[]  = {"Off", "On", "With R"};
 const char *const speedTxt[] = {"Normal", "200%", "Max", "50%"};
-const char *const sleepTxt[] = {"5min", "10min", "30min", "Off"};
 const char *const brighTxt[] = {"I", "II", "III", "IIII", "IIIII"};
+const char *const sleepTxt[] = {"5min", "10min", "30min", "Off"};
 const char *const ctrlTxt[]  = {"1P", "2P"};
 const char *const dispTxt[]  = {"Unscaled", "Scaled"};
 const char *const flickTxt[] = {"No Flicker", "Flicker"};
+
+const char *const machTxt[]  = {"Auto", "NeoGeo Pocket", "NeoGeo Pocket Color"};
 const char *const bordTxt[]  = {"Black", "Border Color", "None"};
 const char *const palTxt[]   = {"Black & White", "Red", "Green", "Blue", "Classic"};
 const char *const langTxt[]  = {"Japanese", "English"};
-const char *const machTxt[]  = {"NeoGeo Pocket Color", "NeoGeo Pocket"};
 
-
+/// This is called at the start of the emulator
 void setupGUI() {
 	emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS | AUTOSLEEP_OFF;
-	keysSetRepeat(25, 4);	// delay, repeat.
+	keysSetRepeat(25, 4);	// Delay, repeat.
 	menuXItems[1] = ARRSIZE(fnList1) - (enableExit?0:1);
 	openMenu();
 }
@@ -114,6 +117,7 @@ void uiOptions() {
 	drawMenuItem("Display");
 	drawMenuItem("Machine");
 	drawMenuItem("Settings");
+	drawMenuItem("Debug");
 }
 
 void uiAbout() {
@@ -124,8 +128,9 @@ void uiAbout() {
 	drawText(" A:        NGP B button", 5, 0);
 	drawText(" Y/Select: Power button", 6, 0);
 	drawText(" X/Start:  Start button", 7, 0);
+	drawText(" DPad:     Joystick", 8, 0);
 
-	drawText(gameInfoString, 9, 0);
+	drawText(gameInfoString, 10, 0);
 
 	drawText(" NGPDS        " EMUVERSION, 19, 0);
 	drawText(" ARMZ80       " ARMZ80VERSION, 20, 0);
@@ -146,19 +151,16 @@ void uiDisplay() {
 	setupSubMenu("Display Settings");
 	drawSubItem("Gamma: ", brighTxt[gGammaValue]);
 	drawSubItem("B&W Palette: ", palTxt[gPaletteBank]);
-	drawSubItem("Disable Foreground: ", autoTxt[gGfxMask&1]);
-	drawSubItem("Disable Background: ", autoTxt[(gGfxMask>>1)&1]);
-	drawSubItem("Disable Sprites: ", autoTxt[(gGfxMask>>4)&1]);
 }
 
 static void uiMachine() {
 	setupSubMenu("Machine Settings");
 	drawSubItem("Language: ",langTxt[gLang]);
-	drawSubItem("Machine: ",machTxt[gMachine]);
-	drawMenuItem(" Change Batteries");
-	drawMenuItem(" Change Sub Battery");
+	drawSubItem("Machine: ",machTxt[gMachineSet]);
+	drawSubItem("Change Batteries", NULL);
+	drawSubItem("Change Sub Battery", NULL);
 	drawSubItem("Cpu speed hacks: ",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
-	drawMenuItem(" Bios Settings ->");
+	drawSubItem("Bios Settings ->", NULL);
 }
 
 void uiSettings() {
@@ -170,8 +172,16 @@ void uiSettings() {
 	drawSubItem("Autopause Game: ", autoTxt[emuSettings&1]);
 	drawSubItem("Powersave 2nd Screen: ",autoTxt[(emuSettings>>1)&1]);
 	drawSubItem("Emulator on Bottom: ", autoTxt[(emuSettings>>8)&1]);
-	drawSubItem("Debug Output: ", autoTxt[gDebugSet&1]);
 	drawSubItem("Autosleep: ", sleepTxt[(emuSettings>>4)&3]);
+}
+
+void uiDebug() {
+	setupSubMenu("Debug");
+	drawSubItem("Debug Output: ", autoTxt[gDebugSet&1]);
+	drawSubItem("Disable Foreground: ", autoTxt[gGfxMask&1]);
+	drawSubItem("Disable Background: ", autoTxt[(gGfxMask>>1)&1]);
+	drawSubItem("Disable Sprites: ", autoTxt[(gGfxMask>>4)&1]);
+	drawSubItem("Step Frame ", NULL);
 }
 
 
@@ -268,7 +278,10 @@ void languageSet() {
 }
 
 void machineSet() {
-	gMachine ^= 0x01;
+	gMachineSet++;
+	if (gMachineSet >= HW_SELECT_END) {
+		gMachineSet = 0;
+	}
 }
 
 void speedHackSet() {

@@ -2,7 +2,8 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.2 - 2022-08-23 (FluBBa)
+V0.5.2 - 2022-09-28 (FluBBa)
+	Added new debug menu.
 	Added "Quit Emulator" if supported.
 
 V0.5.1 - 2021-10-10 (FluBBa)

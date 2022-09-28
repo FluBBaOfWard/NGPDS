@@ -1,17 +1,11 @@
 #include <nds.h>
-#include <fat.h>
-
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/dir.h>
 
 #include "FileHandling.h"
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
 #include "Shared/FileHelper.h"
-#include "Shared/Unzip/unzipnds.h"
 #include "Main.h"
 #include "Gui.h"
 #include "Cart.h"
@@ -19,7 +13,6 @@
 #include "Gfx.h"
 #include "io.h"
 #include "Memory.h"
-#include "NeoGeoPocket.h"
 #include "NGPFlash.h"
 
 static const char *const folderName = "ngpds";
@@ -182,8 +175,7 @@ void loadNVRAM() {
 	if (findFolder(folderName)) {
 		return;
 	}
-	strlcpy(flashName, currentFilename, sizeof(flashName));
-	strlcat(flashName, ".fla", sizeof(flashName));
+	setFileExtension(flashName, currentFilename, ".fla", sizeof(flashName));
 	if ( !(ngfFile = fopen(flashName, "r")) ) {
 		infoOutput("Couldn't open flash file:");
 		infoOutput(flashName);
@@ -244,7 +236,6 @@ void loadNVRAM() {
 	fclose(ngfFile);
 }
 
-//void writeSaveGameFile() {
 void saveNVRAM() {
 	// Find the dirty blocks and write them to the .fla file
 	FILE *ngfFile;
@@ -277,8 +268,7 @@ void saveNVRAM() {
 	if (findFolder(folderName)) {
 		return;
 	}
-	strlcpy(flashName, currentFilename, sizeof(flashName));
-	strlcat(flashName, ".fla", sizeof(flashName));
+	setFileExtension(flashName, currentFilename, ".fla", sizeof(flashName));
 	if ( !(ngfFile = fopen(flashName, "w")) ) {
 		infoOutput("Couldn't open file:");
 		infoOutput(flashName);
@@ -328,64 +318,18 @@ void saveNVRAM() {
 	fclose(ngfFile);
 }
 
-void loadState(void) {
-	FILE *file;
-	u32 *statePtr;
-	char stateName[FILENAMEMAXLENGTH];
-
-	if (findFolder(folderName)) {
-		return;
-	}
-	strlcpy(stateName, currentFilename, sizeof(stateName));
-	strlcat(stateName, ".sta", sizeof(stateName));
-	int stateSize = getStateSize();
-	if ( (file = fopen(stateName, "r")) ) {
-		if ( (statePtr = malloc(stateSize)) ) {
-			cls(0);
-			drawText("        Loading state...", 11, 0);
-			fread(statePtr, 1, stateSize, file);
-			unpackState(statePtr);
-			free(statePtr);
-			infoOutput("Loaded state.");
-		} else {
-			infoOutput("Couldn't alloc mem for state.");
-		}
-		fclose(file);
-	}
-	return;
+void loadState() {
+	loadDeviceState(folderName);
 }
 
-void saveState(void) {
-	FILE *file;
-	u32 *statePtr;
-	char stateName[FILENAMEMAXLENGTH];
-
-	if (findFolder(folderName)) {
-		return;
-	}
-	strlcpy(stateName, currentFilename, sizeof(stateName));
-	strlcat(stateName, ".sta", sizeof(stateName));
-	int stateSize = getStateSize();
-	if ( (file = fopen(stateName, "w")) ) {
-		if ( (statePtr = malloc(stateSize)) ) {
-			cls(0);
-			drawText("        Saving state...", 11, 0);
-			packState(statePtr);
-			fwrite(statePtr, 1, stateSize, file);
-			free(statePtr);
-			infoOutput("Saved state.");
-		}
-		else {
-			infoOutput("Couldn't alloc mem for state.");
-		}
-		fclose(file);
-	}
+void saveState() {
+	saveDeviceState(folderName);
 }
 
 /// Hold down the power button for ~40 frames.
 static void turnPowerOff(void) {
 	int i;
-	if ( g_BIOSBASE_COLOR != NULL ) {
+	if (g_BIOSBASE_COLOR != NULL) {
 		EMUinput &= ~4;
 		for (i = 0; i < 100; i++ ) {
 			run();
@@ -400,7 +344,7 @@ static void turnPowerOff(void) {
 /// Hold down the power button for ~40 frames.
 static void turnPowerOn(void) {
 	int i;
-	if ( g_BIOSBASE_COLOR != NULL ) {
+	if (g_BIOSBASE_COLOR != NULL) {
 		EMUinput &= ~4;
 		for (i = 0; i < 100; i++ ) {
 			run();
@@ -414,22 +358,22 @@ static void turnPowerOn(void) {
 
 //---------------------------------------------------------------------------------
 bool loadGame(const char *gameName) {
-	if ( gameName ) {
+	if (gameName) {
 		cls(0);
-		if ( isConsoleRunning() ) {
+		if (isConsoleRunning()) {
 			drawText("     Please wait, power off.", 11, 0);
 			turnPowerOff();
 		}
 		drawText("     Please wait, loading.", 11, 0);
 		gRomSize = loadROM(romSpacePtr, gameName, maxRomSize);
-		if ( gRomSize ) {
+		if (gRomSize) {
 			setEmuSpeed(0);
 			loadCart(emuFlags);
 			gameInserted = true;
-			if ( emuSettings & AUTOLOAD_NVRAM ) {
+			if (emuSettings & AUTOLOAD_NVRAM) {
 				loadNVRAM();
 			}
-			if ( emuSettings & AUTOLOAD_STATE ) {
+			if (emuSettings & AUTOLOAD_STATE) {
 				loadState();
 			}
 			drawText("     Please wait, power on.", 11, 0);
@@ -445,7 +389,7 @@ void selectGame() {
 	pauseEmulation = true;
 	setSelectedMenu(9);
 	const char *gameName = browseForFileType(FILEEXTENSIONS".zip");
-	if ( loadGame(gameName) ) {
+	if (loadGame(gameName)) {
 		backOutOfMenu();
 	}
 }

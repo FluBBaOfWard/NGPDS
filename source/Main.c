@@ -172,14 +172,15 @@ static void setupGraphics() {
 	vramSetBankI(VRAM_I_SUB_SPRITE);
 
 	// Set up the main display
-	videoSetMode(MODE_0_2D
+	GFX_DISPCNT = MODE_0_2D
 				 | DISPLAY_BG0_ACTIVE
 				 | DISPLAY_BG1_ACTIVE
 				 | DISPLAY_BG2_ACTIVE
 				 | DISPLAY_SPR_ACTIVE
 				 | DISPLAY_WIN0_ON
 				 | DISPLAY_WIN1_ON
-				 );
+				 ;
+	videoSetMode(GFX_DISPCNT);
 	GFX_BG0CNT = BG_32x32 | BG_MAP_BASE(0) | BG_COLOR_16 | BG_TILE_BASE(2) | BG_PRIORITY(0);
 	GFX_BG1CNT = BG_32x32 | BG_MAP_BASE(1) | BG_COLOR_16 | BG_TILE_BASE(3) | BG_PRIORITY(0);
 	REG_BG0CNT = GFX_BG0CNT;

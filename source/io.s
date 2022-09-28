@@ -30,7 +30,11 @@
 	.syntax unified
 	.arm
 
-	.section .text
+#if GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
 ioReset:
@@ -333,11 +337,11 @@ t9StoreB_Low:
 
 	and r2,r1,#0xF0
 	cmp r2,#0x20
-	beq timer_write8
+	beq timerWrite8
 
 	and r0,r0,#0xFF
 	cmp r2,#0x70
-	beq int_write8
+	beq intWrite8
 
 //	cmp r1,#0xB3				;@ Power button NMI on/off.
 	bx lr
@@ -366,7 +370,7 @@ cpuSpeedW:
 	bxeq lr
 	strb r0,[r1,#0x80]
 	rsb r0,r0,#T9CYC_SHIFT
-	strb r0,[t9optbl,#tlcs_cycShift]
+	strb r0,[t9optbl,#tlcsCycShift]
 	mov t9cycles,t9cycles,ror r2
 	bx lr
 
@@ -376,10 +380,10 @@ t9LoadB_Low:
 	and r1,r0,#0xF0
 
 	cmp r1,#0x70
-	beq int_read8
+	beq intRead8
 
 	cmp r1,#0x20
-	beq timer_read8
+	beq timerRead8
 
 	cmp r0,#0x50				;@ Serial channel 0 buffer.
 	ldrbeq r0,sc0Buf

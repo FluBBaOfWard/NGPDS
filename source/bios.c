@@ -13,6 +13,7 @@
 //---------------------------------------------------------------------------
 
 #include <nds.h>
+
 #include "Memory.h"
 #include "bios.h"
 #include "K2GE/K2GE.h"
@@ -22,12 +23,12 @@
 
 //=============================================================================
 
-uint8 *ngpc_bios = 0;			// Holds bios program data
+u8 *ngpc_bios = NULL;			// Holds bios program data
 
-extern u32 gRomSize;			// from cart.s
-extern u8 gLang;				// from cart.s
-extern u8 gMachine;				// from cart.s
-extern u8 gPaletteBank;			// from cart.s
+extern u32 gRomSize;			// From Cart.s
+extern u8 gLang;				// From Cart.s
+extern u8 gMachine;				// From Cart.s
+extern u8 gPaletteBank;			// From Cart.s
 extern u32 sngBIOSHLE;
 
 //=============================================================================
@@ -372,13 +373,13 @@ void resetBios(NgpHeader *ngpHeader)
 
 	// Color Mode Selection: 0x00 = B&W, 0x10 = Colour
 	int color = ngpHeader->mode;
-	if (gMachine == HW_K1GE) {
+	if (gMachine == SOC_K1GE) {
 		color = 0;
 	}
 	t9StoreB(color, 0x6F90);		// Game Displaymode
 	t9StoreB(color, 0x6F95);		// Current Displaymode
 	t9StoreB(color, 0x6F91);		// Machine
-	if (gMachine == HW_K2GE) {
+	if (gMachine == SOC_K2GE) {
 		t9StoreB(0x10, 0x6F91);		// Machine
 	}
 	// User Interrupt table
@@ -424,7 +425,7 @@ void fixBiosSettings(void)
 	int check = gLang ? 0x01 : 0x00;
 	// Language: 0 = Japanese, 1 = English
 	t9StoreB(check, 0x6F87);
-	if (gMachine == HW_K2GE) {
+	if (gMachine == SOC_K2GE) {
 		t9StoreB(gPaletteBank, 0x6F94);
 		check += gPaletteBank;
 	}

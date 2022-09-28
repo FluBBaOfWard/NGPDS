@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "Emubase.h"
+#include "NeoGeoPocket.h"
 
 #define FILEEXTENSIONS ".ngp.ngc"
 #define NGPF_MAGIC (0x4650474e)

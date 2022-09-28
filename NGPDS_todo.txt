@@ -1,6 +1,6 @@
 NGPDS Todo
 
-	Add selection of 2 BIOS's.
+	Add selection of 2 BIOS's. Add machine Auto.
 	Use CLZ for memory mapping.
 	Fix cpu stuff.
 	Connect NDS battery level to NGP battery level?
@@ -22,7 +22,6 @@ GFX:
 	Optimize color transfer?
 
 GUI:
-	Remove... Done.
 
 Mem:
 

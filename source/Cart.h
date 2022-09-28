@@ -9,7 +9,9 @@ extern u32 gRomSize;
 extern u32 maxRomSize;
 extern u32 emuFlags;
 extern u8 gConfig;
+extern u8 gMachineSet;
 extern u8 gMachine;
+extern u8 gSOC;
 extern u8 gLang;
 extern u8 gPaletteBank;
 

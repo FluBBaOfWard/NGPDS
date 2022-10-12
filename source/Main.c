@@ -185,6 +185,7 @@ static void setupGraphics() {
 	GFX_BG1CNT = BG_32x32 | BG_MAP_BASE(1) | BG_COLOR_16 | BG_TILE_BASE(3) | BG_PRIORITY(0);
 	REG_BG0CNT = GFX_BG0CNT;
 	REG_BG1CNT = GFX_BG1CNT;
+	// Background 2 for border
 	REG_BG2CNT = BG_32x32 | BG_MAP_BASE(2) | BG_COLOR_256 | BG_TILE_BASE(1) | BG_PRIORITY(2);
 
 	// Set up the sub display

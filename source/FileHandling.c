@@ -13,7 +13,7 @@
 #include "Gfx.h"
 #include "io.h"
 #include "Memory.h"
-#include "NGPFlash.h"
+#include "NGPFlash/NGPFlash.h"
 
 static const char *const folderName = "ngpds";
 static const char *const settingName = "settings.cfg";

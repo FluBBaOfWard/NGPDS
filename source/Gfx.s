@@ -351,8 +351,8 @@ vblIrqHandler:
 	ldrb r0,[geptr,#kgeBGPrio]
 	tst r0,#0x80
 	ldr r0,GFX_BG0CNT
-	orrne r0,r0,#0x00001		;@ BG 0 low prio
-	orreq r0,r0,#0x10000		;@ BG 1 low prio
+	addne r0,r0,#0x00001		;@ BG 0 low prio
+	addeq r0,r0,#0x10000		;@ BG 1 low prio
 	str r0,[r6,#REG_BG0CNT]
 
 	ldr r0,=GFX_DISPCNT

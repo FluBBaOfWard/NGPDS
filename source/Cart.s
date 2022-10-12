@@ -53,7 +53,7 @@ ROM_Space:
 
 	.align 2
 ;@----------------------------------------------------------------------------
-machineInit: 	;@ Called from C
+machineInit: 				;@ Called from C
 	.type   machineInit STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r11,lr}
@@ -89,9 +89,9 @@ machineInit: 	;@ Called from C
 	cmp r0,#0
 	beq skipBiosSettings
 
-	bl run					;@ Settings are cleared when new batteries are inserted.
-	bl transferTime			;@ So set up time
-	ldr r1,=fixBiosSettings	;@ And Bios settings after the first run.
+	bl run						;@ Settings are cleared when new batteries are inserted.
+	bl transferTime				;@ So set up time
+	ldr r1,=fixBiosSettings		;@ And Bios settings after the first run.
 	blx r1
 skipBiosSettings:
 	ldmfd sp!,{r4-r11,lr}
@@ -100,7 +100,7 @@ skipBiosSettings:
 	.section .ewram,"ax"
 	.align 2
 ;@----------------------------------------------------------------------------
-loadCart: 		;@ Called from C:  r0=emuflags
+loadCart: 					;@ Called from C:  r0=emuflags
 	.type   loadCart STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r11,lr}
@@ -127,7 +127,7 @@ skipHWSetup:
 	bx lr
 
 ;@----------------------------------------------------------------------------
-tlcs9000MemInit: 		;@ Called from C:  r0=rombase address
+tlcs9000MemInit: 			;@ Called from C:  r0=rombase address
 	.type   tlcs9000MemInit STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldr r1,=tlcs900HState
@@ -138,25 +138,25 @@ tlcs9000MemInit: 		;@ Called from C:  r0=rombase address
 ;@----------------------------------------------------------------------------
 z80MemInit:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{z80optbl}
-	ldr z80optbl,=Z80OpTable
-	add r0,z80optbl,#z80ReadTbl
+	stmfd sp!,{z80ptr}
+	ldr z80ptr,=Z80OpTable
+	add r0,z80ptr,#z80ReadTbl
 	ldr r1,=empty_R
 	ldr r2,=empty_W
 	mov r3,#8
 z80MemLoop0:
+	str r2,[r0,#32]				;@ z80WriteTbl
 	str r1,[r0],#4
-	str r2,[r0,#28]
 	subs r3,r3,#1
 	bne z80MemLoop0
 
-	add r0,z80optbl,#z80ReadTbl
+	add r0,z80ptr,#z80ReadTbl
 	ldr r1,=z80RamR
 	str r1,[r0]					;@ 0x0000-0x1FFF
 	ldr r1,=z80LatchR
 	str r1,[r0,#16]				;@ 0x8000-0x9FFF
 
-	add r0,z80optbl,#z80WriteTbl
+	add r0,z80ptr,#z80WriteTbl
 	ldr r1,=z80RamW
 	str r1,[r0]					;@ 0x0000-0x1FFF
 	ldr r1,=z80SoundW
@@ -167,14 +167,14 @@ z80MemLoop0:
 	str r1,[r0,#24]				;@ 0xC000-0xDFFF
 
 	ldr r0,=ngpRAM+0x3000		;@ Shared Z80/TLCS-900H RAM.
-	add r1,z80optbl,#z80MemTbl
+	add r1,z80ptr,#z80MemTbl
 	mov r2,#8
 z80MemLoop1:
 	str r0,[r1],#4				;@ z80MemTbl
 	subs r2,r2,#1
 	bne z80MemLoop1
 
-	ldmfd sp!,{z80optbl}
+	ldmfd sp!,{z80ptr}
 	bx lr
 
 

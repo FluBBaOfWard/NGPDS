@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.2 2022-09-28"
+#define EMUVERSION "V0.5.2 2022-10-12"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -38,7 +38,7 @@ const fptr fnList0[] = {uiDummy};
 const fptr fnList1[] = {selectGame, loadState, saveState, loadNVRAM, saveNVRAM, saveSettings, ejectGame, resetGame, ui9};
 const fptr fnList2[] = {ui4, ui5, ui6, ui7, ui8};
 const fptr fnList3[] = {uiDummy};
-const fptr fnList4[] = {autoBSet, autoASet, controllerSet, swapABSet};
+const fptr fnList4[] = {autoBSet, autoASet, swapABSet};
 const fptr fnList5[] = {gammaSet, paletteChange};
 const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, selectColorBios};
 const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, sleepSet};
@@ -48,7 +48,6 @@ const fptr fnList10[] = {uiDummy};
 const fptr *const fnListX[] = {fnList0, fnList1, fnList2, fnList3, fnList4, fnList5, fnList6, fnList7, fnList8, fnList9, fnList10};
 u8 menuXItems[] = {ARRSIZE(fnList0), ARRSIZE(fnList1), ARRSIZE(fnList2), ARRSIZE(fnList3), ARRSIZE(fnList4), ARRSIZE(fnList5), ARRSIZE(fnList6), ARRSIZE(fnList7), ARRSIZE(fnList8), ARRSIZE(fnList9), ARRSIZE(fnList10)};
 const fptr drawUIX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDebug, uiDummy, uiDummy};
-const u8 menuXBack[] = {0,0,0,0,2,2,2,2,2,1,1};
 
 u8 gGammaValue = 0;
 char gameInfoString[32];
@@ -124,64 +123,63 @@ void uiAbout() {
 	cls(1);
 	updateGameInfo();
 	drawTabs();
-	drawText(" B:        NGP A button", 4, 0);
-	drawText(" A:        NGP B button", 5, 0);
-	drawText(" Y/Select: Power button", 6, 0);
-	drawText(" X/Start:  Start button", 7, 0);
-	drawText(" DPad:     Joystick", 8, 0);
+	drawMenuText("B:        NGP A button", 4, 0);
+	drawMenuText("A:        NGP B button", 5, 0);
+	drawMenuText("Y/Select: Power button", 6, 0);
+	drawMenuText("X/Start:  Start button", 7, 0);
+	drawMenuText("DPad:     Joystick", 8, 0);
 
-	drawText(gameInfoString, 10, 0);
+	drawMenuText(gameInfoString, 10, 0);
 
-	drawText(" NGPDS        " EMUVERSION, 19, 0);
-	drawText(" ARMZ80       " ARMZ80VERSION, 20, 0);
-	drawText(" ARMTLCS-900H " TLCS900VERSION, 21, 0);
-	drawText(" ARMK2GE      " K2GEVERSION, 22, 0);
-	drawText(" ARMK2Audio   " ARMK2AUDIOVERSION, 23, 0);
+	drawMenuText("NGPDS        " EMUVERSION, 19, 0);
+	drawMenuText("ARMZ80       " ARMZ80VERSION, 20, 0);
+	drawMenuText("ARMTLCS-900H " TLCS900VERSION, 21, 0);
+	drawMenuText("ARMK2GE      " K2GEVERSION, 22, 0);
+	drawMenuText("ARMK2Audio   " ARMK2AUDIOVERSION, 23, 0);
 }
 
 void uiController() {
 	setupSubMenu("Controller Settings");
-	drawSubItem("B Autofire: ", autoTxt[autoB]);
-	drawSubItem("A Autofire: ", autoTxt[autoA]);
-	drawSubItem("Controller: ", ctrlTxt[(joyCfg>>29)&1]);
-	drawSubItem("Swap A-B:   ", autoTxt[(joyCfg>>10)&1]);
+	drawSubItem("B Autofire:", autoTxt[autoB]);
+	drawSubItem("A Autofire:", autoTxt[autoA]);
+	drawSubItem("Swap A-B:  ", autoTxt[(joyCfg>>10)&1]);
 }
 
 void uiDisplay() {
 	setupSubMenu("Display Settings");
-	drawSubItem("Gamma: ", brighTxt[gGammaValue]);
-	drawSubItem("B&W Palette: ", palTxt[gPaletteBank]);
+	drawSubItem("Gamma:", brighTxt[gGammaValue]);
+	drawSubItem("B&W Palette:", palTxt[gPaletteBank]);
 }
 
 static void uiMachine() {
 	setupSubMenu("Machine Settings");
-	drawSubItem("Language: ",langTxt[gLang]);
-	drawSubItem("Machine: ",machTxt[gMachineSet]);
+	drawSubItem("Language:",langTxt[gLang]);
+	drawSubItem("Machine:",machTxt[gMachineSet]);
 	drawSubItem("Change Batteries", NULL);
 	drawSubItem("Change Sub Battery", NULL);
-	drawSubItem("Cpu speed hacks: ",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
+	drawSubItem("Cpu Speed Hacks:",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
 	drawSubItem("Bios Settings ->", NULL);
 }
 
 void uiSettings() {
 	setupSubMenu("Settings");
-	drawSubItem("Speed: ", speedTxt[(emuSettings>>6)&3]);
-	drawSubItem("Autoload State: ", autoTxt[(emuSettings>>2)&1]);
-	drawSubItem("Autoload Flash RAM: ", autoTxt[(emuSettings>>10)&1]);
-	drawSubItem("Autosave Settings: ", autoTxt[(emuSettings>>9)&1]);
-	drawSubItem("Autopause Game: ", autoTxt[emuSettings&1]);
-	drawSubItem("Powersave 2nd Screen: ",autoTxt[(emuSettings>>1)&1]);
-	drawSubItem("Emulator on Bottom: ", autoTxt[(emuSettings>>8)&1]);
-	drawSubItem("Autosleep: ", sleepTxt[(emuSettings>>4)&3]);
+	drawSubItem("Speed:", speedTxt[(emuSettings>>6)&3]);
+	drawSubItem("Autoload State:", autoTxt[(emuSettings>>2)&1]);
+	drawSubItem("Autoload Flash RAM:", autoTxt[(emuSettings>>10)&1]);
+	drawSubItem("Autosave Settings:", autoTxt[(emuSettings>>9)&1]);
+	drawSubItem("Autopause Game:", autoTxt[emuSettings&1]);
+	drawSubItem("Powersave 2nd Screen:",autoTxt[(emuSettings>>1)&1]);
+	drawSubItem("Emulator on Bottom:", autoTxt[(emuSettings>>8)&1]);
+	drawSubItem("Autosleep:", sleepTxt[(emuSettings>>4)&3]);
 }
 
 void uiDebug() {
 	setupSubMenu("Debug");
-	drawSubItem("Debug Output: ", autoTxt[gDebugSet&1]);
-	drawSubItem("Disable Foreground: ", autoTxt[gGfxMask&1]);
-	drawSubItem("Disable Background: ", autoTxt[(gGfxMask>>1)&1]);
-	drawSubItem("Disable Sprites: ", autoTxt[(gGfxMask>>4)&1]);
-	drawSubItem("Step Frame ", NULL);
+	drawSubItem("Debug Output:", autoTxt[gDebugSet&1]);
+	drawSubItem("Disable Foreground:", autoTxt[gGfxMask&1]);
+	drawSubItem("Disable Background:", autoTxt[(gGfxMask>>1)&1]);
+	drawSubItem("Disable Sprites:", autoTxt[(gGfxMask>>4)&1]);
+	drawSubItem("Step Frame", NULL);
 }
 
 
@@ -208,7 +206,7 @@ void resetGame() {
 void updateGameInfo() {
 	char catalog[8];
 	NgpHeader *header = (NgpHeader *)romSpacePtr;
-	strlMerge(gameInfoString, " Game name: ", header->name, sizeof(gameInfoString));
+	strlMerge(gameInfoString, "Game Name: ", header->name, sizeof(gameInfoString));
 	strlcat(gameInfoString, " #", sizeof(gameInfoString));
 	short2HexStr(catalog, header->catalog);
 	strlcat(gameInfoString, catalog, sizeof(gameInfoString));
@@ -277,6 +275,14 @@ void languageSet() {
 	fixBiosSettings();
 }
 
+void batteryChange() {
+	batteryLevel = 0xFFFF;				// 0xFFFF for 2 days battery?
+}
+
+void subBatteryChange() {
+	gSubBatteryLevel = 0x3FFFFFF;		// 0x3FFFFFF for 2 years battery?
+}
+
 void machineSet() {
 	gMachineSet++;
 	if (gMachineSet >= HW_SELECT_END) {
@@ -287,12 +293,4 @@ void machineSet() {
 void speedHackSet() {
 	emuSettings ^= ALLOW_SPEED_HACKS;
 	hacksInit();
-}
-
-void batteryChange() {
-	batteryLevel = 0xFFFF;				// 0xFFFF for 2 days battery?
-}
-
-void subBatteryChange() {
-	gSubBatteryLevel = 0x3FFFFFF;		// 0x3FFFFFF for 2 years battery?
 }

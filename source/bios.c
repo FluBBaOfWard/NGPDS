@@ -373,13 +373,13 @@ void resetBios(NgpHeader *ngpHeader)
 
 	// Color Mode Selection: 0x00 = B&W, 0x10 = Colour
 	int color = ngpHeader->mode;
-	if (gMachine == SOC_K1GE) {
+	if (gMachine == HW_NGPMONO) {
 		color = 0;
 	}
 	t9StoreB(color, 0x6F90);		// Game Displaymode
 	t9StoreB(color, 0x6F95);		// Current Displaymode
 	t9StoreB(color, 0x6F91);		// Machine
-	if (gMachine == SOC_K2GE) {
+	if (gMachine == HW_NGPCOLOR) {
 		t9StoreB(0x10, 0x6F91);		// Machine
 	}
 	// User Interrupt table
@@ -425,7 +425,7 @@ void fixBiosSettings(void)
 	int check = gLang ? 0x01 : 0x00;
 	// Language: 0 = Japanese, 1 = English
 	t9StoreB(check, 0x6F87);
-	if (gMachine == SOC_K2GE) {
+	if (gMachine == HW_NGPCOLOR) {
 		t9StoreB(gPaletteBank, 0x6F94);
 		check += gPaletteBank;
 	}

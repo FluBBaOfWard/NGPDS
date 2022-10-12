@@ -20,10 +20,14 @@
 	.syntax unified
 	.arm
 
-	.section .text
+#if GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#else
+	.section .text						;@ For anything else
+#endif
 	.align 2
 ;@----------------------------------------------------------------------------
-run:		;@ Return after 1 frame
+run:						;@ Return after X frame(s)
 	.type   run STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldrh r0,waitCountIn
@@ -60,11 +64,11 @@ ngpFrameLoop:
 	ands r0,r0,r0,lsr#8
 	beq NoZ80Now
 
-	ldr z80optbl,=Z80OpTable
+	ldr z80ptr,=Z80OpTable
 	ldr r0,z80CyclesPerScanline
 	bl Z80RestoreAndRunXCycles
-	add r0,z80optbl,#z80Regs
-	stmia r0,{z80f-z80pc,z80sp}			;@ Save Z80 state
+	add r0,z80ptr,#z80Regs
+	stmia r0,{z80f-z80pc,z80sp}	;@ Save Z80 state
 NoZ80Now:
 ;@--------------------------------------
 	ldr t9optbl,=tlcs900HState
@@ -120,11 +124,11 @@ ngpStepLoop:
 	ands r0,r0,r0,lsr#8
 	beq NoZ80Step
 
-	ldr z80optbl,=Z80OpTable
+	ldr z80ptr,=Z80OpTable
 	ldr r0,z80CyclesPerScanline
 	bl Z80RestoreAndRunXCycles
-	add r0,z80optbl,#z80Regs
-	stmia r0,{z80f-z80pc,z80sp}			;@ Save Z80 state
+	add r0,z80ptr,#z80Regs
+	stmia r0,{z80f-z80pc,z80sp}	;@ Save Z80 state
 NoZ80Step:
 ;@--------------------------------------
 	ldr t9optbl,=tlcs900HState
@@ -174,10 +178,10 @@ Z80_SetEnable:				;@ Address 0xB9 of the TLCS-900H, r0=enabled
 	and r0,r0,#1
 	strb r0,z80Enabled
 	eor r0,r0,#1
-	stmfd sp!,{z80optbl,lr}
-	ldr z80optbl,=Z80OpTable
+	stmfd sp!,{z80ptr,lr}
+	ldr z80ptr,=Z80OpTable
 	bl Z80SetResetPin
-	ldmfd sp!,{z80optbl,lr}
+	ldmfd sp!,{z80ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 Z80_nmi_do:					;@ Address 0xBA of the TLCS-900H
@@ -185,21 +189,21 @@ Z80_nmi_do:					;@ Address 0xBA of the TLCS-900H
 	ldrb r1,z80Enabled
 	cmp r1,#0
 	bxeq lr
-	stmfd sp!,{z80optbl,lr}
-	ldr z80optbl,=Z80OpTable
+	stmfd sp!,{z80ptr,lr}
+	ldr z80ptr,=Z80OpTable
 	mov r0,#1
 	bl Z80SetNMIPin
-	ldmfd sp!,{z80optbl,lr}
+	ldmfd sp!,{z80ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 cpu1SetIRQ:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{z80optbl,lr}
-	ldr z80optbl,=Z80OpTable
+	stmfd sp!,{z80ptr,lr}
+	ldr z80ptr,=Z80OpTable
 	bl Z80SetIRQPin
-	ldmfd sp!,{z80optbl,pc}
+	ldmfd sp!,{z80ptr,pc}
 ;@----------------------------------------------------------------------------
-setCpuSpeed:				;@ in r0=0 normal / !=0 half speed.
+setCpuSpeed:				;@
 	.type   tweakCpuSpeed STT_FUNC
 ;@----------------------------------------------------------------------------
 ;@---Speed - 6.144MHz / 60Hz / 198 lines	;NGP TLCS-900H.

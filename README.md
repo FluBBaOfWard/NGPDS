@@ -47,7 +47,7 @@ To select between the tabs use R & L or the touchscreen.
 		Machine: Select the emulated machine.
 		Change Batteries: Change to new main batteries (AA/LR6).
 		Change Sub Battery: Change to a new sub battery (CR2032).
-		Cpu speed hacks: Allow speed hacks.
+		Cpu Speed Hacks: Allow speed hacks.
 		Bios Settings: Load a real NGP Bios, recommended.
 	Settings:
 		Speed: Switch between speed modes.
@@ -71,6 +71,10 @@ To select between the tabs use R & L or the touchscreen.
 
 ### About:
 	Some dumb info about the game and emulator...
+
+## Games:
+	Sonic the Hedgehog has problems when you reach the boss, try to use a save
+	state soon before the boss and reload and try again.
 
 ## Credits:
 

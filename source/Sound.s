@@ -7,8 +7,8 @@
 	.global VblSound2
 	.global setMuteSoundGUI
 	.global setMuteT6W28
-	.global T6W28_L_W
 	.global T6W28_R_W
+	.global T6W28_L_W
 	.global T6W28_DAC_L_W
 	.global k2Audio_0
 
@@ -128,19 +128,19 @@ T6W28_DAC_L_W:
 	strb r0,[r1,r2,lsr#20]
 	bx lr
 ;@----------------------------------------------------------------------------
-T6W28_L_W:				;@ Sound left write
-;@----------------------------------------------------------------------------
-	stmfd sp!,{r3,lr}
-	ldr r1,=k2Audio_0
-	bl sn76496L_W
-	ldmfd sp!,{r3,lr}
-	bx lr
-;@----------------------------------------------------------------------------
 T6W28_R_W:				;@ Sound right write
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r3,lr}
 	ldr r1,=k2Audio_0
 	bl sn76496W
+	ldmfd sp!,{r3,lr}
+	bx lr
+;@----------------------------------------------------------------------------
+T6W28_L_W:				;@ Sound left write
+;@----------------------------------------------------------------------------
+	stmfd sp!,{r3,lr}
+	ldr r1,=k2Audio_0
+	bl sn76496L_W
 	ldmfd sp!,{r3,lr}
 	bx lr
 

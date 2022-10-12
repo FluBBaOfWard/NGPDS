@@ -387,7 +387,7 @@ bool loadGame(const char *gameName) {
 
 void selectGame() {
 	pauseEmulation = true;
-	setSelectedMenu(9);
+	ui9();
 	const char *gameName = browseForFileType(FILEEXTENSIONS".zip");
 	if (loadGame(gameName)) {
 		backOutOfMenu();

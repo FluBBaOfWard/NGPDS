@@ -10,6 +10,7 @@
 	.global isConsoleRunning
 	.global isConsoleSleeping
 	.global tweakCpuSpeed
+	.global tweakZ80Speed
 	.global frameTotal
 	.global waitMaskIn
 	.global waitMaskOut
@@ -214,6 +215,15 @@ setCpuSpeed:				;@
 	str r0,z80CyclesPerScanline
 	bx lr
 ;@----------------------------------------------------------------------------
+tweakZ80Speed:				;@ in r0=0 normal, 1=half speed, 2=1/4 speed...
+	.type   tweakZ80Speed STT_FUNC
+;@----------------------------------------------------------------------------
+;@---Speed - 3.072MHz / 60Hz / 198 lines	;NGP Z80.
+	ldr r1,=T9_HINT_RATE/2				;@ 515/2
+	mov r1,r1,lsr r0
+	str r1,z80CyclesPerScanline
+	bx lr
+;@----------------------------------------------------------------------------
 cpuReset:					;@ Called by loadCart/resetGame
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
@@ -224,6 +234,11 @@ cpuReset:					;@ Called by loadCart/resetGame
 	bl tlcs900HReset
 
 ;@--------------------------------------
+	ldr r0,=gZ80Speed
+	ldrb r0,[r0]
+	and r0,r0,#7
+	bl tweakZ80Speed
+
 	ldr r0,=Z80OpTable
 	mov r1,#0
 	bl Z80Reset

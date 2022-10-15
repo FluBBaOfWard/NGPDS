@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.2 2022-10-12"
+#define EMUVERSION "V0.5.2 2022-10-15"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -27,12 +27,13 @@ static void machineSet(void);
 static void batteryChange(void);
 static void subBatteryChange(void);
 static void speedHackSet(void);
+static void z80SpeedSet(void);
 
 static void uiMachine(void);
 static void uiDebug(void);
 static void updateGameInfo(void);
 
-const fptr fnMain[] = {nullUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI};
+const fptr fnMain[] = {nullUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI};
 
 const fptr fnList0[] = {uiDummy};
 const fptr fnList1[] = {selectGame, loadState, saveState, loadNVRAM, saveNVRAM, saveSettings, ejectGame, resetGame, ui9};
@@ -40,16 +41,17 @@ const fptr fnList2[] = {ui4, ui5, ui6, ui7, ui8};
 const fptr fnList3[] = {uiDummy};
 const fptr fnList4[] = {autoBSet, autoASet, swapABSet};
 const fptr fnList5[] = {gammaSet, paletteChange};
-const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, selectColorBios};
+const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, z80SpeedSet, selectColorBios};
 const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, sleepSet};
 const fptr fnList8[] = {debugTextSet, fgrLayerSet, bgrLayerSet, sprLayerSet, stepFrame};
 const fptr fnList9[] = {exitEmulator, backOutOfMenu};
 const fptr fnList10[] = {uiDummy};
 const fptr *const fnListX[] = {fnList0, fnList1, fnList2, fnList3, fnList4, fnList5, fnList6, fnList7, fnList8, fnList9, fnList10};
 u8 menuXItems[] = {ARRSIZE(fnList0), ARRSIZE(fnList1), ARRSIZE(fnList2), ARRSIZE(fnList3), ARRSIZE(fnList4), ARRSIZE(fnList5), ARRSIZE(fnList6), ARRSIZE(fnList7), ARRSIZE(fnList8), ARRSIZE(fnList9), ARRSIZE(fnList10)};
-const fptr drawUIX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDebug, uiDummy, uiDummy};
+const fptr drawUIX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDebug, uiYesNo, uiDummy};
 
 u8 gGammaValue = 0;
+u8 gZ80Speed = 0;
 char gameInfoString[32];
 
 const char *const autoTxt[]  = {"Off", "On", "With R"};
@@ -64,6 +66,7 @@ const char *const machTxt[]  = {"Auto", "NeoGeo Pocket", "NeoGeo Pocket Color"};
 const char *const bordTxt[]  = {"Black", "Border Color", "None"};
 const char *const palTxt[]   = {"Black & White", "Red", "Green", "Blue", "Classic"};
 const char *const langTxt[]  = {"Japanese", "English"};
+const char *const cpuSpeedTxt[]  = {"Full Speed", "Half Speed", "1/4 Speed", "1/8 Speed", "1/16 Speed"};
 
 /// This is called at the start of the emulator
 void setupGUI() {
@@ -158,6 +161,7 @@ static void uiMachine() {
 	drawSubItem("Change Batteries", NULL);
 	drawSubItem("Change Sub Battery", NULL);
 	drawSubItem("Cpu Speed Hacks:",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
+	drawSubItem("Z80 Clock: ", cpuSpeedTxt[gZ80Speed&7]);
 	drawSubItem("Bios Settings ->", NULL);
 }
 
@@ -275,6 +279,13 @@ void languageSet() {
 	fixBiosSettings();
 }
 
+void machineSet() {
+	gMachineSet++;
+	if (gMachineSet >= HW_SELECT_END) {
+		gMachineSet = 0;
+	}
+}
+
 void batteryChange() {
 	batteryLevel = 0xFFFF;				// 0xFFFF for 2 days battery?
 }
@@ -283,14 +294,15 @@ void subBatteryChange() {
 	gSubBatteryLevel = 0x3FFFFFF;		// 0x3FFFFFF for 2 years battery?
 }
 
-void machineSet() {
-	gMachineSet++;
-	if (gMachineSet >= HW_SELECT_END) {
-		gMachineSet = 0;
-	}
-}
-
 void speedHackSet() {
 	emuSettings ^= ALLOW_SPEED_HACKS;
 	hacksInit();
+}
+
+void z80SpeedSet() {
+	gZ80Speed++;
+	if (gZ80Speed >= 5) {
+		gZ80Speed = 0;
+	}
+	tweakZ80Speed(gZ80Speed);
 }

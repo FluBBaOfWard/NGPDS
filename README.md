@@ -29,7 +29,7 @@ To select between the tabs use R & L or the touchscreen.
 	Save Flash RAM: Save flash ram for the currently running game.
 	Save Settings: Save the current settings.
 	Reset Game: Reset the currently running game.
-	Quit Emulator: (If your card supports it.)
+	Quit Emulator: (If supported.)
 
 ### Options:
 	Controller:
@@ -72,9 +72,18 @@ To select between the tabs use R & L or the touchscreen.
 ### About:
 	Some dumb info about the game and emulator...
 
+## Controls:
+	NDS A & B buttons are mapped to NeoGeo Pocket B & A.
+	NDS Start is mapped to NeoGeo Pocket Option.
+	NDS Select & Y is mapped to NeoGeo Pocket Power.
+	NDS d-pad is mapped to NeoGeo Pocket d-pad.
+	NDS L button is mapped to NeoGeo Pocket D (debug).
+
 ## Games:
-	Sonic the Hedgehog has problems when you reach the boss, try to use a save
-	state soon before the boss and reload and try again.
+	Memories of - Pure: Glitches everywhere.
+	Sonic The Hedgehog: First boss sometimes disappear, try to use a save
+		state soon before the boss and reload and try again.
+	Super Real Mahjong - Premium Collection: Graphic bugs on intro.
 
 ## Credits:
 

@@ -67,18 +67,24 @@ ioSaveState:				;@ In r0=destination. Out r0=size.
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 
+	ldr r1,ioExtraState
+	str r1,[r0],#4
+
 	ldr r1,=systemMemory
 	mov r2,#0x100
 	bl memcpy
 
 	ldmfd sp!,{lr}
-	mov r0,#0x100
+	ldr r0,=0x104
 	bx lr
 ;@----------------------------------------------------------------------------
 ioLoadState:				;@ In r0=source. Out r0=size.
 	.type   ioLoadState STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
+
+	ldr r1,[r0],#4
+	str r1,ioExtraState
 
 	bl initSysMem
 
@@ -87,7 +93,7 @@ ioLoadState:				;@ In r0=source. Out r0=size.
 ioGetStateSize:				;@ Out r0=state size.
 	.type   ioGetStateSize STT_FUNC
 ;@----------------------------------------------------------------------------
-	mov r0,#0x100
+	ldr r0,=0x104
 	bx lr
 ;@----------------------------------------------------------------------------
 transferTime:
@@ -463,6 +469,7 @@ batteryLevel:
 								;@ Bad < 0x7880 (0x1E2)
 								;@ Shutdown <= 0x74C0 (0x1D3)
 								;@ Alarm minimum = 0x5B80 (0x16E)
+ioExtraState:
 rtcTimer:
 	.byte 0
 sc0Buf:

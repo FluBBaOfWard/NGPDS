@@ -13,7 +13,6 @@ NGPDS Todo
 
 	Add SWI & Interrupt to BiosHLE.
 	Rewrite BiosHLE to asm?
-	Rewrite bios FLASHWRITE function to use GBA SRAM directly? Game reads directly from flash...
 	Keep disassemblying Bios from 0xFF476C.
 
 	Convert bios font to png. Done.

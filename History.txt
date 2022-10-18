@@ -2,6 +2,9 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.5.3 - 2022-10-18 (FluBBa)
+	Fixed savestates.
+
 V0.5.2 - 2022-10-15 (FluBBa)
 	Added new debug menu.
 	Added Z80 CPU slow down menu item.

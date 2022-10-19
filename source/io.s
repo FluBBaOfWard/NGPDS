@@ -1,6 +1,7 @@
 #ifdef __arm__
 
 #include "TLCS900H/TLCS900H.i"
+#include "ARMZ80/ARMZ80.i"
 #include "K2GE/K2GE.i"
 
 	.global ioReset
@@ -18,10 +19,10 @@
 	.global t9LoadB_Low
 	.global t9StoreB_Low
 	.global updateSlowIO
-	.global z80ReadLatch
+	.global z80LatchR
+	.global z80LatchW
 	.global gSubBatteryLevel
 	.global batteryLevel
-	.global commByte
 	.global system_comms_read
 	.global system_comms_poll
 	.global system_comms_write
@@ -49,7 +50,7 @@ ioReset:
 ;@----------------------------------------------------------------------------
 initSysMem:					;@ In r0=values ptr.
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r5,lr}
+	stmfd sp!,{r4-r5,t9optbl,lr}
 
 	mov r4,r0
 	mov r5,#0xFF
@@ -60,31 +61,24 @@ initMemLoop:
 	subs r5,r5,#1
 	bpl initMemLoop
 
-	ldmfd sp!,{r4-r5,pc}
+	ldmfd sp!,{r4-r5,t9optbl,pc}
 ;@----------------------------------------------------------------------------
 ioSaveState:				;@ In r0=destination. Out r0=size.
 	.type   ioSaveState STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{lr}
-
-	ldr r1,ioExtraState
-	str r1,[r0],#4
+	mov r2,#0x100
+	stmfd sp!,{r2,lr}
 
 	ldr r1,=systemMemory
-	mov r2,#0x100
 	bl memcpy
 
-	ldmfd sp!,{lr}
-	ldr r0,=0x104
+	ldmfd sp!,{r0,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 ioLoadState:				;@ In r0=source. Out r0=size.
 	.type   ioLoadState STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
-
-	ldr r1,[r0],#4
-	str r1,ioExtraState
 
 	bl initSysMem
 
@@ -93,7 +87,7 @@ ioLoadState:				;@ In r0=source. Out r0=size.
 ioGetStateSize:				;@ Out r0=state size.
 	.type   ioGetStateSize STT_FUNC
 ;@----------------------------------------------------------------------------
-	ldr r0,=0x104
+	mov r0,#0x100
 	bx lr
 ;@----------------------------------------------------------------------------
 transferTime:
@@ -176,13 +170,22 @@ EMUinput:						;@ This label here for main.c to use
 	.long 0						;@ EMUjoypad (this is what Emu sees)
 
 ;@----------------------------------------------------------------------------
-z80ReadLatch:
+z80LatchW:					;@ Write communication latch (0x8000)
 ;@----------------------------------------------------------------------------
+	cmp addy,#0x8000
+	strbeq r0,systemMemory+0xBC		;@ Z80 communication byte
+	bxeq lr
+	b empty_W
+;@----------------------------------------------------------------------------
+z80LatchR:					;@ Read communication latch (0x8000)
+;@----------------------------------------------------------------------------
+	cmp addy,#0x8000
+	bne empty_R
 	stmfd sp!,{lr}
 	mov r0,#0
 	bl Z80SetNMIPin
 	ldmfd sp!,{lr}
-	ldrb r0,commByte			;@ 0xBC
+	ldrb r0,systemMemory+0xBC		;@ Z80 communication byte
 	bx lr
 
 ;@----------------------------------------------------------------------------
@@ -298,7 +301,7 @@ checkForAlarm:
 t9StoreB_Low:
 ;@----------------------------------------------------------------------------
 	ldr t9optbl,=tlcs900HState	;@ !!!This should not be needed when called from asm.
-	ldr r2,=systemMemory
+	adr r2,systemMemory
 	strb r0,[r2,r1]
 
 	cmp r1,#0x50				;@ Serial channel 0 buffer.
@@ -318,10 +321,6 @@ t9StoreB_Low:
 
 	cmp r1,#0xBA				;@ Z80 NMI
 	beq Z80_nmi_do
-
-	cmp r1,#0xBC				;@ Z80_COM
-	strbeq r0,commByte
-	bxeq lr
 
 	cmp r1,#0xA0				;@ T6W28, Right
 	beq T6W28_R_W
@@ -395,19 +394,52 @@ t9LoadB_Low:
 	ldrbeq r0,sc0Buf
 	bxeq lr
 
-	cmp r0,#0xBC				;@ Z80_COM
-	ldrbeq r0,commByte
-	bxeq lr
-
 	ldr r2,=systemMemory
 	ldrb r0,[r2,r0]
 	bx lr
 
 ;@----------------------------------------------------------------------------
+watchDogW:
+;@----------------------------------------------------------------------------
+	bx lr
+;@----------------------------------------------------------------------------
+Z80In:
+;@----------------------------------------------------------------------------
+	mov r11,r11					;@ No$GBA breakpoint
+	mov r0,#0
+	bx lr
+;@----------------------------------------------------------------------------
+Z80Out:
+;@----------------------------------------------------------------------------
+;@	mov r11,r11					;@ No$GBA breakpoint
+	mov r0,#0
+	b Z80SetIRQPin
+;@----------------------------------------------------------------------------
+gSubBatteryLevel:
+	.long 0x3000000				;@ subBatteryLevel
+batteryLevel:
+	.long 0xFFFF				;@ Max = 0xFFFF (0x3FF)
+								;@ To start > 0x8400 (0x210)
+								;@ Low < 0x8000 (0x200)
+								;@ Bad < 0x7880 (0x1E2)
+								;@ Shutdown <= 0x74C0 (0x1D3)
+								;@ Alarm minimum = 0x5B80 (0x16E)
+;@----------------------------------------------------------------------------
 systemMemory:
 	.space 0x100
 
+ioExtraState:
+rtcTimer:
+	.byte 0
+sc0Buf:
+	.byte 0
+commStatus:
+	.byte 0
+	.space 1
 
+;@----------------------------------------------------------------------------
+	.section .text
+;@----------------------------------------------------------------------------
 SysMemDefault:
 	;@ 0x00													;@ 0x08
 	.byte 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x08, 0xFF, 0xFF
@@ -441,44 +473,6 @@ SysMemDefault:
 	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	;@ 0xF0													;@ 0xF8
 	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-
-
 ;@----------------------------------------------------------------------------
-watchDogW:
-;@----------------------------------------------------------------------------
-	bx lr
-;@----------------------------------------------------------------------------
-Z80In:
-;@----------------------------------------------------------------------------
-	mov r11,r11					;@ No$GBA breakpoint
-	mov r0,#0
-	bx lr
-;@----------------------------------------------------------------------------
-Z80Out:
-;@----------------------------------------------------------------------------
-;@	mov r11,r11					;@ No$GBA breakpoint
-	mov r0,#0
-	b Z80SetIRQPin
-;@----------------------------------------------------------------------------
-gSubBatteryLevel:
-	.long 0x3000000				;@ subBatteryLevel
-batteryLevel:
-	.long 0xFFFF				;@ Max = 0xFFFF (0x3FF)
-								;@ To start > 0x8400 (0x210)
-								;@ Low < 0x8000 (0x200)
-								;@ Bad < 0x7880 (0x1E2)
-								;@ Shutdown <= 0x74C0 (0x1D3)
-								;@ Alarm minimum = 0x5B80 (0x16E)
-ioExtraState:
-rtcTimer:
-	.byte 0
-sc0Buf:
-	.byte 0
-commStatus:
-	.byte 0
-commByte:
-	.byte 0
-//	.space 2
-
 	.end
 #endif // #ifdef __arm__

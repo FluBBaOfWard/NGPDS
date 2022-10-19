@@ -44,6 +44,7 @@ ROM_Space:
 //	.incbin "ngproms/Evolution - Eternal Dungeons (E).ngc"
 //	.incbin "ngproms/Fantastic Night Dreams Cotton (E).ngc"
 //	.incbin "ngproms/Fatal Fury F-Contact (JUE) (M2).ngc"
+//	.incbin "ngproms/King of Fighters R-2 (JUE) (M2).ngc"
 //	.incbin "ngproms/Last Blade, The - Beyond the Destiny (E).ngc"
 //	.incbin "ngproms/Metal Slug - 1st Mission (JUE) (M2).ngc"
 //	.incbin "ngproms/SNK Gals' Fighters (UE).ngc"

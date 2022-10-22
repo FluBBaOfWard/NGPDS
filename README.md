@@ -1,4 +1,4 @@
-# NGPDS V0.5.4
+# NGPDS V0.5.5
 
 <img align="right" width="220" src="./logo.png" />
 
@@ -74,13 +74,14 @@ To select between the tabs use R & L or the touchscreen.
 
 ## Controls:
 	NDS A & B buttons are mapped to NeoGeo Pocket B & A.
-	NDS Start is mapped to NeoGeo Pocket Option.
+	NDS Start & X is mapped to NeoGeo Pocket Option.
 	NDS Select & Y is mapped to NeoGeo Pocket Power.
 	NDS d-pad is mapped to NeoGeo Pocket d-pad.
 	NDS L button is mapped to NeoGeo Pocket D (debug).
 
 ## Games:
 	Memories of - Pure: Glitches everywhere.
+	Rockman Battles: No sound without bios, wait on first menu to let it start.
 	Sonic The Hedgehog: First boss sometimes disappear, try to use a save
 		state soon before the boss and reload and try again.
 	Super Real Mahjong - Premium Collection: Graphic bugs on intro.

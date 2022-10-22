@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.4 2022-10-19"
+#define EMUVERSION "V0.5.5 2022-10-22"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -156,12 +156,12 @@ void uiDisplay() {
 
 static void uiMachine() {
 	setupSubMenu("Machine Settings");
-	drawSubItem("Language:",langTxt[gLang]);
-	drawSubItem("Machine:",machTxt[gMachineSet]);
+	drawSubItem("Language:", langTxt[gLang]);
+	drawSubItem("Machine:", machTxt[gMachineSet]);
 	drawSubItem("Change Batteries", NULL);
 	drawSubItem("Change Sub Battery", NULL);
-	drawSubItem("Cpu Speed Hacks:",autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
-	drawSubItem("Z80 Clock: ", cpuSpeedTxt[gZ80Speed&7]);
+	drawSubItem("Cpu Speed Hacks:", autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
+	drawSubItem("Z80 Clock:", cpuSpeedTxt[gZ80Speed&7]);
 	drawSubItem("Bios Settings ->", NULL);
 }
 
@@ -172,7 +172,7 @@ void uiSettings() {
 	drawSubItem("Autoload Flash RAM:", autoTxt[(emuSettings>>10)&1]);
 	drawSubItem("Autosave Settings:", autoTxt[(emuSettings>>9)&1]);
 	drawSubItem("Autopause Game:", autoTxt[emuSettings&1]);
-	drawSubItem("Powersave 2nd Screen:",autoTxt[(emuSettings>>1)&1]);
+	drawSubItem("Powersave 2nd Screen:", autoTxt[(emuSettings>>1)&1]);
 	drawSubItem("Emulator on Bottom:", autoTxt[(emuSettings>>8)&1]);
 	drawSubItem("Autosleep:", sleepTxt[(emuSettings>>4)&3]);
 }

@@ -77,7 +77,6 @@
 		9CBC0C8F26DD7D0F0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBEE11526FBB7F30095347A /* GameInfo.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = GameInfo.s; sourceTree = "<group>"; };
 		9CC013FC2668FDD9005714F7 /* Emubase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emubase.h; sourceTree = "<group>"; };
-		9CC013FE26694C6C005714F7 /* TLCS900H_int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLCS900H_int.h; sourceTree = "<group>"; };
 		9CC0F92B26B87B570035478F /* NGPHW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NGPHW.png; sourceTree = "<group>"; };
 		9CC0F92C26B87B570035478F /* NGPHW.grit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NGPHW.grit; sourceTree = "<group>"; };
 		9CC0F92D26C55DD50035478F /* TLCS900H_RegistersMap.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = TLCS900H_RegistersMap.s; sourceTree = "<group>"; };
@@ -187,7 +186,6 @@
 				9C7151312654F0650084BE99 /* TLCS900H_reg.s */,
 				9C7151322654F0650084BE99 /* TLCS900H_src.s */,
 				9C7151242654F0650084BE99 /* TLCS900H_dst.s */,
-				9CC013FE26694C6C005714F7 /* TLCS900H_int.h */,
 				9C7151352654F0650084BE99 /* TLCS900H_int.s */,
 				9C7151362654F0650084BE99 /* TLCS900H_registers.h */,
 				9CC0F92D26C55DD50035478F /* TLCS900H_RegistersMap.s */,

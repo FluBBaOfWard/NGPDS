@@ -99,6 +99,7 @@ gfxReset:					;@ Called with CPU reset
 	ldrb r0,[r0]
 	bl paletteInit				;@ Do palette mapping
 	bl paletteTxAll				;@ Transfer it
+	bl updateLED
 
 	ldmfd sp!,{pc}
 

@@ -22,6 +22,7 @@ typedef struct {				//(config struct)
 	u8 palette;
 	char currentPath[256];
 	char biosPath[256];
+	char biosPathColor[256];
 } ConfigData;
 
 #ifdef __cplusplus

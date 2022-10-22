@@ -64,6 +64,9 @@ int initSettings() {
 bool updateSettingsFromNGP() {
 	int val;
 	bool changed = false;
+	if (g_BIOSBASE_COLOR == NULL && g_BIOSBASE_BW == NULL) {
+		return changed;
+	}
 
 	val = t9LoadB(0x6F8B);
 	if (cfg.birthYear != val) {
@@ -337,6 +340,9 @@ static void turnPowerOff(void) {
 			if (isConsoleSleeping()) {
 				break;
 			}
+		}
+		for (i = 0; i < 6; i++ ) {
+			run();
 		}
 	}
 }

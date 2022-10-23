@@ -445,20 +445,14 @@ k2GEReset0:			;@ r0=periodicIrqFunc, r1=frameIrqFunc, r2=frame2IrqFunc, r3=model
 ;@----------------------------------------------------------------------------
 k2GE_0R:					;@ K2GE read, 0x8000-0x8FFF
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{geptr,lr}
 	adr geptr,k2GE_0
-	bl k2GE_R
-	ldmfd sp!,{geptr,lr}
-	bx lr
+	b k2GE_R
 
 ;@----------------------------------------------------------------------------
 k2GE_0W:					;@ K2GE write, 0x8000-0x8FFF
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{geptr,lr}
 	adr geptr,k2GE_0
-	bl k2GE_W
-	ldmfd sp!,{geptr,lr}
-	bx lr
+	b k2GE_W
 
 k2GE_0:
 	.space k2GESize

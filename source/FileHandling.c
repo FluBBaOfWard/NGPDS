@@ -252,6 +252,9 @@ void saveNVRAM() {
 	NgfHeader header;
 	NgfBlock block;
 
+	cls(0);
+	drawText("        Saving flash...", 11, 0);
+
 	header.version = 0x53;
 	header.blockCount = 0;
 	header.fileLen = sizeof(NgfHeader);

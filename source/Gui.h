@@ -24,6 +24,12 @@ void uiOptions(void);
 void uiController(void);
 void uiDisplay(void);
 
+void debugIOUnimplR(u16 port);
+void debugIOUnimplW(u8 val, u16 port);
+void debugDivideError(void);
+void debugUndefinedInstruction(void);
+void debugCrashInstruction(void);
+
 void controllerSet(void);
 void swapABSet(void);
 

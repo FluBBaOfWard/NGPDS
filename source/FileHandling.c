@@ -13,6 +13,7 @@
 #include "Gfx.h"
 #include "io.h"
 #include "Memory.h"
+#include "NGPHeader.h"
 #include "NGPFlash/NGPFlash.h"
 
 static const char *const folderName = "ngpds";
@@ -376,6 +377,7 @@ bool loadGame(const char *gameName) {
 		drawText("     Please wait, loading.", 11, 0);
 		gRomSize = loadROM(romSpacePtr, gameName, maxRomSize);
 		if (gRomSize) {
+			checkMachine();
 			setEmuSpeed(0);
 			loadCart(emuFlags);
 			gameInserted = true;
@@ -400,6 +402,34 @@ void selectGame() {
 	const char *gameName = browseForFileType(FILEEXTENSIONS".zip");
 	if (loadGame(gameName)) {
 		backOutOfMenu();
+	}
+}
+
+void checkMachine() {
+	char fileExt[8];
+	u8 newMachine;
+	if ( gMachineSet == HW_AUTO ) {
+		getFileExtension(fileExt, currentFilename);
+		NgpHeader *header = (NgpHeader *)romSpacePtr;
+		if ( header->mode != 0 || strstr(fileExt, ".ngc") ) {
+			newMachine = HW_NGPCOLOR;
+		}
+		else {
+			newMachine = HW_NGPMONO;
+		}
+	}
+	else {
+		newMachine = gMachineSet;
+	}
+	if (gMachine != newMachine) {
+		gMachine = newMachine;
+		if (newMachine == HW_NGPMONO) {
+			gSOC = SOC_K1GE;
+		}
+		else {
+			gSOC = SOC_K2GE;
+		}
+		resetConsole();
 	}
 }
 

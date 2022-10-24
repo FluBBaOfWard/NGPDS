@@ -733,6 +733,14 @@ C000 B	: Write any value to this address to start the Z80 interrupt
 						SubBattery fail writes 0x10
 
 
+8700 B		: ??? 0x37 written at startup. BnW
+8702 B		: ??? 0x37 written at startup. BnW
+8704 B		: ??? 0x32 written at startup. BnW
+8706 B		: ??? 0x2A written at startup. BnW
+8708 B		: ??? 0x2A written at startup. BnW
+870A B		: ??? 0x46 written at startup. BnW
+870C B		: ??? 0xC2 written at startup. BnW
+
 87E0 B		: 2D software reset - Write 0x52 to reset?, otherwise ignored.
 				Reset writes 0x53 & 0x47.
 				Bios compares with 0x01.
@@ -747,9 +755,9 @@ C000 B	: Write any value to this address to start the Z80 interrupt
 				0xAA = Allowed,
 				0x55 = Denied
 
-87F2 B		: ??? 0x00 written at shutdown.
+87F2 B		: ??? 0x00 written at shutdown & startup.
 
-87F4 B		: ??? 0x80 written at shutdown.
+87F4 B		: ??? 0x80 written at shutdown & startup.
 
 87FE B		: Input Port Register (Reserved)
 				Bit 0-5 = 1

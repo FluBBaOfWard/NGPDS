@@ -50,6 +50,7 @@ ROM_Space:
 //	.incbin "ngproms/SNK Gals' Fighters (UE).ngc"
 //	.incbin "ngproms/Sonic the Hedgehog - Pocket Adventure (JUE).ngc"
 //biosSpace:
+//	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket (J).ngp"
 //	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket Color (JE).ngp"
 
 	.align 2

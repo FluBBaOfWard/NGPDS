@@ -13,7 +13,7 @@ void exitGUI(void);
 void quickSelectGame(void);
 void nullUINormal(int key);
 void nullUIDebug(int key);
-void resetGame(void);
+void resetConsole(void);
 void ejectGame(void);
 
 void uiNullNormal(void);

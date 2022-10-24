@@ -89,6 +89,7 @@ int main(int argc, char **argv) {
 	if ( g_BIOSBASE_COLOR == NULL ) {
 		installHleBios(biosSpace);
 	}
+	checkMachine();
 	machineInit();
 //	loadCart(0);
 

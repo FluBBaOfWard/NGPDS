@@ -36,7 +36,7 @@ static void updateGameInfo(void);
 const fptr fnMain[] = {nullUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI};
 
 const fptr fnList0[] = {uiDummy};
-const fptr fnList1[] = {selectGame, loadState, saveState, loadNVRAM, saveNVRAM, saveSettings, ejectGame, resetGame, ui9};
+const fptr fnList1[] = {selectGame, loadState, saveState, loadNVRAM, saveNVRAM, saveSettings, ejectGame, resetConsole, ui9};
 const fptr fnList2[] = {ui4, ui5, ui6, ui7, ui8};
 const fptr fnList3[] = {uiDummy};
 const fptr fnList4[] = {autoBSet, autoASet, swapABSet};
@@ -203,7 +203,9 @@ void ejectGame() {
 	ejectCart();
 }
 
-void resetGame() {
+void resetConsole() {
+	checkMachine();
+	machineInit();
 	loadCart(0);
 }
 

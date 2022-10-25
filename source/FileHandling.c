@@ -102,11 +102,13 @@ bool updateSettingsFromNGP() {
 		gLang = val;
 		changed = true;
 	}
-	val = t9LoadB(0x6F94) & 7;
-	if (cfg.palette != val) {
-		cfg.palette = val;
-		gPaletteBank = val;
-		changed = true;
+	if (gMachine == HW_NGPCOLOR) {
+		val = t9LoadB(0x6F94) & 7;
+		if (cfg.palette != val) {
+			cfg.palette = val;
+			gPaletteBank = val;
+			changed = true;
+		}
 	}
 	settingsChanged |= changed;
 

@@ -385,7 +385,7 @@ FF0000 -> FFFFFF	BIOS
 6C23 B		: ?
 
 6C24 B		: Readable copy of 0070.
-6C25 B		: Readable copy of 0071.
+6C25 B		: Readable copy of 0071. // Mono BIOS requires 0xDC to skip setup.
 6C26 B		: Readable copy of 0072.
 6C27 B		: Readable copy of 0073.
 6C28 B		: Readable copy of 0074.
@@ -513,7 +513,6 @@ FF0000 -> FFFFFF	BIOS
 6E95 W		: Reset RTC and more if not 0x4E50(/"NP"?)
 
 
-
 6F80 W		: Battery Voltage, Maximum value 0x3FF, see 0x0060.
 
 6F82 B		: Joypad Status
@@ -524,7 +523,7 @@ FF0000 -> FFFFFF	BIOS
 				Bit 4 = "A"
 				Bit 5 = "B"
 				Bit 6 = "Option" (C button NeoGeo controller when connected)
-				Bit 7 = -  (D button NeoGeo controller when connected)
+				Bit 7 = - (D button NeoGeo controller when connected)
 
 6F83 B		: Boot something? 0x00 Bios UI running.
 				Bit 3 = ??? Set at shutdown, tested in Bios VBlank.
@@ -733,13 +732,13 @@ C000 B	: Write any value to this address to start the Z80 interrupt
 						SubBattery fail writes 0x10
 
 
-8700 B		: ??? 0x37 written at startup. BnW
-8702 B		: ??? 0x37 written at startup. BnW
-8704 B		: ??? 0x32 written at startup. BnW
-8706 B		: ??? 0x2A written at startup. BnW
-8708 B		: ??? 0x2A written at startup. BnW
-870A B		: ??? 0x46 written at startup. BnW
-870C B		: ??? 0xC2 written at startup. BnW
+8700 B		: ??? 0x37 written at startup of BnW BIOS.
+8702 B		: ??? 0x37 written at startup of BnW BIOS.
+8704 B		: ??? 0x32 written at startup of BnW BIOS.
+8706 B		: ??? 0x2A written at startup of BnW BIOS.
+8708 B		: ??? 0x2A written at startup of BnW BIOS.
+870A B		: ??? 0x46 written at startup of BnW BIOS.
+870C B		: ??? 0xC2 written at startup of BnW BIOS.
 
 87E0 B		: 2D software reset - Write 0x52 to reset?, otherwise ignored.
 				Reset writes 0x53 & 0x47.

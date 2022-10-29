@@ -347,6 +347,7 @@ static void turnPowerOff(void) {
 				break;
 			}
 		}
+		// Run a few more frames to turn off LED.
 		for (i = 0; i < 6; i++ ) {
 			run();
 		}

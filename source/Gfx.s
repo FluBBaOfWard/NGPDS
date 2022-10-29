@@ -85,10 +85,10 @@ gfxReset:					;@ Called with CPU reset
 	strh r0,[r1,#REG_WIN1V]
 
 
-	mov r0,#0
-	mov r1,#0
-//	ldr r0,=m6809SetNMIPin
-//	ldr r1,=m6809SetIRQPin
+//	mov r0,#0
+//	mov r1,#0
+	ldr r0,=setVBlankInterrupt
+	ldr r1,=clockTimer0
 	ldr r2,=k2geRAM
 	ldr r3,=gSOC
 	ldrb r3,[r3]
@@ -438,7 +438,7 @@ dmaScroll:		.long SCROLLBUFF2
 
 frameDone:		.long 0
 ;@----------------------------------------------------------------------------
-k2GEReset0:			;@ r0=periodicIrqFunc, r1=frameIrqFunc, r2=frame2IrqFunc, r3=model
+k2GEReset0:			;@ r0=frameIrqFunc, r1=hblankIrqFunc, r2=frame2IrqFunc, r3=model
 ;@----------------------------------------------------------------------------
 	adr geptr,k2GE_0
 	b k2GEReset

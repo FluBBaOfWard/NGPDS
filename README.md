@@ -81,7 +81,6 @@ To select between the tabs use R & L or the touchscreen.
 
 ## Games:
 	Memories of - Pure: Glitches everywhere.
-	Rockman Battles: No sound without bios, wait on first menu to let it start.
 	Sonic The Hedgehog: First boss sometimes disappear, try to use a save
 		state soon before the boss and reload and try again.
 	Super Real Mahjong - Premium Collection: Graphic bugs on intro.

@@ -19,6 +19,7 @@
 #include "TLCS900H/TLCS900H_registers.h"
 #include "cpu.h"
 #include "Memory.h"
+#include "NGPFlash/NGPFlash.h"
 
 const u8 IndexConv[0x21] = {0,0,0,0,1,2,3,0,0,0,4,5,6,0,0,0, 7,8,9,10,0,0,0,0,11,12,0,0,0,14,15,16, 17};
 
@@ -165,7 +166,7 @@ void iBIOSHLE(int vector)
 	// VECT_FLASHWRITE (0xFF6FD8)
 	case 0x06:
 	{
-#ifdef FLASH_ENABLED
+//#ifdef FLASH_ENABLED
 		uint32 i, address, bank = 0x200000;
 
 		// Select HI rom?
@@ -174,21 +175,24 @@ void iBIOSHLE(int vector)
 		}
 		address = rCodeL(0x38) + bank;
 
-		memory_flash_error = FALSE;
+		bool memory_flash_error = FALSE;
 		// Copy as 32 bit values for speed
-		for (i = 0; i < rCodeW(0x34) * 64ul; i++) {
-			t9StoreL(t9LoadL(rCodeL(0x3C) + (i * 4)), address + (i * 4));
+		for (i = 0; i < rCodeW(0x34) * 256ul; i++) {
+			t9StoreB(0xAA, address + 0x5555);
+			t9StoreB(0x55, address + 0x2AAA);
+			t9StoreB(0xA0, address + 0x5555);
+			t9StoreB(t9LoadB(rCodeL(0x3C) + i), address + i);
 		}
+		int block = getBlockFromAddress(address);
+		markBlockDirty(rCodeB(0x30), block);
 
 		if (memory_flash_error) {
 			rCodeB(0x30) = 0xFF;	// RA3 = SYS_FAILURE
 		}
 		else {
-			// Save this data to an external file
-			flash_write(address, rCodeW(0x34) * 256);
 			rCodeB(0x30) = 0;		// RA3 = SYS_SUCCESS
 		}
-#endif
+//#endif
 	}
 		break;
 

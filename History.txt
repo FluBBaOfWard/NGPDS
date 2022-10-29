@@ -2,7 +2,7 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.5 - 2022-10-23 (FluBBa)
+V0.5.5 - 2022-10-29 (FluBBa)
 	Optimized K2GE access.
 	Added speedhack for Big Bang Pro Wrestling.
 

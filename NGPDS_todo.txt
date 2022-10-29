@@ -8,9 +8,9 @@ NGPDS Todo
 
 	Add SWI & Interrupt to BiosHLE.
 	Rewrite BiosHLE to asm?
-	Keep disassemblying Bios from 0xFF476C.
+	Keep disassemblying BIOS from 0xFF476C.
 
-	Convert bios font to png. Done.
+	Convert BIOS font to png. Done.
 
 GFX:
 	Optimize color transfer?
@@ -35,7 +35,8 @@ Games Non Working:
 
 Games With Glitches:
 	Memories of - Pure: Glitches everywhere.
-	Rockman battles: No sound without bios, need to wait on menu a bit.
+	Puyo Puyo: Needs BIOS.
+	Rockman battles: No sound without BIOS.
 	Sonic The Hedgehog: First boss sometimes disappear.
 	Super Real Mahjong - Premium Collection: Graphic bugs on intro.
 	...
@@ -124,7 +125,7 @@ Speedhacks:
 	"Tsunagete Pon! 2"					- JR (0x6E,0xF9) @0x200
 	"Wrestling Madness"					- ???
 
-	"Bios"								- JR (0x67,0xF9) @0xFF
+	"BIOS"								- JR (0x67,0xF9) @0xFF
 										- JR (0x6E,0xF9) @0xFF
 
 Metal Slug - 2nd Mission:

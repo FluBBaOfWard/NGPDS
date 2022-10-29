@@ -14,7 +14,6 @@
 	.global frameTotal
 	.global waitMaskIn
 	.global waitMaskOut
-	.global cpu1SetIRQ
 	.global setInterruptExternal
 	.global Z80_SetEnable
 	.global Z80_nmi_do
@@ -235,12 +234,14 @@ tweakZ80Speed:				;@ in r0=0 normal, 1=half speed, 2=1/4 speed...
 	bx lr
 ;@----------------------------------------------------------------------------
 cpuReset:					;@ Called by loadCart/resetGame
+	.type   cpuReset STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 
 	bl setCpuSpeed
 
 	ldr r0,=tlcs900HState
+	adr r1,cpu1SetIRQ
 	bl tlcs900HReset
 
 ;@--------------------------------------

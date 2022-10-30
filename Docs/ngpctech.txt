@@ -1034,9 +1034,9 @@ ANSWERF_TIME           equ     40h     ; long time no use shutdown operation (0=
 ; Entry:
 ;    rw3 = VECT_FLASHWRITE
 ;    ra3 = Flash Memory Address (0=$200000, 1=$800000)
-;    rbc3 = Transfer byte number (transfer in multiples of 256: 1=256, 2=512, etc)
-;    xhl3 = Transfer from Address
+;    rbc3 = Transfer byte count (transfer in multiples of 256: 1=256, 2=512, etc)
 ;    xde3 = Transfer to Address
+;    xhl3 = Transfer from Address
 ; Exit:
 ;    ra3 = SYS_SUCCESS if ok, other values are an error.
 ;

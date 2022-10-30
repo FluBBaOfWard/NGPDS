@@ -166,7 +166,6 @@ void iBIOSHLE(int vector)
 	// VECT_FLASHWRITE (0xFF6FD8)
 	case 0x06:
 	{
-//#ifdef FLASH_ENABLED
 		uint32 i, address, bank = 0x200000;
 
 		// Select HI rom?
@@ -175,24 +174,17 @@ void iBIOSHLE(int vector)
 		}
 		address = rCodeL(0x38) + bank;
 
-		bool memory_flash_error = FALSE;
-		// Copy as 32 bit values for speed
-		for (i = 0; i < rCodeW(0x34) * 256ul; i++) {
-			t9StoreB(0xAA, address + 0x5555);
-			t9StoreB(0x55, address + 0x2AAA);
-			t9StoreB(0xA0, address + 0x5555);
+		int count = rCodeW(0x34) * 256;
+		for (i = 0; i < count; i++) {
+			t9StoreB(0xAA, bank + 0x5555);
+			t9StoreB(0x55, bank + 0x2AAA);
+			t9StoreB(0xA0, bank + 0x5555);
 			t9StoreB(t9LoadB(rCodeL(0x3C) + i), address + i);
 		}
 		int block = getBlockFromAddress(address);
 		markBlockDirty(rCodeB(0x30), block);
 
-		if (memory_flash_error) {
-			rCodeB(0x30) = 0xFF;	// RA3 = SYS_FAILURE
-		}
-		else {
-			rCodeB(0x30) = 0;		// RA3 = SYS_SUCCESS
-		}
-//#endif
+		rCodeB(0x30) = 0;		// RA3 = SYS_SUCCESS
 	}
 		break;
 
@@ -203,8 +195,22 @@ void iBIOSHLE(int vector)
 		break;
 	// VECT_FLASHERS (0xFF7082)
 	case 0x08:
-		// TODO
+	{
+		uint32 address, bank = 0x200000;
+
+		// Select HI rom?
+		if (rCodeB(0x30) == 1) {
+			bank = 0x800000;
+		}
+		address = bank + getBlockOffset(rCodeB(0x34));
+
+		t9StoreB(0xAA, address + 0x5555);
+		t9StoreB(0x55, address + 0x2AAA);
+		t9StoreB(0x80, address + 0x5555);
+		t9StoreB(0xAA, address + 0x5555);
+		t9StoreB(0x55, address + 0x2AAA);
 		rCodeB(0x30) = 0;	// RA3 = SYS_SUCCESS
+	}
 		break;
 
 	// VECT_ALARMSET (0xFF149B)

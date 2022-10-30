@@ -23,7 +23,7 @@
 
 const u8 IndexConv[0x21] = {0,0,0,0,1,2,3,0,0,0,4,5,6,0,0,0, 7,8,9,10,0,0,0,0,11,12,0,0,0,14,15,16, 17};
 
-static uint8 CacheIntPrio[0xB]; // Interrupt prio registers at 0x0070-0x007a don't have priority readable.
+static u8 CacheIntPrio[0xB]; // Interrupt prio registers at 0x0070-0x007a don't have priority readable.
 	 		       // This should probably be stored in BIOS work RAM somewhere instead of a separate array! @6C24-6C2B
 
 
@@ -45,7 +45,7 @@ is dependant on the current program counter. */
 
 void iBIOSHLE(int vector)
 {
-//	uint32 a;
+//	u32 a;
 	switch (vector)
 	{	
 
@@ -84,8 +84,8 @@ void iBIOSHLE(int vector)
 	case 0x04:
 	{
 
-	uint8 level = rCodeB(0x35) & 0x07; // RB3
-	uint8 interrupt = rCodeB(0x34);	// RC3
+	u8 level = rCodeB(0x35) & 0x07; // RB3
+	u8 interrupt = rCodeB(0x34);	// RC3
 
 	switch(interrupt)
 	{
@@ -139,8 +139,8 @@ void iBIOSHLE(int vector)
 	// VECT_SYSFONTSET (0xFF8D8A)
 	case 0x05:
 	{
-		uint8 a,b,c, j;
-		uint16 i, dst = 0xA000;
+		u8 a,b,c, j;
+		u16 i, dst = 0xA000;
 
 		b = rCodeB(0x30) >> 4;
 		a = rCodeB(0x30) & 3;
@@ -149,7 +149,7 @@ void iBIOSHLE(int vector)
 			c = ngpc_bios[0x8DCF + i];
 
 			for (j = 0; j < 8; j++, c<<=1) {
-				uint16 data16;
+				u16 data16;
 
 				data16 = t9LoadW(dst);
 				data16 <<= 2;
@@ -166,7 +166,7 @@ void iBIOSHLE(int vector)
 	// VECT_FLASHWRITE (0xFF6FD8)
 	case 0x06:
 	{
-		uint32 i, address, bank = 0x200000;
+		u32 i, address, bank = 0x200000;
 
 		// Select HI rom?
 		if (rCodeB(0x30) == 1) {
@@ -196,7 +196,7 @@ void iBIOSHLE(int vector)
 	// VECT_FLASHERS (0xFF7082)
 	case 0x08:
 	{
-		uint32 address, bank = 0x200000;
+		u32 address, bank = 0x200000;
 
 		// Select HI rom?
 		if (rCodeB(0x30) == 1) {
@@ -276,7 +276,7 @@ void iBIOSHLE(int vector)
 	case 0x13:
 	{
 		// Write the byte
-		uint8 data = rCodeB(0x35);
+		u8 data = rCodeB(0x35);
 		system_comms_write(data);
 		// Always COM_BUF_OK because the write call always succeeds.
 		rCodeB(0x30) = 0x0;			// RA3 = COM_BUF_OK
@@ -290,7 +290,7 @@ void iBIOSHLE(int vector)
 	// VECT_COMGETDATA (0xFF2CB4)
 	case 0x14:
 	{
-		uint8 data;
+		u8 data;
 
 		if (system_comms_read(&data)) {
 			rCodeB(0x30) = 0;	// COM_BUF_OK
@@ -334,7 +334,7 @@ void iBIOSHLE(int vector)
 	case 0x19:
 		while(rCodeB(0x35) > 0)
 		{
-			uint8 data;
+			u8 data;
 			data = t9LoadB(rCodeL(0x3C));
 
 			// Write data from (XHL3++)
@@ -349,7 +349,7 @@ void iBIOSHLE(int vector)
 	// VECT_COMGETBUFDATA (0xFF2D85)
 	case 0x1A:
 		while(rCodeB(0x35) > 0) {
-			uint8 data;
+			u8 data;
 			if (system_comms_read(&data)) {
 				// Read data into (XHL3++)
 				t9StoreB(data, rCodeL(0x3C));

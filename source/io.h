@@ -40,32 +40,20 @@ int ioGetStateSize(void);
  * high-level communications have been established, then return FALSE.
  * If buffer is NULL, then no data is read, only status is returned
  */
-bool system_comms_read(uint8 *buffer);
+bool system_comms_read(u8 *buffer);
 
 /**
  * Peeks at any data from the other system. If no data is available or
  * no high-level communications have been established, then return FALSE.
  * If buffer is NULL, then no data is read, only status is returned
  */
-bool system_comms_poll(uint8 *buffer);
+bool system_comms_poll(u8 *buffer);
 
 /**
  * Writes a byte from the other system. This function should block until
  * the data is written. USE RELIABLE COMMS! Data cannot be re-requested.
  */
-void system_comms_write(uint8 data);
-
-/**
- * Reads the "appropriate" (system specific) flash data into the given
- * preallocated buffer. The emulation core doesn't care where from.
- */
-bool system_io_flash_read(uint8 *buffer, uint32 bufferLength);
-
-/**
- * Writes the given flash data into an "appropriate" (system specific)
- * place. The emulation core doesn't care where to.
- */
-bool system_io_flash_write(uint8 *buffer, uint32 bufferLength);
+void system_comms_write(u8 data);
 
 #ifdef __cplusplus
 } // extern "C"

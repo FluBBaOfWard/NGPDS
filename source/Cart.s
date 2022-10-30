@@ -1,6 +1,5 @@
 #ifdef __arm__
 
-#include "Shared/EmuSettings.h"
 #include "TLCS900H/TLCS900H.i"
 #include "ARMZ80/ARMZ80.i"
 #include "K2GE/K2GE.i"

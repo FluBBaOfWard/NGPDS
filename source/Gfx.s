@@ -68,10 +68,10 @@ gfxReset:					;@ Called with CPU reset
 
 	mov r1,#REG_BASE
 	;@ Horizontal start-end
-	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<16)+(SCREEN_WIDTH+GAME_WIDTH)/2
+	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
 	strh r0,[r1,#REG_WIN0H]
 	;@ Vertical start-end
-	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<16)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
+	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
 	strh r0,[r1,#REG_WIN0V]
 
 	mov r0,#0x003F				;@ WinIN0, Everything enabled inside Win0

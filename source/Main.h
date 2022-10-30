@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 extern bool gameInserted;
-extern uint16 *map0sub;
+extern u16 *map0sub;
 
 void waitVBlank(void);
 

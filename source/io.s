@@ -224,19 +224,19 @@ z80LatchR:					;@ Read communication latch (0x8000)
 	bx lr
 
 ;@----------------------------------------------------------------------------
-system_comms_read:			;@ r0 = (uint8 *buffer)
+system_comms_read:			;@ r0 = (u8 *buffer)
 	.type system_comms_read STT_FUNC
 ;@----------------------------------------------------------------------------
 	mov r0,#0
 	bx lr
 ;@----------------------------------------------------------------------------
-system_comms_poll:			;@ r0 = (uint8 *buffer)
+system_comms_poll:			;@ r0 = (u8 *buffer)
 	.type system_comms_poll STT_FUNC
 ;@----------------------------------------------------------------------------
 	mov r0,#0
 	bx lr
 ;@----------------------------------------------------------------------------
-system_comms_write:			;@ r0 = (uint8 data)
+system_comms_write:			;@ r0 = (u8 data)
 	.type system_comms_write STT_FUNC
 ;@----------------------------------------------------------------------------
 	mov r0,#0

@@ -234,7 +234,6 @@ tweakZ80Speed:				;@ in r0=0 normal, 1=half speed, 2=1/4 speed...
 	bx lr
 ;@----------------------------------------------------------------------------
 cpuReset:					;@ Called by loadCart/resetGame
-	.type   cpuReset STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 

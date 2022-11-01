@@ -103,7 +103,7 @@ NoZ80Now:
 tlcs900hCyclesPerScanline:	.long 0
 z80CyclesPerScanline:	.long 0
 joyClick:			.long 0
-frameTotal:			.long 0		;@ Let ui.c see frame count for savestates
+frameTotal:			.long 0		;@ Let Gui.c see frame count for savestates
 waitCountIn:		.byte 0
 waitMaskIn:			.byte 0
 waitCountOut:		.byte 0

@@ -155,10 +155,6 @@ muteSoundChip:
 	.byte 0
 	.space 2
 
-soundLatch:
-	.byte 0
-	.space 3
-
 	.section .bss
 	.align 2
 k2Audio_0:

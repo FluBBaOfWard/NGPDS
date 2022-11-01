@@ -335,7 +335,6 @@ checkForAlarm:
 ;@----------------------------------------------------------------------------
 t9StoreB_Low:
 ;@----------------------------------------------------------------------------
-	ldr t9optbl,=tlcs900HState	;@ !!!This should not be needed when called from asm.
 	adr r2,systemMemory
 	strb r0,[r2,r1]
 

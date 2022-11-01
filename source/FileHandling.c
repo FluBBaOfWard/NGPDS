@@ -69,41 +69,41 @@ bool updateSettingsFromNGP() {
 		return changed;
 	}
 
-	val = t9LoadB(0x6F8B);
+	val = t9LoadBX(0x6F8B);
 	if (cfg.birthYear != val) {
 		cfg.birthYear = val;
 		changed = true;
 	}
-	val = t9LoadB(0x6F8C);
+	val = t9LoadBX(0x6F8C);
 	if (cfg.birthMonth != val) {
 		cfg.birthMonth = val;
 		changed = true;
 	}
-	val = t9LoadB(0x6F8D);
+	val = t9LoadBX(0x6F8D);
 	if (cfg.birthDay != val) {
 		cfg.birthDay = val;
 		changed = true;
 	}
 
-	val = t9LoadB(0x6C34);
+	val = t9LoadBX(0x6C34);
 	if (cfg.alarmHour != val) {
 		cfg.alarmHour = val;
 		changed = true;
 	}
-	val = t9LoadB(0x6C35);
+	val = t9LoadBX(0x6C35);
 	if (cfg.alarmMinute != val) {
 		cfg.alarmMinute = val;
 		changed = true;
 	}
 
-	val = t9LoadB(0x6F87) & 1;
+	val = t9LoadBX(0x6F87) & 1;
 	if (cfg.language != val) {
 		cfg.language = val;
 		gLang = val;
 		changed = true;
 	}
 	if (gMachine == HW_NGPCOLOR) {
-		val = t9LoadB(0x6F94) & 7;
+		val = t9LoadBX(0x6F94) & 7;
 		if (cfg.palette != val) {
 			cfg.palette = val;
 			gPaletteBank = val;
@@ -410,7 +410,7 @@ void selectGame() {
 
 void checkMachine() {
 	char fileExt[8];
-	u8 newMachine;
+	u8 newMachine = gMachine;
 	if ( gMachineSet == HW_AUTO ) {
 		getFileExtension(fileExt, currentFilename);
 		NgpHeader *header = (NgpHeader *)romSpacePtr;
@@ -421,9 +421,6 @@ void checkMachine() {
 			newMachine = HW_NGPMONO;
 		}
 	}
-	else {
-		newMachine = gMachineSet;
-	}
 	if (gMachine != newMachine) {
 		gMachine = newMachine;
 		if (newMachine == HW_NGPMONO) {
@@ -432,7 +429,6 @@ void checkMachine() {
 		else {
 			gSOC = SOC_K2GE;
 		}
-		resetConsole();
 	}
 }
 

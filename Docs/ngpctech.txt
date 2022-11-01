@@ -416,6 +416,7 @@ FF0000 -> FFFFFF	BIOS
 6C2C B		: ??? 0x00 written everytime CPU speed (0x0080) is set.
 
 6C2D B		: 0x60?
+
 6C34 B		: RTC Alarm hour, BCD, used during setting.
 6C35 B		: RTC Alarm minute, BCD, used during setting.
 6C36 B		: RTC Alarm day of week
@@ -530,7 +531,7 @@ FF0000 -> FFFFFF	BIOS
 6E8B B		: ???	Function pointer for System VBlank 7?
 				00 - 07 = Function
 
-6E95 W		: Reset RTC and more if not 0x4E50(/"NP"?)
+6E95 W		: Run setup if not 0x4E50(/"NP"?)
 
 
 6F80 W		: Battery Voltage, Maximum value 0x3FF, see 0x0060.

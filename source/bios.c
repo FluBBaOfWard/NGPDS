@@ -400,6 +400,13 @@ void resetBios(NgpHeader *ngpHeader)
 		t9StoreBX(snkLogo[i], 0xA1C0 + i);
 	}
 
+	t9StoreBX(0xF3, 0x7000);	// Z80 DI
+	t9StoreBX(0x31, 0x7001);	// Z80 LD SP 0x0FFF
+	t9StoreBX(0xFF, 0x7002);
+	t9StoreBX(0x0F, 0x7003);
+	t9StoreBX(0x18, 0x7004);	// Z80 JR -2
+	t9StoreBX(0xFE, 0x7005);
+
 	// Enable sound
 	t9StoreWX(0x5555, 0xB8);
 

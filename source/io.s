@@ -47,6 +47,7 @@ ioReset:
 initSysMem:					;@ In r0=values ptr.
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r5,t9optbl,lr}
+	ldr t9optbl,=tlcs900HState
 
 	mov r4,r0
 	mov r5,#0xFF

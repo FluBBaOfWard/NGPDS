@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "NGPHeader.h"
+
 extern u32 gRomSize;
 extern u32 maxRomSize;
 extern u32 emuFlags;
@@ -18,6 +20,7 @@ extern u8 gPaletteBank;
 extern u8 ngpRAM[0x4000];
 extern u8 biosSpace[0x10000];
 extern u8 *romSpacePtr;
+extern const NgpHeader *ngpHeader;
 extern const void *g_BIOSBASE_COLOR;
 extern const void *g_BIOSBASE_BW;
 

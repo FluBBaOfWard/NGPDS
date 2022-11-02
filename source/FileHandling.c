@@ -413,8 +413,7 @@ void checkMachine() {
 	u8 newMachine = gMachine;
 	if ( gMachineSet == HW_AUTO ) {
 		getFileExtension(fileExt, currentFilename);
-		NgpHeader *header = (NgpHeader *)romSpacePtr;
-		if ( header->mode != 0 || strstr(fileExt, ".ngc") ) {
+		if ( ngpHeader->mode != 0 || strstr(fileExt, ".ngc") ) {
 			newMachine = HW_NGPCOLOR;
 		}
 		else {

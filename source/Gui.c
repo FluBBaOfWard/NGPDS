@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.5 2022-11-02"
+#define EMUVERSION "V0.5.6 2023-06-21"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -241,7 +241,7 @@ void debugUndefinedInstruction() {
 	debugOutput("Undefined Instruction.");
 }
 void debugCrashInstruction() {
-	debugOutput("CPU Crash! (0xF1)");
+	debugOutput("CPU Crash!");
 }
 
 //---------------------------------------------------------------------------------

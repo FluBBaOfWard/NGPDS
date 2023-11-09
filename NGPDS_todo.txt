@@ -1,8 +1,6 @@
 NGPDS Todo
 
-	Add selection of 2 BIOS's. Add machine Auto.
 	Use CLZ for memory mapping.
-	Connect NDS battery level to NGP battery level?
 	Save settings for Swap A-B.
 	Emulate second flash chip!
 

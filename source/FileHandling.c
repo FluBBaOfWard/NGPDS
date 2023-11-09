@@ -6,6 +6,8 @@
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
 #include "Shared/FileHelper.h"
+#include "Shared/AsmExtra.h"
+#include "Shared/CartridgeRAM.h"
 #include "Main.h"
 #include "Gui.h"
 #include "Cart.h"
@@ -65,7 +67,7 @@ int initSettings() {
 bool updateSettingsFromNGP() {
 	int val;
 	bool changed = false;
-	if (g_BIOSBASE_COLOR == NULL && g_BIOSBASE_BW == NULL) {
+	if (g_BIOSBASE_COLOR == NULL && g_BIOSBASE_BNW == NULL) {
 		return changed;
 	}
 
@@ -378,8 +380,27 @@ bool loadGame(const char *gameName) {
 			turnPowerOff();
 		}
 		drawText("     Please wait, loading.", 11, 0);
+		u32 maxSize = allocatedRomMemSize;
+		u8 *romPtr = allocatedRomMem;
 		gRomSize = loadROM(romSpacePtr, gameName, maxRomSize);
+		if (!gRomSize) {
+			// Enable Expansion RAM in GBA port
+			if (cartRamInit(DETECT_RAM) != DETECT_RAM) {
+				infoOutput("Trying Exp-RAM.");
+				romPtr = (u8 *)cartRamUnlock();
+				maxSize = cartRamSize();
+				gRomSize = loadROM(romPtr, gameName, maxSize);
+				enableSlot2Cache();
+			}
+		}
+		else {
+			cartRamLock();
+		}
+
 		if (gRomSize) {
+			maxRomSize = maxSize;
+			romSpacePtr = romPtr;
+
 			checkMachine();
 			setEmuSpeed(0);
 			loadCart(emuFlags);
@@ -410,8 +431,8 @@ void selectGame() {
 
 void checkMachine() {
 	char fileExt[8];
-	u8 newMachine = gMachine;
-	if ( gMachineSet == HW_AUTO ) {
+	u8 newMachine = gMachineSet;
+	if ( newMachine == HW_AUTO ) {
 		getFileExtension(fileExt, currentFilename);
 		if ( ngpHeader->mode != 0 || strstr(fileExt, ".ngc") ) {
 			newMachine = HW_NGPCOLOR;
@@ -422,12 +443,13 @@ void checkMachine() {
 	}
 	if (gMachine != newMachine) {
 		gMachine = newMachine;
-		if (newMachine == HW_NGPMONO) {
+		if (gMachine == HW_NGPMONO) {
 			gSOC = SOC_K1GE;
 		}
 		else {
 			gSOC = SOC_K2GE;
 		}
+		machineInit();
 	}
 }
 
@@ -456,20 +478,20 @@ static int loadBIOS(void *dest, const char *fPath, const int maxSize) {
 }
 
 int loadColorBIOS(void) {
-	if ( loadBIOS(biosSpace, cfg.biosPath, sizeof(biosSpace)) ) {
-		g_BIOSBASE_COLOR = biosSpace;
+	if ( loadBIOS(biosSpaceColor, cfg.biosPath, sizeof(biosSpace)) ) {
+		g_BIOSBASE_COLOR = biosSpaceColor;
 		return 1;
 	}
 	g_BIOSBASE_COLOR = NULL;
 	return 0;
 }
 
-int loadBWBIOS(void) {
+int loadBnWBIOS(void) {
 	if ( loadBIOS(biosSpace, cfg.biosPath, sizeof(biosSpace)) ) {
-		g_BIOSBASE_BW = biosSpace;
+		g_BIOSBASE_BNW = biosSpace;
 		return 1;
 	}
-	g_BIOSBASE_BW = NULL;
+	g_BIOSBASE_BNW = NULL;
 	return 0;
 }
 
@@ -494,9 +516,9 @@ void selectColorBios() {
 	cls(0);
 }
 
-void selectBWBios() {
+void selectBnWBios() {
 	if ( selectBios(cfg.biosPath, ".ngp.ngc.zip") ) {
-		loadBWBIOS();
+		loadBnWBIOS();
 		machineInit();
 	}
 	cls(0);

@@ -61,12 +61,16 @@ int main(int argc, char **argv) {
 	if (argc > 1) {
 		enableExit = true;
 	}
-	maxRomSize = 0x400000;
-	romSpacePtr = malloc(maxRomSize);
-	if (romSpacePtr == NULL) {
-		maxRomSize = 0x200000;
-		romSpacePtr = malloc(maxRomSize);
+	// Try to allocate 4MB on DSi
+	allocatedRomMemSize = 0x400000 + 0x1000;
+	allocatedRomMem = malloc(allocatedRomMemSize);
+	if (allocatedRomMem == NULL) {
+		// Try to allocate 2MB on DS
+		allocatedRomMemSize = 0x200000 + 0x1000;
+		allocatedRomMem = malloc(allocatedRomMemSize);
 	}
+	maxRomSize = allocatedRomMemSize;
+	romSpacePtr = allocatedRomMem;
 	setupGraphics();
 
 	setupStream();
@@ -76,6 +80,7 @@ int main(int argc, char **argv) {
 	initSettings();
 	if ( initFileHelper() ) {
 		loadSettings();
+		loadBnWBIOS();
 		loadColorBIOS();
 		if (argc > 1) {
 			loadGame(argv[1]);

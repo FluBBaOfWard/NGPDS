@@ -3,26 +3,28 @@
 #include "TLCS900H/TLCS900H.i"
 #include "ARMZ80/ARMZ80.i"
 #include "K2GE/K2GE.i"
-
-	.global ioReset
-	.global transferTime
-	.global Z80In
-	.global Z80Out
-	.global refreshEMUjoypads
-	.global ioSaveState
-	.global ioLoadState
-	.global ioGetStateSize
+#include "Shared/EmuMenu.i"
 
 	.global joyCfg
 	.global EMUinput
+	.global gSubBatteryLevel
+	.global batteryLevel
+
+	.global ioReset
+	.global convertInput
+	.global refreshEMUjoypads
+	.global transferTime
+	.global Z80In
+	.global Z80Out
+	.global ioSaveState
+	.global ioLoadState
+	.global ioGetStateSize
 
 	.global t9LoadB_Low
 	.global t9StoreB_Low
 	.global updateSlowIO
 	.global z80LatchR
 	.global z80LatchW
-	.global gSubBatteryLevel
-	.global batteryLevel
 	.global system_comms_read
 	.global system_comms_poll
 	.global system_comms_write
@@ -46,8 +48,8 @@ ioReset:
 ;@----------------------------------------------------------------------------
 initSysMem:					;@ In r0=values ptr.
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r5,t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{r4-r5,t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 
 	mov r4,r0
 	mov r5,#0xFF
@@ -58,7 +60,7 @@ initMemLoop:
 	subs r5,r5,#1
 	bpl initMemLoop
 
-	ldmfd sp!,{r4-r5,t9optbl,pc}
+	ldmfd sp!,{r4-r5,t9ptr,pc}
 ;@----------------------------------------------------------------------------
 ioSaveState:				;@ In r0=destination. Out r0=size.
 	.type   ioSaveState STT_FUNC
@@ -148,6 +150,14 @@ SysMemDefault:
 	.section .ewram, "ax", %progbits	;@ For the GBA
 	.align 2
 #endif
+;@----------------------------------------------------------------------------
+convertInput:			;@ Convert from device keys to target r0=input/output
+	.type convertInput STT_FUNC
+;@----------------------------------------------------------------------------
+	mvn r1,r0
+	tst r1,#KEY_L|KEY_R				;@ Keys to open menu
+	orreq r0,r0,#KEY_OPEN_MENU
+	bx lr
 ;@----------------------------------------------------------------------------
 refreshEMUjoypads:			;@ Call every frame
 ;@----------------------------------------------------------------------------
@@ -251,10 +261,23 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	strb r0,rtcTimer
 	bxpl lr
 
-	ldr r0,batteryLevel
-	subs r0,r0,#1
-	movmi r0,#1
-	str r0,batteryLevel
+	stmfd sp!,{r12,lr}
+	blx getBatteryLevel			;@ Get NDS battery level.
+	ldmfd sp!,{r12,lr}
+	ldrb r1,lastBattery
+	strb r0,lastBattery
+	ldr r2,batteryLevel
+	eor r1,r1,r0
+	tst r1,#0xF
+	beq notLowBatt
+	ands r0,r0,#0xC
+	bne notLowBatt
+	cmp r2,#0x8000
+	movcs r2,#0x8000
+notLowBatt:
+	subs r2,r2,#1
+	movmi r2,#1
+	str r2,batteryLevel
 
 	ldr r1,=gSubBatteryLevel
 	ldr r0,[r1]
@@ -408,7 +431,7 @@ cpuSpeedW:
 	bxeq lr
 	strb r0,systemMemory+0x80
 	rsb r0,r0,#T9CYC_SHIFT
-	strb r0,[t9optbl,#tlcsCycShift]
+	strb r0,[t9ptr,#tlcsCycShift]
 	mov t9cycles,t9cycles,ror r2
 	bx lr
 
@@ -461,13 +484,14 @@ batteryLevel:
 systemMemory:
 	.space 0x100
 
+lastBattery:
+	.byte 0
 rtcTimer:
 	.byte 0
 sc0Buf:
 	.byte 0
 commStatus:
 	.byte 0
-	.space 1
 
 ;@----------------------------------------------------------------------------
 	.end

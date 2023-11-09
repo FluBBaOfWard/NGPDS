@@ -2,13 +2,16 @@
 
 <img align="right" width="220" src="./logo.png" />
 
-This is a SNK Neogeo Pocket (Color) emulator for the Nintendo DS.
+This is a SNK Neogeo Pocket (Color) emulator for the Nintendo DS(i)/3DS.
 
 ## How to use
 
 1. Create a folder named "ngpds" in either the root of your flash card or in
  the data folder. This is where settings and save files end up.
-2. Now put game/bios files into a folder where you have (NGP) roms.
+2. Now put game/bios files into a folder where you have (NGP) roms, max
+ 768 games per folder, filenames must not be longer than 127 chars. You can use
+ zip-files (as long as they use the deflate compression). CAUTION! Games that
+ require SLOT-2 RAM can not be used with zip-files!
 3. Depending on your flashcart you might have to DLDI patch the emulator.
 
 Note! You need a bios to be able to save in game.
@@ -21,6 +24,9 @@ to select an option, B or the top of the screen to go back a step.
 
 To select between the tabs use R & L or the touchscreen.
 
+Since the DS/DS Lite only has 4MB of RAM you will need a SLOT-2/GBA cart with
+ RAM to play games larger than 2MB.
+
 ## Menu
 
 ### File
@@ -28,10 +34,11 @@ To select between the tabs use R & L or the touchscreen.
 * Load Game: Select a game to load.
 * Load State: Load a previously saved state of the currently running game.
 * Save State: Save a state of the currently running game.
-* Load Flash RAM: Load flash ram for the currently running game.
-* Save Flash RAM: Save flash ram for the currently running game.
+* Load Flash: Load flash ram for the currently running game.
+* Save Flash: Save flash ram for the currently running game.
 * Save Settings: Save the current settings.
-* Reset Game: Reset the currently running game.
+* Eject Game: Remove the game, can be used to enter bios settings.
+* Reset Console: Reset the console.
 * Quit Emulator: (If supported.)
 
 ### Options
@@ -101,6 +108,6 @@ Dwedit for help and inspiration with a lot of things.
 
 Fredrik Ahlström
 
-Twitter @TheRealFluBBa
+X/Twitter @TheRealFluBBa
 
-http://www.github.com/FluBBaOfWard
+https://www.github.com/FluBBaOfWard

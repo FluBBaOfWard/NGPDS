@@ -36,6 +36,13 @@ int ioLoadState(const void *source);
 int ioGetStateSize(void);
 
 /**
+ * Convert device input keys to target keys.
+ * @param input NDS/GBA keys
+ * @return The converted input.
+ */
+int convertInput(int input);
+
+/**
  * Reads a byte from the other system. If no data is available or no
  * high-level communications have been established, then return FALSE.
  * If buffer is NULL, then no data is read, only status is returned

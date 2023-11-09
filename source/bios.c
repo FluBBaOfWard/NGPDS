@@ -325,7 +325,7 @@ void resetBios(NgpHeader *cartHeader)
 //006C00 -> 006FFF	BIOS Workspace
 //==================================
 
-	t9StoreLX(cartHeader->startPC, 0x6C00);		// Start
+	t9StoreLX(cartHeader->startPC, 0x6C00);	// Start
 
 	t9StoreWX(cartHeader->catalog, 0x6C04);
 	t9StoreWX(cartHeader->catalog, 0x6E82);
@@ -353,14 +353,14 @@ void resetBios(NgpHeader *cartHeader)
 
 	t9StoreBX(0x01, 0x6C55);		// 0x01 = Commercial game
 
-	t9StoreWX(0x03FF, 0x6F80);	// Lots of battery power!
+	t9StoreWX(0x03FF, 0x6F80);		// Lots of battery power!
 
 	t9StoreBX(0x40, 0x6F84);		// "Power On" startup
 	t9StoreBX(0x00, 0x6F85);		// No shutdown request
 	t9StoreBX(0x00, 0x6F86);		// No user answer (?)
 
-	t9StoreWX(0xA5A5, 0x6C7A);	// Running mode
-	t9StoreWX(0x5AA5, 0x6C7C);	// Running mode
+	t9StoreWX(0xA5A5, 0x6C7A);		// Running mode
+	t9StoreWX(0x5AA5, 0x6C7C);		// Running mode
 
 	// Language: 0 = Japanese, 1 = English
 	if (gLang) {
@@ -380,7 +380,7 @@ void resetBios(NgpHeader *cartHeader)
 	t9StoreBX(color, 0x6F95);		// Current Displaymode
 	t9StoreBX(color, 0x6F91);		// Machine
 	if (gMachine == HW_NGPCOLOR) {
-		t9StoreBX(0x10, 0x6F91);		// Machine
+		t9StoreBX(0x10, 0x6F91);	// Machine
 	}
 	// User Interrupt table
 	for (i = 0; i < 0x12; i++) {

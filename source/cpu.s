@@ -4,6 +4,10 @@
 #include "ARMZ80/ARMZ80.i"
 #include "K2GE/K2GE.i"
 
+	.global frameTotal
+	.global waitMaskIn
+	.global waitMaskOut
+
 	.global run
 	.global stepFrame
 	.global cpuReset
@@ -11,9 +15,6 @@
 	.global isConsoleSleeping
 	.global tweakCpuSpeed
 	.global tweakZ80Speed
-	.global frameTotal
-	.global waitMaskIn
-	.global waitMaskOut
 	.global setInterruptExternal
 	.global Z80_SetEnable
 	.global Z80_nmi_do
@@ -72,7 +73,7 @@ ngpFrameLoop:
 	stmia r0,{z80f-z80pc,z80sp}	;@ Save Z80 state
 NoZ80Now:
 ;@--------------------------------------
-	ldr t9optbl,=tlcs900HState
+	ldr t9ptr,=tlcs900HState
 	ldr r0,tlcs900hCyclesPerScanline
 	bl tlcsRestoreAndRunXCycles
 ;@--------------------------------------
@@ -132,7 +133,7 @@ ngpStepLoop:
 	stmia r0,{z80f-z80pc,z80sp}	;@ Save Z80 state
 NoZ80Step:
 ;@--------------------------------------
-	ldr t9optbl,=tlcs900HState
+	ldr t9ptr,=tlcs900HState
 	ldr r0,tlcs900hCyclesPerScanline
 	bl tlcsRestoreAndRunXCycles
 ;@--------------------------------------
@@ -174,10 +175,10 @@ isConsoleSleeping:
 setInterruptExternal:		;@ r0 = index
 	.type setInterruptExternal STT_FUNC
 ;@---------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl setInterrupt
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 Z80_SetEnable:				;@ Address 0xB9 of the TLCS-900H, r0=enabled

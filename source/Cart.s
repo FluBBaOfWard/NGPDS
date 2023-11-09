@@ -6,28 +6,31 @@
 
 	.extern reset				;@ from bios.c
 
-	.global machineInit
-	.global loadCart
-	.global emuFlags
-	.global romNum
-	.global cartFlags
-	.global romStart
-	.global isBiosLoaded
-	.global ngpHeader
-	.global romSpacePtr
-
-	.global biosSpace
-	.global g_BIOSBASE_COLOR
-	.global g_BIOSBASE_BW
-	.global ngpRAM
 	.global gRomSize
 	.global maxRomSize
+	.global allocatedRomMemSize
+	.global emuFlags
 	.global gConfig
 	.global gMachineSet
 	.global gMachine
 	.global gSOC
 	.global gLang
 	.global gPaletteBank
+
+	.global ngpRAM
+	.global biosSpace
+	.global biosSpaceColor
+	.global romSpacePtr
+	.global allocatedRomMem
+	.global ngpHeader
+	.global g_BIOSBASE_COLOR
+	.global g_BIOSBASE_BNW
+	.global cartFlags
+	.global romStart
+	.global isBiosLoaded
+
+	.global machineInit
+	.global loadCart
 
 
 	.syntax unified
@@ -57,7 +60,7 @@ ROM_Space:
 machineInit: 				;@ Called from C
 	.type   machineInit STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r11,lr}
+	stmfd sp!,{r4,lr}
 
 	ldr r1,=romSpacePtr
 //	ldr r0,=ROM_Space
@@ -66,13 +69,17 @@ machineInit: 				;@ Called from C
 
 	bl tlcs9000MemInit
 
-	ldr t9optbl,=tlcs900HState
-	ldr r0,=biosSpace
-	str r0,[t9optbl,#biosBase]
+	ldr r4,=gMachine
+	ldrb r4,[r4]
+	cmp r4,#HW_NGPMONO
+	ldreq r0,=biosSpace
+	ldrne r0,=biosSpaceColor
+	ldr t9ptr,=tlcs900HState
+	str r0,[t9ptr,#biosBase]
 	ldr r0,=tlcs_rom_R
-	str r0,[t9optbl,#readRomPtrLo]
+	str r0,[t9ptr,#readRomPtrLo]
 	ldr r0,=tlcs_romH_R
-	str r0,[t9optbl,#readRomPtrHi]
+	str r0,[t9ptr,#readRomPtrHi]
 
 	bl gfxInit
 //	bl ioInit
@@ -85,7 +92,9 @@ machineInit: 				;@ Called from C
 	bl soundReset
 	bl cpuReset
 
-	ldr r0,=g_BIOSBASE_COLOR
+	cmp r4,#HW_NGPMONO
+	ldreq r0,=g_BIOSBASE_BNW
+	ldrne r0,=g_BIOSBASE_COLOR
 	ldr r0,[r0]
 	cmp r0,#0
 	beq skipBiosSettings
@@ -95,7 +104,7 @@ machineInit: 				;@ Called from C
 	ldr r1,=fixBiosSettings		;@ And Bios settings after the first run.
 	blx r1
 skipBiosSettings:
-	ldmfd sp!,{r4-r11,lr}
+	ldmfd sp!,{r4,lr}
 	bx lr
 
 	.section .ewram,"ax"
@@ -112,7 +121,11 @@ loadCart: 					;@ Called from C:  r0=emuflags
 	bl ngpFlashReset
 	bl hacksInit
 
-	ldr r0,g_BIOSBASE_COLOR
+	ldr r4,=gMachine
+	ldrb r4,[r4]
+	cmp r4,#HW_NGPMONO
+	ldreq r0,g_BIOSBASE_BNW
+	ldrne r0,g_BIOSBASE_COLOR
 	cmp r0,#0
 	bne skipHWSetup
 
@@ -181,8 +194,6 @@ z80MemLoop1:
 
 ;@----------------------------------------------------------------------------
 
-romNum:
-	.long 0						;@ romnumber
 romInfo:						;@
 emuFlags:
 	.byte 0						;@ emuflags      (label this so GUI.c can take a peek) see EmuSettings.h for bitfields
@@ -207,12 +218,16 @@ isBiosLoaded:
 	.byte 0
 //	.space 1					;@ alignment.
 
+allocatedRomMem:
+	.long 0
+allocatedRomMemSize:
+	.long 0
 ngpHeader:
 romSpacePtr:
 	.long 0
 g_BIOSBASE_COLOR:
 	.long 0
-g_BIOSBASE_BW:
+g_BIOSBASE_BNW:
 	.long 0
 gRomSize:
 romSize:
@@ -224,6 +239,8 @@ maxRomSize:
 ngpRAM:
 	.space 0x4000
 biosSpace:
+	.space 0x10000
+biosSpaceColor:
 	.space 0x10000
 ;@----------------------------------------------------------------------------
 	.end

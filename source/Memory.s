@@ -73,55 +73,55 @@ rom_W:						;@ Write ROM address (error)
 t9StoreBX:					;@ r0=value, r1=address
 	.type	t9StoreBX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl t9StoreB
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9StoreWX:					;@ r0=value, r1=address
 	.type	t9StoreWX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl t9StoreW
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9StoreLX:					;@ r0=value, r1=address
 	.type	t9StoreLX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl t9StoreL
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9LoadBX:					;@ r0=address
 	.type	t9LoadBX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl t9LoadB
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9LoadWX:					;@ r0=address
 	.type	t9LoadWX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl t9LoadW
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9LoadLX:					;@ r0=address
 	.type	t9LoadLX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9optbl,lr}
-	ldr t9optbl,=tlcs900HState
+	stmfd sp!,{t9ptr,lr}
+	ldr t9ptr,=tlcs900HState
 	bl t9LoadL
-	ldmfd sp!,{t9optbl,lr}
+	ldmfd sp!,{t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 
@@ -267,9 +267,9 @@ t9LoadB:					;@ r0=address
 	beq tlcs_vram_R
 	mov r2,r2,lsr#7
 	cmp r2,#1
-	ldreq pc,[t9optbl,#readRomPtrLo]
+	ldreq pc,[t9ptr,#readRomPtrLo]
 	cmp r2,#4
-	ldreq pc,[t9optbl,#readRomPtrHi]
+	ldreq pc,[t9ptr,#readRomPtrHi]
 	cmp r2,#7
 	beq tlcs_bios_R
 ram_low_R:
@@ -381,21 +381,21 @@ tlcs_vram_R:				;@ Read vram (0x009000-0x00BFFF)
 ;@----------------------------------------------------------------------------
 tlcs_rom_R:					;@ Read rom (0x200000-0x3FFFFF)
 ;@----------------------------------------------------------------------------
-	ldr r1,[t9optbl,#romBaseLo]
+	ldr r1,[t9ptr,#romBaseLo]
 	mov r0,r0,lsl#11
 	ldrb r0,[r1,r0,lsr#11]!
 	bx lr
 ;@----------------------------------------------------------------------------
 tlcs_romH_R:				;@ Read rom (0x800000-0x9FFFFF)
 ;@----------------------------------------------------------------------------
-	ldr r1,[t9optbl,#romBaseHi]
+	ldr r1,[t9ptr,#romBaseHi]
 	mov r0,r0,lsl#11
 	ldrb r0,[r1,r0,lsr#11]!
 	bx lr
 ;@----------------------------------------------------------------------------
 tlcs_bios_R:				;@ Read bios (0xFF0000-0xFFFFFF)
 ;@----------------------------------------------------------------------------
-	ldr r1,[t9optbl,#biosBase]
+	ldr r1,[t9ptr,#biosBase]
 	mov r0,r0,lsl#16
 	ldrb r0,[r1,r0,lsr#16]!
 	bx lr
@@ -421,7 +421,7 @@ tlcs_vram_W_R:				;@ Read vram (0x009000-0x00BFFF)
 ;@----------------------------------------------------------------------------
 tlcs_rom_W_R:				;@ Read rom (0x200000-0x3FFFFF)
 ;@----------------------------------------------------------------------------
-	ldr r1,[t9optbl,#romBaseLo]
+	ldr r1,[t9ptr,#romBaseLo]
 	mov r0,r0,lsl#11
 	add r1,r1,r0,lsr#11
 	ldrh r0,[r1]
@@ -429,7 +429,7 @@ tlcs_rom_W_R:				;@ Read rom (0x200000-0x3FFFFF)
 ;@----------------------------------------------------------------------------
 tlcs_romH_W_R:				;@ Read rom (0x800000-0x9FFFFF)
 ;@----------------------------------------------------------------------------
-	ldr r1,[t9optbl,#romBaseHi]
+	ldr r1,[t9ptr,#romBaseHi]
 	mov r0,r0,lsl#11
 	add r1,r1,r0,lsr#11
 	ldrh r0,[r1]
@@ -437,7 +437,7 @@ tlcs_romH_W_R:				;@ Read rom (0x800000-0x9FFFFF)
 ;@----------------------------------------------------------------------------
 tlcs_bios_W_R:				;@ Read bios (0xFF0000-0xFFFFFF)
 ;@----------------------------------------------------------------------------
-	ldr r1,[t9optbl,#biosBase]
+	ldr r1,[t9ptr,#biosBase]
 	mov r0,r0,lsl#16
 	add r1,r1,r0,lsr#16
 	ldrh r0,[r1]

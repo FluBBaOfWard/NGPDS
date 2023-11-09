@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.6 2023-06-21"
+#define EMUVERSION "V0.5.6 2023-11-09"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -41,7 +41,7 @@ const fptr fnList2[] = {ui4, ui5, ui6, ui7, ui8};
 const fptr fnList3[] = {uiDummy};
 const fptr fnList4[] = {autoBSet, autoASet, swapABSet};
 const fptr fnList5[] = {gammaSet, paletteChange};
-const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, z80SpeedSet, selectColorBios};
+const fptr fnList6[] = {languageSet, machineSet, batteryChange, subBatteryChange, speedHackSet, z80SpeedSet, selectBnWBios, selectColorBios};
 const fptr fnList7[] = {speedSet, autoStateSet, autoNVRAMSet, autoSettingsSet, autoPauseGameSet, powerSaveSet, screenSwapSet, sleepSet};
 const fptr fnList8[] = {debugTextSet, fgrLayerSet, bgrLayerSet, sprLayerSet, stepFrame};
 const fptr fnList9[] = {exitEmulator, backOutOfMenu};
@@ -162,7 +162,8 @@ static void uiMachine() {
 	drawSubItem("Change Sub Battery", NULL);
 	drawSubItem("Cpu Speed Hacks:", autoTxt[(emuSettings&ALLOW_SPEED_HACKS)>>17]);
 	drawSubItem("Z80 Clock:", cpuSpeedTxt[gZ80Speed&7]);
-	drawSubItem("Bios Settings ->", NULL);
+	drawSubItem("Select BnW Bios", NULL);
+	drawSubItem("Select Color Bios", NULL);
 }
 
 void uiSettings() {

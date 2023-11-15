@@ -26,7 +26,6 @@
 	.global z80LatchR
 	.global z80LatchW
 	.global system_comms_read
-	.global system_comms_poll
 	.global system_comms_write
 	.global systemMemory
 
@@ -237,12 +236,6 @@ z80LatchR:					;@ Read communication latch (0x8000)
 ;@----------------------------------------------------------------------------
 system_comms_read:			;@ r0 = (u8 *buffer)
 	.type system_comms_read STT_FUNC
-;@----------------------------------------------------------------------------
-	mov r0,#0
-	bx lr
-;@----------------------------------------------------------------------------
-system_comms_poll:			;@ r0 = (u8 *buffer)
-	.type system_comms_poll STT_FUNC
 ;@----------------------------------------------------------------------------
 	mov r0,#0
 	bx lr

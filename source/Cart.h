@@ -29,6 +29,7 @@ extern const void *g_BIOSBASE_BNW;
 
 void machineInit(void);
 void loadCart(int emuFlags);
+void tlcs9000MemInit(u8 *romPtr);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -31,6 +31,7 @@
 
 	.global machineInit
 	.global loadCart
+	.global tlcs9000MemInit
 
 
 	.syntax unified
@@ -134,7 +135,7 @@ loadCart: 					;@ Called from C:  r0=emuflags
 	bl soundReset
 	bl cpuReset
 	ldr r0,ngpHeader			;@ First argument
-	ldr r1,=resetBios
+	ldr r1,=resetHleBios
 	blx r1
 skipHWSetup:
 	ldmfd sp!,{r4-r11,lr}

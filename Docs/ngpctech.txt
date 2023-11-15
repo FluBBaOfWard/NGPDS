@@ -30,7 +30,7 @@ My K2-CHIP has the designation T3W31AF-001, I've also seen T3W26AF-0103.
 Memory Map Summary:
 -------------------
 
-000000 -> 0000FF	CPU Internal RAM (Timers / DMA / RTC / IO / etc.)
+000000 -> 0000FF	CPU Internal Registers (Timers / DMA / RTC / IO / etc.)
 004000 -> 006BFF	Work RAM
 006C00 -> 006FFF	Bios work RAM
 007000 -> 007FFF	Z80 Shared RAM
@@ -492,7 +492,7 @@ FF0000 -> FFFFFF	BIOS
 
 6D00 B		: Serial Comms Transmit buffer count.
 6D01 B		: Serial Comms Receive buffer count.
-6D02 B		: Serial Comms flag?
+6D02 B		: Serial Comms counter?
 6D03 B		: Serial Comms flag?
 6D04 B		: Serial Comms flag?
 6D05 B		: Serial Comms status flag? 0xFF is Error?

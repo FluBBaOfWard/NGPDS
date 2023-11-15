@@ -1,63 +1,21 @@
-//---------------------------------------------------------------------------
-// NEOPOP : Emulator as in Dreamland
-//
-// Copyright (c) 2001-2002 by neopop_uk
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-//	This program is free software; you can redistribute it and/or modify
-//	it under the terms of the GNU General Public License as published by
-//	the Free Software Foundation; either version 2 of the License, or
-//	(at your option) any later version. See also the license.txt file for
-//	additional informations.
-//---------------------------------------------------------------------------
 
 #include <nds.h>
 
 #include "io.h"
-#include "bios.h"
 #include "TLCS900H/TLCS900H_registers.h"
 #include "cpu.h"
 #include "Memory.h"
 #include "NGPFlash/NGPFlash.h"
 
-const u8 IndexConv[0x21] = {0,0,0,0,1,2,3,0,0,0,4,5,6,0,0,0, 7,8,9,10,0,0,0,0,11,12,0,0,0,14,15,16, 17};
-
-static u8 CacheIntPrio[0xB]; // Interrupt prio registers at 0x0070-0x007a don't have priority readable.
-	 		       // This should probably be stored in BIOS work RAM somewhere instead of a separate array! @6C24-6C2B
-
-
-void BIOSHLE_Reset(void)
-{
-	int x;
-	memset(CacheIntPrio, 0, sizeof(CacheIntPrio));
-	CacheIntPrio[0] = 0x02;
-	CacheIntPrio[1] = 0x32;
-
-	for (x = 0; x < 0xB; x++) {
-		t9StoreBX(CacheIntPrio[x], 0x70 + x);
-	}
-}
-
-/* This is the custom HLE instruction. I considered it was the fastest and
-most streamlined way of intercepting a bios call. The operation performed
-is dependant on the current program counter. */
-
-void iBIOSHLE(int vector)
-{
-//	u32 a;
-	switch (vector)
-	{	
+/**
+ *
+ */
+void iBIOSHLE(int vector) {
+	switch (vector) {
 
 	// VECT_SHUTDOWN (0xFF27A2)
 	case 0x00:
-		// Cheap bit of code to stop the message appearing repeatedly.
-//		a = pop32();
-//		if (a != 0xBAADC0DE){
-			//MDFN_printf("IDS_POWER");
-//		}
-//		push32(0xBAADC0DE); // Sure is!
-		return;	// Don't pop a return address, stay here
+		return;
 
 	// VECT_CLOCKGEARSET (0xFF1034)
 	case 0x01:
@@ -66,9 +24,8 @@ void iBIOSHLE(int vector)
 
 	// VECT_RTCGET (0xFF1440)
 	case 0x02:
-		if (rCodeL(0x3C) < 0xC000)
-		{
-			// Copy data from hardware area
+		if (rCodeL(0x3C) < 0xC000) {
+			// Copy time from hardware area
 			t9StoreBX(t9LoadBX(0x91), rCodeL(0x3C) + 0);
 			t9StoreWX(t9LoadWX(0x92), rCodeL(0x3C) + 1);
 			t9StoreWX(t9LoadWX(0x94), rCodeL(0x3C) + 3);
@@ -87,50 +44,58 @@ void iBIOSHLE(int vector)
 	u8 level = rCodeB(0x35) & 0x07; // RB3
 	u8 interrupt = rCodeB(0x34);	// RC3
 
-	switch(interrupt)
-	{
+	switch(interrupt) {
 		case 0x00:	// Interrupt from RTC alarm
-			CacheIntPrio[0x0] = (CacheIntPrio[0x0] & 0xf0) |  level;
-			t9StoreBX(CacheIntPrio[0x0], 0x70);
+			level |= t9LoadBX(0x6C24) & 0xf0;
+			t9StoreBX(level, 0x6C24);
+			t9StoreBX(level, 0x70);
 			break;
 		case 0x01:	// Interrupt from the Z80 CPU
-			CacheIntPrio[0x1] = (CacheIntPrio[0x1] & 0x0f) | (level<<4);
-			t9StoreBX(CacheIntPrio[0x1], 0x71);
+			level = (level<<4) | (t9LoadBX(0x6C25) & 0x0f);
+			t9StoreBX(level, 0x6C25);
+			t9StoreBX(level, 0x71);
 			break;
-		case 0x02:	// Interrupt from the 8 bit timer 0
-			CacheIntPrio[0x3] = (CacheIntPrio[0x3] & 0xf0) |  level;
-			t9StoreBX(CacheIntPrio[0x3], 0x73);
+		case 0x02:	// Interrupt from Timer 0
+			level |= t9LoadBX(0x6C27) & 0xf0;
+			t9StoreBX(level, 0x6C27);
+			t9StoreBX(level, 0x73);
 			break;
-		case 0x03:	// Interrupt from the 8 bit timer 1
-			CacheIntPrio[0x3] = (CacheIntPrio[0x3] & 0x0f) | (level<<4);
-			t9StoreBX(CacheIntPrio[0x3], 0x73);
+		case 0x03:	// Interrupt from Timer 1
+			level = (level<<4) | (t9LoadBX(0x6C27) & 0x0f);
+			t9StoreBX(level, 0x6C27);
+			t9StoreBX(level, 0x73);
 			break;
-		case 0x04:	// Interrupt from the 8 bit timer 2
-			CacheIntPrio[0x4] = (CacheIntPrio[0x4] & 0xf0) |  level;
-			t9StoreBX(CacheIntPrio[0x4], 0x74);
+		case 0x04:	// Interrupt from Timer 2
+			level |= t9LoadBX(0x6C28) & 0xf0;
+			t9StoreBX(level, 0x6C28);
+			t9StoreBX(level, 0x74);
 			break;
-		case 0x05:	// Interrupt from the 8 bit timer 3
-			CacheIntPrio[0x4] = (CacheIntPrio[0x4] & 0x0f) | (level<<4);
-			t9StoreBX(CacheIntPrio[0x4], 0x74);
+		case 0x05:	// Interrupt from Timer 3
+			level = (level<<4) | (t9LoadBX(0x6C28) & 0x0f);
+			t9StoreBX(level, 0x6C28);
+			t9StoreBX(level, 0x74);
 			break;
 		case 0x06:	// End of transfer interrupt from DMA channel 0
-			CacheIntPrio[0x9] = (CacheIntPrio[0x9] & 0xf0) |  level;
-			t9StoreBX(CacheIntPrio[0x9], 0x79);
+			level |= t9LoadBX(0x6C2A) & 0xf0;
+			t9StoreBX(level, 0x6C2A);
+			t9StoreBX(level, 0x79);
 			break;
 		case 0x07:	// End of transfer interrupt from DMA channel 1
-			CacheIntPrio[0x9] = (CacheIntPrio[0x9] & 0x0f) | (level<<4);
-			t9StoreBX(CacheIntPrio[0x9], 0x79);
+			level = (level<<4) | (t9LoadBX(0x6C2A) & 0x0f);
+			t9StoreBX(level, 0x6C2A);
+			t9StoreBX(level, 0x79);
 			break;
 		case 0x08:	// End of transfer interrupt from DMA channel 2
-			CacheIntPrio[0xa] = (CacheIntPrio[0xa] & 0xf0) |  level;
-			t9StoreBX(CacheIntPrio[0xa], 0x7a);
+			level |= (t9LoadBX(0x6C2B) & 0xf0);
+			t9StoreBX(level, 0x6C2B);
+			t9StoreBX(level, 0x7A);
 			break;
 		case 0x09:	// End of transfer interrupt from DMA channel 3
-			CacheIntPrio[0xa] = (CacheIntPrio[0xa] & 0x0f) | (level<<4);
-			t9StoreBX(CacheIntPrio[0xa], 0x7a);
+			level = (level<<4) | (t9LoadBX(0x6C2B) & 0x0f);
+			t9StoreBX(level, 0x6C2B);
+			t9StoreBX(level, 0x7A);
 			break;
 		default:
-			//puts("DOH");
 			break;
 	}
 	}
@@ -139,25 +104,21 @@ void iBIOSHLE(int vector)
 	// VECT_SYSFONTSET (0xFF8D8A)
 	case 0x05:
 	{
-		u8 a,b,c, j;
-		u16 i, dst = 0xA000;
+		int j, i, dst = 0xA000;
 
-		b = rCodeB(0x30) >> 4;
-		a = rCodeB(0x30) & 3;
+		u8 a = rCodeB(0x30);
+		u8 b = a >> 4;
+		a &= 3;
 
 		for (i = 0; i < 0x800; i++) {
-			c = t9LoadBX(0xFF8DCF + i);
+			u8 c = t9LoadBX(0xFF8DCF + i);
 
-			for (j = 0; j < 8; j++, c<<=1) {
-				u16 data16;
-
-				data16 = t9LoadWX(dst);
+			u16 data16 = t9LoadWX(dst);
+			for (j = 0; j < 8; j++, c <<= 1) {
 				data16 <<= 2;
-				t9StoreWX(data16, dst);
-
-				if (c & 0x80)	t9StoreBX(t9LoadBX(dst) | a, dst);
-				else			t9StoreBX(t9LoadBX(dst) | b, dst);
+				data16 |= (c & 0x80)?a:b;
 			}
+			t9StoreWX(data16, dst);
 			dst += 2;
 		}
 	}
@@ -166,22 +127,23 @@ void iBIOSHLE(int vector)
 	// VECT_FLASHWRITE (0xFF6FD8)
 	case 0x06:
 	{
-		u32 i, address, bank = 0x200000;
+		int i, bank = 0x200000;
 
-		// Select HI rom?
+		// Select HI rom
 		if (rCodeB(0x30) == 1) {
 			bank = 0x800000;
 		}
-		address = rCodeL(0x38) + bank;
+		int destination = rCodeL(0x38) + bank;
+		int source = rCodeL(0x3C) + bank;
 
 		int count = rCodeW(0x34) * 256;
 		for (i = 0; i < count; i++) {
 			t9StoreBX(0xAA, bank + 0x5555);
 			t9StoreBX(0x55, bank + 0x2AAA);
 			t9StoreBX(0xA0, bank + 0x5555);
-			t9StoreBX(t9LoadBX(rCodeL(0x3C) + i), address + i);
+			t9StoreBX(t9LoadBX(source + i), destination + i);
 		}
-		int block = getBlockFromAddress(address);
+		int block = getBlockFromAddress(destination);
 		markBlockDirty(rCodeB(0x30), block);
 
 		rCodeB(0x30) = 0;		// RA3 = SYS_SUCCESS
@@ -196,13 +158,12 @@ void iBIOSHLE(int vector)
 	// VECT_FLASHERS (0xFF7082)
 	case 0x08:
 	{
-		u32 address, bank = 0x200000;
-
+		u32 address = 0x200000;
 		// Select HI rom?
 		if (rCodeB(0x30) == 1) {
-			bank = 0x800000;
+			address = 0x800000;
 		}
-		address = bank + getBlockOffset(rCodeB(0x34));
+		address += getBlockOffset(rCodeB(0x34));
 
 		t9StoreBX(0xAA, address + 0x5555);
 		t9StoreBX(0x55, address + 0x2AAA);
@@ -281,9 +242,6 @@ void iBIOSHLE(int vector)
 		// Always COM_BUF_OK because the write call always succeeds.
 		rCodeB(0x30) = 0x0;			// RA3 = COM_BUF_OK
 	}
-
-		// Restore $PC after BIOS-HLE instruction
-//		tlcs_pc = pop32();
 		setInterruptExternal(0x18);
 		return;
 
@@ -291,14 +249,12 @@ void iBIOSHLE(int vector)
 	case 0x14:
 	{
 		u8 data;
-
 		if (system_comms_read(&data)) {
 			rCodeB(0x30) = 0;	// COM_BUF_OK
 			rCodeB(0x35) = data;
 			// Comms. Read interrupt
 			t9StoreBX(data, 0x50);
 
-//			tlcs_pc = pop32();
 			setInterruptExternal(0x19);
 			return;
 		}
@@ -310,13 +266,13 @@ void iBIOSHLE(int vector)
 	
 	// VECT_COMONRTS (0xFF2D27)
 	case 0x15:
-		t9StoreBX(0, 0xB2);
+		t9StoreBX(t9LoadBX(0xB2) & 0xFE, 0xB2);
 		break;
 	
 	// VECT_COMOFFRTS (0xFF2D33)
 	case 0x16:
-		t9StoreBX(1, 0xB2);
-		break;	
+		t9StoreBX(t9LoadBX(0xB2) | 0x01, 0xB2);
+		break;
 
 	// VECT_COMSENDSTATUS (0xFF2D3A)
 	case 0x17:
@@ -332,19 +288,15 @@ void iBIOSHLE(int vector)
 
 	// VECT_COMCREATEBUFDATA (0xFF2D6C)
 	case 0x19:
-		while(rCodeB(0x35) > 0)
-		{
-			u8 data;
-			data = t9LoadBX(rCodeL(0x3C));
-
+		while(rCodeB(0x35) > 0) {
+			u8 data = t9LoadBX(rCodeL(0x3C));
 			// Write data from (XHL3++)
 			system_comms_write(data);
 			rCodeL(0x3C)++; // Next data
 			rCodeB(0x35)--;	// RB3 = Count Left
 		}
-//		tlcs_pc = pop32();
 		setInterruptExternal(0x18);
-		return;
+		break;
 
 	// VECT_COMGETBUFDATA (0xFF2D85)
 	case 0x1A:
@@ -358,7 +310,6 @@ void iBIOSHLE(int vector)
 
 				// Comms. Read interrupt
 				t9StoreBX(data, 0x50);
-//				tlcs_pc = pop32();
 				setInterruptExternal(0x19);
 				return;
 			}

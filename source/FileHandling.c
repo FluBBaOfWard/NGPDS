@@ -350,7 +350,7 @@ static void turnPowerOff(void) {
 			}
 		}
 		// Run a few more frames to turn off LED.
-		for (i = 0; i < 6; i++ ) {
+		for (i = 0; i < 6; i++) {
 			run();
 		}
 	}
@@ -361,7 +361,7 @@ static void turnPowerOn(void) {
 	int i;
 	if (g_BIOSBASE_COLOR != NULL) {
 		EMUinput &= ~4;
-		for (i = 0; i < 100; i++ ) {
+		for (i = 0; i < 100; i++) {
 			run();
 			EMUinput |= 4;
 			if (isConsoleRunning()) {
@@ -382,7 +382,7 @@ bool loadGame(const char *gameName) {
 		drawText("     Please wait, loading.", 11, 0);
 		u32 maxSize = allocatedRomMemSize;
 		u8 *romPtr = allocatedRomMem;
-		gRomSize = loadROM(romSpacePtr, gameName, maxRomSize);
+		gRomSize = loadROM(romPtr, gameName, maxSize);
 		if (!gRomSize) {
 			// Enable Expansion RAM in GBA port
 			if (cartRamInit(DETECT_RAM) != DETECT_RAM) {
@@ -400,7 +400,7 @@ bool loadGame(const char *gameName) {
 		if (gRomSize) {
 			maxRomSize = maxSize;
 			romSpacePtr = romPtr;
-
+			tlcs9000MemInit(romSpacePtr);
 			checkMachine();
 			setEmuSpeed(0);
 			loadCart(emuFlags);
@@ -432,9 +432,9 @@ void selectGame() {
 void checkMachine() {
 	char fileExt[8];
 	u8 newMachine = gMachineSet;
-	if ( newMachine == HW_AUTO ) {
+	if (newMachine == HW_AUTO) {
 		getFileExtension(fileExt, currentFilename);
-		if ( ngpHeader->mode != 0 || strstr(fileExt, ".ngc") ) {
+		if (ngpHeader->mode != 0 || strstr(fileExt, ".ngc")) {
 			newMachine = HW_NGPCOLOR;
 		}
 		else {

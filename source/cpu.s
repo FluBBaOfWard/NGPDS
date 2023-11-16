@@ -13,11 +13,11 @@
 	.global cpuReset
 	.global isConsoleRunning
 	.global isConsoleSleeping
-	.global tweakCpuSpeed
 	.global tweakZ80Speed
 	.global setInterruptExternal
 	.global Z80_SetEnable
 	.global Z80_nmi_do
+	.global getRegAdr
 
 	.syntax unified
 	.arm
@@ -214,8 +214,15 @@ cpu1SetIRQ:
 	bl Z80SetIRQPin
 	ldmfd sp!,{z80ptr,pc}
 ;@----------------------------------------------------------------------------
+getRegAdr:				;@ r0=register, 0x00-0x1C (current)
+	.type   getRegAdr STT_FUNC
+;@----------------------------------------------------------------------------
+	ldr r1,=tlcs900HState
+	ldr r2,[r1,#tlcsCurrentGprBank]
+	add r0,r2,r0
+	bx lr
+;@----------------------------------------------------------------------------
 setCpuSpeed:				;@
-	.type   tweakCpuSpeed STT_FUNC
 ;@----------------------------------------------------------------------------
 ;@---Speed - 6.144MHz / 60Hz / 198 lines	;NGP TLCS-900H.
 	ldr r0,=T9_HINT_RATE				;@ 515

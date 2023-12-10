@@ -8,6 +8,9 @@ extern "C" {
 #include <maxmod9.h>
 #include "K2Audio/SN76496.h"
 
+#define sample_rate 48000
+#define buffer_size (512+10)
+
 extern SN76496 k2Audio_0;
 void soundInit(void);
 void setMuteSoundGUI(void);

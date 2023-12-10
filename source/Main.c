@@ -1,5 +1,4 @@
 #include <nds.h>
-
 #include <maxmod9.h>
 
 #include "Main.h"
@@ -8,7 +7,6 @@
 #include "Shared/AsmExtra.h"
 #include "Gui.h"
 #include "FileHandling.h"
-#include "bios.h"
 #include "EmuFont.h"
 #include "NGPBorder.h"
 #include "Cart.h"
@@ -16,9 +14,7 @@
 #include "Gfx.h"
 #include "io.h"
 #include "Sound.h"
-
-#define sample_rate 48000
-#define buffer_size (512+10)
+#include "bios.h"
 
 static void checkTimeOut(void);
 static void setupGraphics(void);
@@ -99,7 +95,6 @@ int main(int argc, char **argv) {
 	}
 	checkMachine();
 	machineInit();
-//	loadCart(0);
 
 	while (1) {
 		waitVBlank();

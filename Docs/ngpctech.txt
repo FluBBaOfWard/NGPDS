@@ -145,12 +145,14 @@ FF0000 -> FFFFFF	BIOS
 002E B		: ???	0x4C Written by Bios at shutdown.
 002F B		: ???	0x4C Written by Bios at shutdown.
 
+0038 B		: 0x30 written by BIOS
+
 003C B		: ??? MSAR0?	0x20 ChipSelect0 adr, 0x200000 ROM address?
 003D B		: ??? MAMR0?	0xFF ChipSelect0 mask, 2MB size?
 003E B		: ??? MSAR1?	0x80 ChipSelect1 adr, 0x800000 start address?
 003F B		: ??? MAMR1?	0x7F ChipSelect1 mask, 2MB size?
 
-0048 B		:
+0048 B		: 0x30 written by BIOS
 
 0050 B		: Serial Buffer Data
 0051 B		: Serial Control (details ?)
@@ -391,8 +393,8 @@ FF0000 -> FFFFFF	BIOS
 
 6C14 W		: Addition of 6C25-6C2B, 6F87 & 6F94. Check to see if setup is needed
 6C16 W		: Frame counter for "inactive" shutdown.
-6C18 W		: Frame counter for battery measure.
-6C1A W		: Frame compare for battery measure.
+6C18 W		: Frame counter for next battery measure.
+6C1A W		: Frame compare for next battery measure (how many frames between measures).
 6C1C W		: Counter for shutdown?
 6C1E W		: ?
 
@@ -442,14 +444,14 @@ FF0000 -> FFFFFF	BIOS
 				01 = Alarm is setting/ongoing?
 				02 = Alarm is set/on.
 
-6C49-6C4C	: SWI 1 function pointer.
+6C49-6C4C	: Used during SWI 1 as function pointer.
 
 6C55 B		: Game Type 
 				00 = Bios Menu (Catalogue == 0xFFFF)
 				01 = Game
 				02 = Developer mode? (Catalogue == 0xFFFE)
 
-6C57 B		: Copy of CPU Speed?
+6C57 B		: Copy of CPU Speed
 				Bit 0-2 = Value 0-4 = 6.144MHz - 384KHz
 				Bit 3-5 = - ?
 				Bit 6-7 = !0 = Auto clock speed regeneration with panel switch input
@@ -470,6 +472,8 @@ FF0000 -> FFFFFF	BIOS
 6C5D B		: Copy of byte from 0x9FFFF8, compared to 0x33
 
 6C5F B		: Used by joypad reading routine (last value?).
+
+6C61 B		: Set to 0xFF during battery measure, set to 0 after.
 
 6C62 B		: Something during alarm set.
 6C63 B		: RTC month during alarm set.
@@ -853,11 +857,11 @@ Interrupt sources:
 	SWI 0,				vector 0x00,	address 0xFFFF00, Reset vector.
 	SWI 1,				vector 0x01,	address 0xFFFF04, default vector interrupt.
 	SWI 2,				vector 0x02,	address 0xFFFF08, illegal instruction interrupt.
-	SWI 3,				vector 0x03,	address 0xFFFF0C
-	SWI 4,				vector 0x04,	address 0xFFFF10
-	SWI 5,				vector 0x05,	address 0xFFFF14
-	SWI 6,				vector 0x06,	address 0xFFFF18
-	SWI 7,				vector 0x07,	address 0xFFFF1C
+	SWI 3,				vector 0x03,	address 0xFFFF0C, User controlled through 0x6FB8
+	SWI 4,				vector 0x04,	address 0xFFFF10, User controlled through 0x6FBC
+	SWI 5,				vector 0x05,	address 0xFFFF14, User controlled through 0x6FC0
+	SWI 6,				vector 0x06,	address 0xFFFF18, User controlled through 0x6FC4
+	SWI 7,				vector 0x07,	address 0xFFFF1C, Debugging? Fetches adr from 0x3FFF1C
 
 	PowerButton,		vector 0x08,	address 0xFFFF20, NMI
 	INTWD?,				vector 0x09,	address 0xFFFF24, watch dog timer (NMI)?

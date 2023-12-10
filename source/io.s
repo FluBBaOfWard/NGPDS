@@ -9,6 +9,7 @@
 	.global EMUinput
 	.global gSubBatteryLevel
 	.global batteryLevel
+	.global systemMemory
 
 	.global ioReset
 	.global convertInput
@@ -20,14 +21,12 @@
 	.global ioLoadState
 	.global ioGetStateSize
 
-	.global t9LoadB_Low
-	.global t9StoreB_Low
 	.global updateSlowIO
 	.global z80LatchR
 	.global z80LatchW
 	.global system_comms_read
 	.global system_comms_write
-	.global systemMemory
+	.global ADStart
 
 	.syntax unified
 	.arm
@@ -350,59 +349,6 @@ checkForAlarm:
 	bx lr
 
 ;@----------------------------------------------------------------------------
-t9StoreB_Low:
-;@----------------------------------------------------------------------------
-	adr r2,systemMemory
-	strb r0,[r2,r1]
-
-	cmp r1,#0x50				;@ Serial channel 0 buffer.
-	strbeq r0,sc0Buf
-	bxeq lr
-
-	cmp r1,#0xB2				;@ COMMStatus
-	andeq r0,r0,#1
-	strbeq r0,commStatus
-	bxeq lr
-
-	cmp r1,#0xB8				;@ Soundchip enable/disable, 0x55 On 0xAA Off.
-	beq setMuteT6W28
-
-	cmp r1,#0xB9				;@ Z80 enable/disable, 0x55 On 0xAA Off.
-	beq Z80_SetEnable
-
-	cmp r1,#0xBA				;@ Z80 NMI
-	beq Z80_nmi_do
-
-	cmp r1,#0xA0				;@ T6W28, Right
-	beq T6W28_R_W
-	cmp r1,#0xA1				;@ T6W28, Left
-	beq T6W28_L_W
-	cmp r1,#0xA2				;@ T6W28 DAC, Left
-	beq T6W28_DAC_L_W
-;@	cmp r1,#0xA3				;@ T6W28 DAC, Right
-;@	beq T6W28_DAC_R_W
-
-	cmp r1,#0x6F				;@ Watchdog
-	beq watchDogW
-
-	cmp r1,#0x6D				;@ Battery A/D start
-	beq ADStart
-
-	cmp r1,#0x80				;@ CpuSpeed
-	beq cpuSpeedW
-
-	and r2,r1,#0xF0
-	cmp r2,#0x20
-	beq timerWrite8
-
-	and r0,r0,#0xFF
-	cmp r2,#0x70
-	beq intWrite8
-
-//	cmp r1,#0xB3				;@ Power button NMI on/off.
-	bx lr
-
-;@----------------------------------------------------------------------------
 ADStart:
 ;@----------------------------------------------------------------------------
 	tst r0,#0x04
@@ -413,44 +359,6 @@ ADStart:
 	mov r0,#0x1C
 	b setInterrupt
 
-;@----------------------------------------------------------------------------
-cpuSpeedW:
-;@----------------------------------------------------------------------------
-	and r0,r0,#0x07
-	cmp r0,#4
-	movpl r0,#4
-	ldrb r2,systemMemory+0x80
-	subs r2,r0,r2
-	bxeq lr
-	strb r0,systemMemory+0x80
-	rsb r0,r0,#T9CYC_SHIFT
-	strb r0,[t9ptr,#tlcsCycShift]
-	mov t9cycles,t9cycles,ror r2
-	bx lr
-
-;@----------------------------------------------------------------------------
-t9LoadB_Low:
-;@----------------------------------------------------------------------------
-	and r1,r0,#0xF0
-
-	cmp r1,#0x70
-	beq intRead8
-
-	cmp r1,#0x20
-	beq timerRead8
-
-	cmp r0,#0x50				;@ Serial channel 0 buffer.
-	ldrbeq r0,sc0Buf
-	bxeq lr
-
-	adr r2,systemMemory
-	ldrb r0,[r2,r0]
-	bx lr
-
-;@----------------------------------------------------------------------------
-watchDogW:
-;@----------------------------------------------------------------------------
-	bx lr
 ;@----------------------------------------------------------------------------
 Z80In:
 ;@----------------------------------------------------------------------------

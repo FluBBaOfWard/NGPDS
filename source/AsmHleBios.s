@@ -1,6 +1,5 @@
 #ifdef __arm__
 
-#include "TLCS900H/TLCS900H.i"
 #include "TLCS900H/TLCS900H_mac.h"
 
 	.global sngBIOSHLE
@@ -60,7 +59,7 @@ asmBiosHLE:
 BiosReset:
 ;@----------------------------------------------------------------------------
 	mov r0,#0x6C00
-	str r0,[t9gprBank,#0x1C]	;@ XSP
+	str r0,[t9gprBank,#RXSP]
 	bl t9LoadL					;@ 0x6C00 Should also have the game start vector.
 	bl encode_r0_pc
 	t9fetch 24

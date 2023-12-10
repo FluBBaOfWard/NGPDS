@@ -76,6 +76,7 @@ machineInit: 				;@ Called from C
 	ldreq r0,=biosSpace
 	ldrne r0,=biosSpaceColor
 	ldr t9ptr,=tlcs900HState
+	sub r0,r0,#0xFF0000
 	str r0,[t9ptr,#biosBase]
 	ldr r0,=tlcs_rom_R
 	str r0,[t9ptr,#readRomPtrLo]
@@ -146,8 +147,9 @@ tlcs9000MemInit: 			;@ Called from C:  r0=rombase address
 	.type   tlcs9000MemInit STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldr r1,=tlcs900HState
-	str r0,[r1,#romBaseLo]
-	add r0,r0,#0x200000
+	sub r2,r0,#0x200000			;@ First bank is @ 0x200000
+	str r2,[r1,#romBaseLo]
+	add r0,r0,#0x200000-0x800000	;@ Second Bank @ 0x800000
 	str r0,[r1,#romBaseHi]
 	bx lr
 ;@----------------------------------------------------------------------------

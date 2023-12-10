@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.6 2023-11-16"
+#define EMUVERSION "V0.5.6 2023-12-10"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -246,20 +246,9 @@ void debugCrashInstruction() {
 }
 
 //---------------------------------------------------------------------------------
-/// Switch between Player 1 & Player 2 controls
-void controllerSet() {				// See io.s: refreshEMUjoypads
-	joyCfg ^= 0x20000000;
-}
-
 /// Swap A & B buttons
 void swapABSet() {
 	joyCfg ^= 0x400;
-}
-
-/// Turn on/off scaling
-void scalingSet(){
-	gScaling ^= 0x01;
-	refreshGfx();
 }
 
 /// Change gamma (brightness)

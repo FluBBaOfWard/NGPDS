@@ -10,12 +10,11 @@
 	.global T6W28_R_W
 	.global T6W28_L_W
 	.global T6W28_DAC_L_W
+	.global T6W28_DAC_R_W
 	.global k2Audio_0
 
 	.extern pauseEmulation
 
-
-;@----------------------------------------------------------------------------
 
 	.syntax unified
 	.arm
@@ -126,6 +125,7 @@ T6W28_DAC_L_W:
 	mov r2,r2,lsl#20
 	eor r0,r0,#0x80
 	strb r0,[r1,r2,lsr#20]
+T6W28_DAC_R_W:
 	bx lr
 ;@----------------------------------------------------------------------------
 T6W28_R_W:				;@ Sound right write

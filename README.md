@@ -25,7 +25,7 @@ to select an option, B or the top of the screen to go back a step.
 To select between the tabs use R & L or the touchscreen.
 
 Since the DS/DS Lite only has 4MB of RAM you will need a SLOT-2/GBA cart with
- RAM to play games larger than 2MB.
+ RAM on these devices to play games larger than 2MB.
 
 ## Menu
 

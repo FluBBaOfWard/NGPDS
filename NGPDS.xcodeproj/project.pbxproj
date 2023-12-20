@@ -83,6 +83,8 @@
 		9CC0F92D26C55DD50035478F /* TLCS900H_RegistersMap.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = TLCS900H_RegistersMap.s; sourceTree = "<group>"; };
 		9CC0F92E26D1073F0035478F /* AsmHleBios.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = AsmHleBios.s; sourceTree = "<group>"; };
 		9CC0F93A26D6C4740035478F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9CC964EE2B3308A0006CB4F9 /* CartridgeRAM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CartridgeRAM.h; sourceTree = "<group>"; };
+		9CC964EF2B3308A0006CB4F9 /* CartridgeRAM.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CartridgeRAM.c; sourceTree = "<group>"; };
 		9CD304E528F6ED7900ACD6A7 /* NGPFlash.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = NGPFlash.s; sourceTree = "<group>"; };
 		9CD304E628F6ED7900ACD6A7 /* NGPFlash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGPFlash.h; sourceTree = "<group>"; };
 		9CD304E728F6ED7900ACD6A7 /* NGPFlash.i */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c.preprocessed; path = NGPFlash.i; sourceTree = "<group>"; };
@@ -251,6 +253,8 @@
 				A47F092C20863AF5004E1DA6 /* EmuMenu.c */,
 				A4D0E10B208930D100401463 /* FileHelper.h */,
 				A4D0E112208930D100401463 /* FileHelper.c */,
+				9CC964EF2B3308A0006CB4F9 /* CartridgeRAM.c */,
+				9CC964EE2B3308A0006CB4F9 /* CartridgeRAM.h */,
 				A4D0E10A208930D100401463 /* crc32.h */,
 				A4D0E111208930D100401463 /* crc32.c */,
 				A4D0E11D2089E28D00401463 /* AsmExtra.h */,

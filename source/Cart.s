@@ -78,10 +78,6 @@ machineInit: 				;@ Called from C
 	ldr t9ptr,=tlcs900HState
 	sub r0,r0,#0xFF0000
 	str r0,[t9ptr,#biosBase]
-	ldr r0,=tlcs_rom_R
-	str r0,[t9ptr,#readRomPtrLo]
-	ldr r0,=tlcs_romH_R
-	str r0,[t9ptr,#readRomPtrHi]
 
 	bl gfxInit
 //	bl ioInit

@@ -1,4 +1,4 @@
-# NGPDS V0.5.6
+# NGPDS V0.5.7
 
 <img align="right" width="220" src="./logo.png" />
 
@@ -93,6 +93,7 @@ Some dumb info about the game and emulator...
 ## Games
 
 * Memories of - Pure: Glitches everywhere.
+* Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
 * Sonic The Hedgehog: First boss sometimes disappear, try to use a save state soon before the boss and reload and try again.
 * Super Real Mahjong - Premium Collection: Graphic bugs on intro.
 

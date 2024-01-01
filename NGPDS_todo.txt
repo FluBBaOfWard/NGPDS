@@ -1,5 +1,6 @@
 NGPDS Todo
 
+	Fix loading of compressed bios files.
 	Use one LUT for IO access.
 	Use CLZ for memory mapping.
 	Save settings for Swap A-B.

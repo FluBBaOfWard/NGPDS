@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.7 2023-12-22"
+#define EMUVERSION "V0.5.7 2024-01-01"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -128,11 +128,12 @@ void uiAbout() {
 	drawTabs();
 	drawMenuText("B:        NGP A button", 4, 0);
 	drawMenuText("A:        NGP B button", 5, 0);
-	drawMenuText("Y/Select: Power button", 6, 0);
-	drawMenuText("X/Start:  Start button", 7, 0);
-	drawMenuText("DPad:     Joystick", 8, 0);
+	drawMenuText("L:        NGP D button", 6, 0);
+	drawMenuText("X/Start:  Option button", 7, 0);
+	drawMenuText("Y/Select: Power button", 8, 0);
+	drawMenuText("DPad:     Joystick", 9, 0);
 
-	drawMenuText(gameInfoString, 10, 0);
+	drawMenuText(gameInfoString, 11, 0);
 
 	drawMenuText("NGPDS        " EMUVERSION, 19, 0);
 	drawMenuText("ARMZ80       " ARMZ80VERSION, 20, 0);

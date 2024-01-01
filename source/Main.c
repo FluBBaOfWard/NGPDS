@@ -78,10 +78,6 @@ int main(int argc, char **argv) {
 		loadSettings();
 		loadBnWBIOS();
 		loadColorBIOS();
-		if (argc > 1) {
-			loadGame(argv[1]);
-			setMuteSoundGUI();
-		}
 		redrawUI();
 	}
 	else {
@@ -95,6 +91,10 @@ int main(int argc, char **argv) {
 	}
 	checkMachine();
 	machineInit();
+	if (argc > 1) {
+		loadGame(argv[1]);
+		setMuteSoundGUI();
+	}
 
 	while (1) {
 		waitVBlank();

@@ -61,7 +61,7 @@ ROM_Space:
 machineInit: 				;@ Called from C
 	.type   machineInit STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4,lr}
+	stmfd sp!,{r4,t9ptr,lr}
 
 	ldr r1,=romSpacePtr
 //	ldr r0,=ROM_Space
@@ -102,7 +102,7 @@ machineInit: 				;@ Called from C
 	ldr r1,=fixBiosSettings		;@ And Bios settings after the first run.
 	blx r1
 skipBiosSettings:
-	ldmfd sp!,{r4,lr}
+	ldmfd sp!,{r4,t9ptr,lr}
 	bx lr
 
 	.section .ewram,"ax"
@@ -111,7 +111,7 @@ skipBiosSettings:
 loadCart: 					;@ Called from C:  r0=emuflags
 	.type   loadCart STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r11,lr}
+	stmfd sp!,{lr}
 	str r0,emuFlags
 
 	ldr r0,gRomSize
@@ -119,9 +119,9 @@ loadCart: 					;@ Called from C:  r0=emuflags
 	bl ngpFlashReset
 	bl hacksInit
 
-	ldr r4,=gMachine
-	ldrb r4,[r4]
-	cmp r4,#HW_NGPMONO
+	ldr r1,=gMachine
+	ldrb r1,[r1]
+	cmp r1,#HW_NGPMONO
 	ldreq r0,g_BIOSBASE_BNW
 	ldrne r0,g_BIOSBASE_COLOR
 	cmp r0,#0
@@ -135,7 +135,7 @@ loadCart: 					;@ Called from C:  r0=emuflags
 	ldr r1,=resetHleBios
 	blx r1
 skipHWSetup:
-	ldmfd sp!,{r4-r11,lr}
+	ldmfd sp!,{lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------

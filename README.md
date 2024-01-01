@@ -50,7 +50,7 @@ Since the DS/DS Lite only has 4MB of RAM you will need a SLOT-2/GBA cart with
 * Display:
   * Gamma: Lets you change the gamma ("brightness").
   * B&W Palette: Here you can select the palette for B & W games.
-* Machine Settings:
+* Machine:
   * Language: Select between Japanese and English.
   * Machine: Select the emulated machine.
   * Change Batteries: Change to new main batteries (AA/LR6).
@@ -95,7 +95,7 @@ Some dumb info about the game and emulator...
 * Memories of - Pure: Glitches everywhere.
 * Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
 * Sonic The Hedgehog: First boss sometimes disappear, try to use a save state soon before the boss and reload and try again.
-* Super Real Mahjong - Premium Collection: Graphic bugs on intro.
+* Super Real Mahjong - Premium Collection: Graphic bugs on intro. Sprite multiplexing.
 
 ## Credits
 

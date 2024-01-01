@@ -50,7 +50,7 @@ initSysMem:					;@ In r0=values ptr.
 	ldr t9ptr,=tlcs900HState
 
 	mov r5,r0
-	mov t9Mem,#0xFF
+	mov t9Mem,#0xBF
 initMemLoop:
 	ldrb r0,[r5,t9Mem]
 	bl t9StoreB_Low

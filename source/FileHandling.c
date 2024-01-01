@@ -221,11 +221,12 @@ void loadNVRAM() {
 
 		canCopy = false;
 		if ((block.ngpAddr >= 0x800000 && block.ngpAddr < 0xA00000)) {
-			block.ngpAddr -= 0x600000;
+			block.ngpAddr &= 0x1FFFFF;
 			canCopy = markBlockDirty(1, getBlockFromAddress(block.ngpAddr));
+			block.ngpAddr += 0x200000;
 		}
 		else if ((block.ngpAddr >= 0x200000 && block.ngpAddr < 0x400000)) {
-			block.ngpAddr -= 0x200000;
+			block.ngpAddr &= 0x1FFFFF;
 			canCopy = markBlockDirty(0, getBlockFromAddress(block.ngpAddr));
 		}
 		if (!canCopy) {
@@ -315,8 +316,7 @@ void saveNVRAM() {
 				else {
 					bytes = fwrite(&romSpacePtr[getBlockOffset(i)+0x200000], 1, block.len, ngfFile);
 				}
-				if (bytes != block.len)
-				{
+				if (bytes != block.len) {
 					infoOutput("Couldn't write correct number of bytes.");
 					fclose(ngfFile);
 					return;
@@ -478,7 +478,7 @@ static int loadBIOS(void *dest, const char *fPath, const int maxSize) {
 }
 
 int loadColorBIOS(void) {
-	if ( loadBIOS(biosSpaceColor, cfg.biosPath, sizeof(biosSpace)) ) {
+	if ( loadBIOS(biosSpaceColor, cfg.biosPath, sizeof(biosSpaceColor)) ) {
 		g_BIOSBASE_COLOR = biosSpaceColor;
 		return 1;
 	}

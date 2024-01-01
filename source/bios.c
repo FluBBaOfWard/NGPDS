@@ -3,7 +3,7 @@
 //  NGPDS
 //
 //  Created by Fredrik Ahlström on 2023-11-10.
-//  Copyright © 2023 Fredrik Ahlström. All rights reserved.
+//  Copyright © 2023,2024 Fredrik Ahlström. All rights reserved.
 //
 
 #include <nds.h>
@@ -406,6 +406,7 @@ void resetHleBios(NgpHeader *cartHeader) {
 	t9StoreBX(0xDC, 0x6C25);
 	t9StoreBX(0x0A, 0x70);
 	t9StoreBX(0xDC, 0x71);
+	t9StoreBX(0x90, 0x73);
 }
 
 void fixBiosSettings(void) {

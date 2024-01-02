@@ -340,8 +340,8 @@ void saveState() {
 /// Hold down the power button for ~40 frames.
 static void turnPowerOff(void) {
 	int i;
-	if (g_BIOSBASE_COLOR != NULL) {
-		EMUinput &= ~4;
+	if (g_BIOSBASE_COLOR != NULL || g_BIOSBASE_BNW != NULL) {
+		EMUinput = 0;
 		for (i = 0; i < 100; i++ ) {
 			run();
 			EMUinput |= 4;
@@ -353,14 +353,17 @@ static void turnPowerOff(void) {
 		for (i = 0; i < 6; i++) {
 			run();
 		}
+		if (!isConsoleSleeping()) {
+			machineInit();
+		}
 	}
 }
 
 /// Hold down the power button for ~40 frames.
 static void turnPowerOn(void) {
 	int i;
-	if (g_BIOSBASE_COLOR != NULL) {
-		EMUinput &= ~4;
+	if (g_BIOSBASE_COLOR != NULL || g_BIOSBASE_BNW != NULL) {
+		EMUinput = 0;
 		for (i = 0; i < 100; i++) {
 			run();
 			EMUinput |= 4;

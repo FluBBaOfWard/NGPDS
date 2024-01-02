@@ -198,11 +198,11 @@ push32:						;@ Also used from interrupt
 t9StoreL_mem:				;@ r0=value, t9Mem=address
 ;@----------------------------------------------------------------------------
 	bic t9Mem,t9Mem,#0xFF000000
-	stmfd sp!,{r0,lr}
+	stmfd sp!,{r0,t9Mem,lr}
 	tst t9Mem,#1
 	bne t9StoreUnevenL
 	bl t9StoreW_even
-	ldmfd sp!,{r0,lr}
+	ldmfd sp!,{r0,t9Mem,lr}
 	mov r0,r0,lsr#16
 	add t9Mem,t9Mem,#2
 	b t9StoreW_even
@@ -215,9 +215,9 @@ t9StoreUnevenL:
 	mov r0,r0,lsr#8
 	add t9Mem,t9Mem,#1
 	bl t9StoreW_even
-	ldmfd sp!,{r0,lr}
+	ldmfd sp!,{r0,t9Mem,lr}
 	mov r0,r0,lsr#24
-	add t9Mem,t9Mem,#2
+	add t9Mem,t9Mem,#3
 	b t9StoreB_mem
 ;@----------------------------------------------------------------------------
 t9StoreB_ram:				;@ Write RAM byte (0x004000-0x007FFF)

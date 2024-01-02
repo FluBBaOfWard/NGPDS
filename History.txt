@@ -2,7 +2,7 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.7 - 2024-01-01 (FluBBa)
+V0.5.7 - 2024-01-02 (FluBBa)
 	Fixed IRQ & Micro DMA handling.
 	Fixed start of game from TWiLight.
 	More optimizations.

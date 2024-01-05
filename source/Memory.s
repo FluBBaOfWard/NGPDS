@@ -85,21 +85,21 @@ t9StoreBX:					;@ r0=value, r1=address
 t9StoreWX:					;@ r0=value, r1=address
 	.type	t9StoreWX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9Mem,t9ptr,lr}
+	stmfd sp!,{t9Mem,t9cycles,t9ptr,lr}
 	ldr t9ptr,=tlcs900HState
 	mov t9Mem,r1
 	bl t9StoreW_mem
-	ldmfd sp!,{t9Mem,t9ptr,lr}
+	ldmfd sp!,{t9Mem,t9cycles,t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9StoreLX:					;@ r0=value, r1=address
 	.type	t9StoreLX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9Mem,t9ptr,lr}
+	stmfd sp!,{t9Mem,t9cycles,t9ptr,lr}
 	ldr t9ptr,=tlcs900HState
 	mov t9Mem,r1
 	bl t9StoreL_mem
-	ldmfd sp!,{t9Mem,t9ptr,lr}
+	ldmfd sp!,{t9Mem,t9cycles,t9ptr,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9LoadBX:					;@ r0=address
@@ -114,19 +114,19 @@ t9LoadBX:					;@ r0=address
 t9LoadWX:					;@ r0=address
 	.type	t9LoadWX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9ptr,lr}
+	stmfd sp!,{t9ptr,t9cycles,lr}
 	ldr t9ptr,=tlcs900HState
 	bl t9LoadW
-	ldmfd sp!,{t9ptr,lr}
+	ldmfd sp!,{t9ptr,t9cycles,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 t9LoadLX:					;@ r0=address
 	.type	t9LoadLX STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9ptr,lr}
+	stmfd sp!,{t9ptr,t9cycles,lr}
 	ldr t9ptr,=tlcs900HState
 	bl t9LoadL
-	ldmfd sp!,{t9ptr,lr}
+	ldmfd sp!,{t9ptr,t9cycles,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 

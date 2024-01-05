@@ -464,7 +464,7 @@ void ejectCart() {
 }
 
 //---------------------------------------------------------------------------------
-static int loadBIOS(void *dest, const char *fPath, const int maxSize) {
+static int loadBIOS(void *dest, const char *fPath, const int size) {
 	char tempString[FILEPATHMAXLENGTH];
 	char *sPtr;
 
@@ -475,13 +475,15 @@ static int loadBIOS(void *dest, const char *fPath, const int maxSize) {
 		sPtr += 1;
 		chdir("/");
 		chdir(tempString);
-		return loadROM(dest, sPtr, maxSize);
+		bool result = loadROM(allocatedRomMem, sPtr, allocatedRomMemSize);
+		memcpy(dest, allocatedRomMem, size);
+		return result;
 	}
 	return 0;
 }
 
 int loadColorBIOS(void) {
-	if ( loadBIOS(biosSpaceColor, cfg.biosPath, sizeof(biosSpaceColor)) ) {
+	if ( loadBIOS(biosSpaceColor, cfg.biosPathColor, sizeof(biosSpaceColor)) ) {
 		g_BIOSBASE_COLOR = biosSpaceColor;
 		return 1;
 	}
@@ -512,7 +514,7 @@ static bool selectBios(char *dest, const char *fileTypes) {
 
 void selectColorBios() {
 	pauseEmulation = true;
-	if ( selectBios(cfg.biosPath, ".ngp.ngc.zip") ) {
+	if ( selectBios(cfg.biosPathColor, ".ngp.ngc.zip") ) {
 		loadColorBIOS();
 		machineInit();
 	}

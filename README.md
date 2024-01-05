@@ -57,7 +57,8 @@ Since the DS/DS Lite only has 4MB of RAM you will need a SLOT-2/GBA cart with
   * Change Sub Battery: Change to a new sub battery (CR2032).
   * Cpu Speed Hacks: Allow speed hacks.
   * Z80 Clock: You can underclock to get better speed on the DS.
-  * Bios Settings: Load a real NGP Bios, recommended.
+  * Select BnW Bios: Load a real NGP Bios, recommended.
+  * Select Color Bios: Load a real NGPC Bios, recommended.
 * Settings:
   * Speed: Switch between speed modes.
     * Normal: Game runs at it's normal speed.
@@ -92,10 +93,11 @@ Some dumb info about the game and emulator...
 
 ## Games
 
+* Densetsu no Ogre Battle Gaiden - Zenobia no Ouji (J): Don't want to start after selecting save slot.
 * Memories of - Pure: Glitches everywhere.
 * Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
 * Sonic The Hedgehog: First boss sometimes disappear, try to use a save state soon before the boss and reload and try again.
-* Super Real Mahjong - Premium Collection: Graphic bugs on intro. Sprite multiplexing.
+* Super Real Mahjong - Premium Collection: Sprite multiplexing & palette updates doesn't' work, game play locks up.
 
 ## Credits
 

@@ -46,7 +46,7 @@ ioReset:
 ;@----------------------------------------------------------------------------
 initSysMem:					;@ In r0=values ptr.
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{t9Mem,r5,t9ptr,lr}
+	stmfd sp!,{t9Mem,r5,t9cycles,t9ptr,lr}
 	ldr t9ptr,=tlcs900HState
 
 	mov r5,r0
@@ -57,7 +57,7 @@ initMemLoop:
 	subs t9Mem,t9Mem,#1
 	bpl initMemLoop
 
-	ldmfd sp!,{t9Mem,r5,t9ptr,pc}
+	ldmfd sp!,{t9Mem,r5,t9cycles,t9ptr,pc}
 ;@----------------------------------------------------------------------------
 ioSaveState:				;@ In r0=destination. Out r0=size.
 	.type   ioSaveState STT_FUNC

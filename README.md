@@ -93,7 +93,6 @@ Some dumb info about the game and emulator...
 
 ## Games
 
-* Densetsu no Ogre Battle Gaiden - Zenobia no Ouji (J): Don't want to start after selecting save slot.
 * Memories of - Pure: Glitches everywhere.
 * Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
 * Sonic The Hedgehog: First boss sometimes disappear, try to use a save state soon before the boss and reload and try again.

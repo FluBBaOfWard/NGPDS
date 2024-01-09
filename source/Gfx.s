@@ -13,12 +13,11 @@
 	.global endFrameGfx
 	.global vblIrqHandler
 
-	.global gfxState
 	.global gFlicker
 	.global gTwitch
 	.global gScaling
 	.global gGfxMask
-	.global yStart
+	.global gBufferEnable
 	.global GFX_DISPCNT
 	.global GFX_BG0CNT
 	.global GFX_BG1CNT
@@ -31,6 +30,7 @@
 	.global k2GE_0R_W
 	.global k2GE_0W
 	.global k2GE_0W_W
+	.global k2GE_0EnableBufferMode
 	.global k2geRAM
 	.global DIRTYTILES
 	.global DIRTYTILES2
@@ -60,10 +60,6 @@ gfxReset:					;@ Called with CPU reset
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
 
-	ldr r0,=gfxState
-	mov r1,#5					;@ 5*4
-	bl memclr_					;@ Clear GFX regs
-
 	ldr r0,=k2geRAM
 	ldr r1,=0x6960/4			;@ VRAM and dirty tiles
 	bl memclr_					;@ Clear GFX regs
@@ -86,15 +82,14 @@ gfxReset:					;@ Called with CPU reset
 	mov r0,r0,lsr#16
 	strh r0,[r1,#REG_WIN1V]
 
-
-//	mov r0,#0
-//	mov r1,#0
 	ldr r0,=setVBlankInterrupt
 	ldr r1,=clockTimer0
 	ldr r2,=k2geRAM
 	ldr r3,=gSOC
 	ldrb r3,[r3]
 	bl k2GEReset0
+	ldrb r0,gBufferEnable
+	bl k2GEEnableBufferMode
 	bl monoPalInit
 
 	ldr r0,=gGammaValue
@@ -369,14 +364,14 @@ vblIrqHandler:
 	mov r0,r0,lsr#16
 	strh r0,[r6,#REG_WIN0V]
 
-	ldr r0,frameDone
+	ldrb r0,frameDone
 	cmp r0,#0
 	beq nothingNew
 	bl k2GEConvertTiles
 	mov r0,#BG_GFX
 	bl k2GEConvertTileMaps
 	mov r0,#0
-	str r0,frameDone
+	strb r0,frameDone
 nothingNew:
 
 	blx scanKeys
@@ -390,8 +385,8 @@ gTwitch:		.byte 0
 
 gScaling:		.byte 0
 gGfxMask:		.byte 0
-yStart:			.byte 0
-				.byte 0
+gBufferEnable:	.byte 1
+frameDone:		.byte 0
 ;@----------------------------------------------------------------------------
 refreshGfx:					;@ Called from C when changing scaling.
 	.type refreshGfx STT_FUNC
@@ -419,12 +414,8 @@ endFrameGfx:				;@ Called just before screen end (~line 152)	(r0-r3 safe to use)
 	str r0,tmpScroll
 	str r1,dmaScroll
 
-	ldr r0,=windowTop			;@ Load wTop, store in wTop+4.......load wTop+8, store in wTop+12
-	ldmia r0,{r1-r3}			;@ Load with increment after
-	stmib r0,{r1-r3}			;@ Store with increment before
-
 	mov r0,#1
-	str r0,frameDone
+	strb r0,frameDone
 
 	ldmfd sp!,{lr}
 	bx lr
@@ -437,8 +428,6 @@ dmaOamBuffer:	.long OAM_BUFFER2
 tmpScroll:		.long SCROLLBUFF1
 dmaScroll:		.long SCROLLBUFF2
 
-
-frameDone:		.long 0
 ;@----------------------------------------------------------------------------
 k2GEReset0:			;@ r0=frameIrqFunc, r1=hblankIrqFunc, r2=frame2IrqFunc, r3=model
 ;@----------------------------------------------------------------------------
@@ -467,6 +456,12 @@ k2GE_0W_W:					;@ K2GE write word, 0x8000-0x8FFF
 	mov r1,t9Mem
 	adr geptr,k2GE_0
 	b k2GE_W_W
+;@----------------------------------------------------------------------------
+k2GE_0EnableBufferMode:		;@ K2GE Enable/disable buffer mode
+	.type k2GE_0EnableBufferMode STT_FUNC
+;@----------------------------------------------------------------------------
+	adr geptr,k2GE_0
+	b k2GEEnableBufferMode
 
 k2GE_0:
 	.space k2GESize
@@ -484,14 +479,6 @@ GFX_BG1CNT:
 	.section .bss
 #endif
 	.align 2
-
-gfxState:
-adjustBlend:
-	.long 0
-windowTop:
-	.long 0
-wTop:
-	.long 0,0,0		;@ windowTop  (this label too)   L/R scrolling in unscaled mode
 
 OAM_BUFFER1:
 	.space 0x400

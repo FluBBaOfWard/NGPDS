@@ -68,6 +68,9 @@ empty_W:					;@ Write bad address (error)
 ;@----------------------------------------------------------------------------
 rom_W:						;@ Write ROM address (error)
 ;@----------------------------------------------------------------------------
+	tst t9Mem,#0xFF000000
+	bicne t9Mem,t9Mem,#0xFF000000
+	bne t9StoreB_mem
 	mov r11,r11					;@ No$GBA breakpoint
 	mov r0,#0xB0
 	bx lr
@@ -168,7 +171,6 @@ push16:
 ;@----------------------------------------------------------------------------
 t9StoreW_mem:				;@ r0=value, t9Mem=address
 ;@----------------------------------------------------------------------------
-	bic t9Mem,t9Mem,#0xFF000000
 	tst t9Mem,#1
 	bne t9StoreUnevenW
 t9StoreW_even:
@@ -178,6 +180,9 @@ t9StoreW_even:
 	cmp r2,#2
 	beq t9StoreW_vram
 
+	tst t9Mem,#0xFF000000
+	bicne t9Mem,t9Mem,#0xFF000000
+	bne t9StoreW_even
 ;@----------------------------------------------------------------------------
 t9StoreUnevenW:
 ;@----------------------------------------------------------------------------
@@ -197,7 +202,6 @@ push32:						;@ Also used from interrupt
 ;@----------------------------------------------------------------------------
 t9StoreL_mem:				;@ r0=value, t9Mem=address
 ;@----------------------------------------------------------------------------
-	bic t9Mem,t9Mem,#0xFF000000
 	stmfd sp!,{r0,t9Mem,lr}
 	tst t9Mem,#1
 	bne t9StoreUnevenL

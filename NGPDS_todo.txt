@@ -1,6 +1,6 @@
 NGPDS Todo
 
-	Fix loading of compressed bios files.
+	Add warning to UI about low battery.
 	Use one LUT for IO access.
 	Use CLZ for memory mapping.
 	Save settings for Swap A-B.
@@ -34,6 +34,7 @@ Misc:
 Games Non Working:
 
 Games With Glitches:
+	Densetsu no Ogre Battle Gaiden - Zenobia no Ouji (J): Uses top 8 bits of address.
 	Memories of - Pure: Glitches everywhere.
 	Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
 	Puzzle Link/Puzzle Link 2 (USA, EU) sometimes softlocks when a level ends.

@@ -15,7 +15,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.7 2024-01-09"
+#define EMUVERSION "V0.5.7 2024-01-13"
 
 #define ALLOW_SPEED_HACKS	(1<<17)
 
@@ -33,6 +33,8 @@ static void z80SpeedSet(void);
 static void uiMachine(void);
 static void uiDebug(void);
 static void updateGameInfo(void);
+static void checkBattery(void);
+
 
 const fptr fnMain[] = {nullUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI, subUI};
 
@@ -51,6 +53,7 @@ const fptr *const fnListX[] = {fnList0, fnList1, fnList2, fnList3, fnList4, fnLi
 u8 menuXItems[] = {ARRSIZE(fnList0), ARRSIZE(fnList1), ARRSIZE(fnList2), ARRSIZE(fnList3), ARRSIZE(fnList4), ARRSIZE(fnList5), ARRSIZE(fnList6), ARRSIZE(fnList7), ARRSIZE(fnList8), ARRSIZE(fnList9), ARRSIZE(fnList10)};
 const fptr drawUIX[] = {uiNullNormal, uiFile, uiOptions, uiAbout, uiController, uiDisplay, uiMachine, uiSettings, uiDebug, uiYesNo, uiDummy};
 
+static int oldBattery;
 u8 gGammaValue = 0;
 u8 gZ80Speed = 0;
 char gameInfoString[32];
@@ -97,6 +100,7 @@ void quickSelectGame(void) {
 
 void uiNullNormal() {
 	uiNullDefault();
+	oldBattery = 0;
 }
 
 void uiFile() {
@@ -190,14 +194,27 @@ void uiDebug() {
 	drawSubItem("Step Frame", NULL);
 }
 
+void checkBattery() {
+	if (oldBattery != batteryLevel) {
+		oldBattery = batteryLevel;
+		if (batteryLevel < 0x8400) {
+			drawText("   Batteries low in the NGP!", 15, 0);
+		}
+		else {
+			drawText("", 15, 0);
+		}
+	}
+}
 
 void nullUINormal(int key) {
+	checkBattery();
 	if (key & KEY_TOUCH) {
 		openMenu();
 	}
 }
 
 void nullUIDebug(int key) {
+	checkBattery();
 	if (key & KEY_TOUCH) {
 		openMenu();
 	}

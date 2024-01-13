@@ -263,8 +263,8 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	beq notLowBatt
 	ands r0,r0,#0xC
 	bne notLowBatt
-	cmp r2,#0x8000
-	movcs r2,#0x8000
+	cmp r2,#0x8400
+	movcs r2,#0x8400
 notLowBatt:
 	subs r2,r2,#1
 	movmi r2,#1

@@ -607,6 +607,12 @@ FF0000 -> FFFFFF	BIOS
 
 
 6F80 W		: Battery Voltage, Maximum value 0x3FF, see 0x0060.
+				;@ Max = 0x3FF
+				;@ To start > 0x210
+				;@ Low < 0x200
+				;@ Bad < 0x1E2
+				;@ Shutdown <= 0x1D3
+				;@ Alarm minimum = 0x16E
 
 6F82 B		: Joypad Status
 				Bit 0 = "Up"

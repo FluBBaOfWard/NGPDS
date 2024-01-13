@@ -34,13 +34,15 @@ Misc:
 Games Non Working:
 
 Games With Glitches:
-	Densetsu no Ogre Battle Gaiden - Zenobia no Ouji (J): Uses top 8 bits of address.
 	Memories of - Pure: Glitches everywhere.
 	Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
 	Puzzle Link/Puzzle Link 2 (USA, EU) sometimes softlocks when a level ends.
 	Sonic The Hedgehog: First boss sometimes disappear.
-	Super Real Mahjong - Premium Collection: Graphic bugs on intro. HBlank irq plus palette.
-	...
+	Super Real Mahjong - Premium Collection: Sprite multiplexing & palette updates doesn't' work, game play locks up.
+
+Games With Glitches Fixed:
+	Densetsu no Ogre Battle Gaiden - Zenobia no Ouji (J): Uses top 8 bits of address.
+	Rockman - Battle & Fighters (J): Changes BG priority mid screen.
 
 Speedhacks:
 	"Bakumatsu Rouman Tokubetsu"		- JR (0x65,0xF8) @0x2002

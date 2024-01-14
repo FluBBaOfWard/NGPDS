@@ -760,7 +760,7 @@ C000 B	: Write any value to this address to cause an INT4 (Z80) interrupt
 8004 B		: Window X Size (0xA0 at reset)
 8005 B		: Window Y Size (0x98 at reset)
 
-8006 B		: Frame Rate Register (0xC6 at reset, readonly)
+8006 B		: Frame Rate Register (0xC6 at reset, readonly?)
 
 8008 B		: Raster Position Horizontal
 8009 B		: Raster Position Vertical

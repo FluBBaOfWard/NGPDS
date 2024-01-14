@@ -73,6 +73,7 @@ ngpFrameLoop:
 	stmia r0,{z80f-z80pc,z80sp}	;@ Save Z80 state
 NoZ80Now:
 ;@--------------------------------------
+	bl soundUpdate
 	ldr t9ptr,=tlcs900HState
 	ldr r0,tlcs900hCyclesPerScanline
 	bl tlcsRestoreAndRunXCycles

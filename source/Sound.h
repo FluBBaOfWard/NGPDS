@@ -9,9 +9,10 @@ extern "C" {
 #include "K2Audio/SN76496.h"
 
 #define sample_rate 48000
-#define buffer_size (512+10)
+#define buffer_size (800*2)
 
 extern SN76496 k2Audio_0;
+
 void soundInit(void);
 void setMuteSoundGUI(void);
 mm_word VblSound2(mm_word length, mm_addr dest, mm_stream_formats format);

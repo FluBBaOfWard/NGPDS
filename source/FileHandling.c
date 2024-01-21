@@ -350,7 +350,7 @@ static void turnPowerOff(void) {
 			}
 		}
 		// Run a few more frames to turn off LED.
-		for (i = 0; i < 6; i++) {
+		for (i = 0; i < 10; i++) {
 			run();
 		}
 		if (!isConsoleSleeping()) {

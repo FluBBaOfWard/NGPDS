@@ -2,13 +2,14 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.7 - 2024-01-21 (FluBBa)
+V0.5.7 - 2024-01-24 (FluBBa)
 	Added warning for low battery in the NGP.
 	Added support for sample playing.
 	Fixed IRQ & Micro DMA handling.
 	Fixed BG priority updates mid screen (Rockman).
 	Fixed start of game from TWiLight.
 	Fixed HLE BIOS some more.
+	Fixed save states a bit.
 	More optimizations.
 
 V0.5.6 - 2023-12-20 (FluBBa)

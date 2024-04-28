@@ -293,7 +293,7 @@ sngJR_nc_hack:				;@ 0x6F
 	bne nc_end
 nc_end:
 
-#if GBA
+#ifdef GBA
 	.section .ewram, "ax", %progbits	;@ For the GBA
 	.align 2
 #endif

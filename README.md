@@ -1,4 +1,4 @@
-# NGPDS V0.5.7
+# NGPDS V0.5.8
 
 <img align="right" width="220" src="./logo.png" />
 
@@ -95,6 +95,15 @@ Some dumb info about the game and emulator...
 
 * Memories of - Pure: Glitches everywhere.
 * Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
+* Pachi-Slot Aruze Oukoku Pocket - Azteca (J)			: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Dekahel 2 (J)		: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Delsol 2 (J)			: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - e-Cup (J)			: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Hanabi (J) (v1.02)	: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Hanabi (J) (v1.04)	: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Oohanabi (J)			: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Porcano 2 (J)		: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Ward of Lights (J)	: Palette glitches.
 * Sonic The Hedgehog: First boss sometimes disappear, try to use a save state soon before the boss and reload and try again.
 * Super Real Mahjong - Premium Collection: Sprite multiplexing & palette updates doesn't' work, game play locks up.
 
@@ -112,4 +121,4 @@ Fredrik Ahlström
 
 X/Twitter @TheRealFluBBa
 
-https://www.github.com/FluBBaOfWard
+<https://www.github.com/FluBBaOfWard>

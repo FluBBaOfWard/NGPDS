@@ -66,22 +66,20 @@ setMuteT6W28:
 VblSound2:					;@ r0=length, r1=pointer
 ;@----------------------------------------------------------------------------
 ;@	mov r11,r11
-
 	ldr r2,muteSound
 	tst r2,#0x00FF
 	bne silenceMix
 	tst r2,#0xFF00
 	bne playSamples
 
-	stmfd sp!,{r0,r1,lr}
+	stmfd sp!,{r0,lr}
 	ldr r2,=k2Audio_0
-	mov r0,r0,lsl#2
 	bl sn76496Mixer
-	ldmfd sp!,{r0,r1,lr}
+	ldmfd sp!,{r0,lr}
 	bx lr
 
 playSamples:
-	stmfd sp!,{r0,r1,lr}
+	stmfd sp!,{r0,lr}
 	ldr r12,pcmWritePtr
 	sub r12,r12,r0,lsr#2
 	ldr r2,=WAVBUFFER
@@ -100,7 +98,7 @@ wavLoop:
 	subs r0,r0,#4
 	bhi wavLoop
 
-	ldmfd sp!,{r0,r1,lr}
+	ldmfd sp!,{r0,lr}
 	bx lr
 
 silenceMix:

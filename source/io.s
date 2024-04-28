@@ -143,7 +143,7 @@ SysMemDefault:
 	;@ 0xF0													;@ 0xF8
 	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 ;@----------------------------------------------------------------------------
-#if GBA
+#ifdef GBA
 	.section .ewram, "ax", %progbits	;@ For the GBA
 	.align 2
 #endif
@@ -226,7 +226,7 @@ z80LatchR:					;@ Read communication latch (0x8000)
 	bne empty_R
 	stmfd sp!,{lr}
 	mov r0,#0
-	bl Z80SetNMIPin
+	bl Z80SetNMIPinCurrentCpu
 	ldmfd sp!,{lr}
 	ldrb r0,systemMemory+0xBC	;@ Z80 communication byte
 	bx lr
@@ -369,7 +369,7 @@ Z80Out:
 ;@----------------------------------------------------------------------------
 ;@	mov r11,r11					;@ No$GBA breakpoint
 	mov r0,#0
-	b Z80SetIRQPin
+	b Z80SetIRQPinCurrentCpu
 ;@----------------------------------------------------------------------------
 gSubBatteryLevel:
 	.long 0x3000000				;@ subBatteryLevel

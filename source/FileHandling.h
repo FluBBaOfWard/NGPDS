@@ -8,7 +8,7 @@ extern "C" {
 #include "Emubase.h"
 #include "NeoGeoPocket.h"
 
-#define FILEEXTENSIONS ".ngp.ngc"
+#define FILEEXTENSIONS ".ngp.ngc.ngpc"
 #define NGPF_MAGIC (0x4650474e)
 
 typedef struct

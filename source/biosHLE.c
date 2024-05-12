@@ -26,8 +26,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_RTCGET (0xFF1440)
-	case 0x02:
-	{
+	case 0x02: {
 		// Copy time from hardware area
 		u32 adr = rCodeL(0x3C);
 		t9StoreBX(t9LoadBX(0x91), adr + 0);
@@ -41,8 +40,7 @@ void iBIOSHLE(int vector) {
 	//	break;
 
 	// VECT_INTLVSET (0xFF1222)
-	case 0x04:
-	{
+	case 0x04: {
 
 	u8 level = rCodeB(0x35) & 0x07; // RB
 	u8 interrupt = rCodeB(0x34);	// RC
@@ -105,8 +103,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_SYSFONTSET (0xFF8D8A)
-	case 0x05:
-	{
+	case 0x05: {
 		int j, i, dst = 0xA000;
 
 		u8 a = rCodeB(0x30);
@@ -128,8 +125,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_FLASHWRITE (0xFF6FD8)
-	case 0x06:
-	{
+	case 0x06: {
 		int i, bank = 0x200000;
 
 		// Select HI rom
@@ -159,8 +155,7 @@ void iBIOSHLE(int vector) {
 		rCodeB(0x30) = 0;	// RA3 = SYS_SUCCESS
 		break;
 	// VECT_FLASHERS (0xFF7082)
-	case 0x08:
-	{
+	case 0x08: {
 		u32 address = 0x200000;
 		// Select HI rom?
 		if (rCodeB(0x30) == 1) {
@@ -236,8 +231,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_COMCREATEDATA (0xFF2C86)
-	case 0x13:
-	{
+	case 0x13: {
 		// Write the byte
 		u8 data = rCodeB(0x35);
 		system_comms_write(data);
@@ -248,8 +242,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_COMGETDATA (0xFF2CB4)
-	case 0x14:
-	{
+	case 0x14: {
 		u8 data;
 		if (system_comms_read(&data)) {
 			rCodeB(0x30) = 0; // COM_BUF_OK
@@ -258,7 +251,6 @@ void iBIOSHLE(int vector) {
 			t9StoreBX(data, 0x50);
 
 			setInterruptExternal(0x19);
-			return;
 		}
 		else {
 			rCodeB(0x30) = 1; // COM_BUF_EMPTY
@@ -289,8 +281,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_COMCREATEBUFDATA (0xFF2D6C)
-	case 0x19:
-	{
+	case 0x19: {
 		u8 count = rCodeB(0x35);
 		u32 index = rCodeL(0x3C);
 		while(count > 0) {
@@ -307,8 +298,7 @@ void iBIOSHLE(int vector) {
 		break;
 
 	// VECT_COMGETBUFDATA (0xFF2D85)
-	case 0x1A:
-	{
+	case 0x1A: {
 		u8 count = rCodeB(0x35);
 		u32 index = rCodeL(0x3C);
 		while(count > 0) {

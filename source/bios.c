@@ -16,7 +16,7 @@
 #include "FileHandling.h"
 #include "TLCS900H/TLCS900H.h"
 
-extern u32 sngBIOSHLE;			// From AsmHleBios.s
+extern void sngBIOSHLE(void);		// From AsmHleBios.s
 
 //=============================================================================
 

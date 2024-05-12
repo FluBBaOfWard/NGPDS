@@ -2,6 +2,9 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.5.8 - 2024-05-12 (FluBBa)
+	Optimized BS1B opcode.
+
 V0.5.7 - 2024-01-24 (FluBBa)
 	Added warning for low battery in the NGP.
 	Added support for sample playing.

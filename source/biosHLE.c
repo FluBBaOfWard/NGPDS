@@ -42,7 +42,7 @@ void iBIOSHLE(int vector) {
 	// VECT_INTLVSET (0xFF1222)
 	case 0x04: {
 
-	u8 level = rCodeB(0x35) & 0x07; // RB
+	u8 level = rCodeB(0x35) & 0x0F; // RB
 	u8 interrupt = rCodeB(0x34);	// RC
 
 	switch(interrupt) {

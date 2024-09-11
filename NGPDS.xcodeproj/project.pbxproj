@@ -11,6 +11,7 @@
 		35E683AF1C664A6D00FCFE8A /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		746D78E114ED9A8400CC738F /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = Makefile; sourceTree = "<group>"; };
 		9C1FFFA72684A277005851ED /* EmuSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmuSettings.h; sourceTree = "<group>"; };
+		9C31B74B2BF50990006A7786 /* NGPLogo.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = NGPLogo.bmp; sourceTree = "<group>"; };
 		9C367C932667CC760017B4F6 /* NGPBorder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NGPBorder.png; sourceTree = "<group>"; };
 		9C367C942667CC760017B4F6 /* NGPBorder.grit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NGPBorder.grit; sourceTree = "<group>"; };
 		9C367C962668B7CA0017B4F6 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
@@ -72,6 +73,8 @@
 		9C7BB95C25FFF08400EA9C9C /* NeoGeoPocket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NeoGeoPocket.c; sourceTree = "<group>"; };
 		9C7BB95D25FFF08400EA9C9C /* NeoGeoPocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeoGeoPocket.h; sourceTree = "<group>"; };
 		9C8F33EE248ACA2E00996E5A /* nds_asm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nds_asm.h; sourceTree = "<group>"; };
+		9C9B0E3A2C5A4004004AE287 /* IPSPatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSPatch.h; sourceTree = "<group>"; };
+		9C9B0E3B2C5A4004004AE287 /* IPSPatch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = IPSPatch.c; sourceTree = "<group>"; };
 		9CBC0C8C26DD79270039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBC0C8D26DD7BD50039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CBC0C8E26DD7C2A0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -128,6 +131,7 @@
 				A4DA29B117651A3800810B12 /* NGPDS_todo.txt */,
 				A4AA02141B04077F0043E4D4 /* History.txt */,
 				9CBC0C8E26DD7C2A0039D17E /* README.md */,
+				9C31B74B2BF50990006A7786 /* NGPLogo.bmp */,
 				A42D0269205FEC6E00515C72 /* Docs */,
 				746D78E014ED9A6D00CC738F /* makefile */,
 				A48CC0251618E65200465E20 /* source */,
@@ -255,6 +259,8 @@
 				A4D0E112208930D100401463 /* FileHelper.c */,
 				9CC964EF2B3308A0006CB4F9 /* CartridgeRAM.c */,
 				9CC964EE2B3308A0006CB4F9 /* CartridgeRAM.h */,
+				9C9B0E3B2C5A4004004AE287 /* IPSPatch.c */,
+				9C9B0E3A2C5A4004004AE287 /* IPSPatch.h */,
 				A4D0E10A208930D100401463 /* crc32.h */,
 				A4D0E111208930D100401463 /* crc32.c */,
 				A4D0E11D2089E28D00401463 /* AsmExtra.h */,

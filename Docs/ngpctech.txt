@@ -288,7 +288,7 @@ FF0000 -> FFFFFF	BIOS
 					10 = Internal clock f-sys?
 					11 = External clock (SCLK0 input)?
 
-0053 B	R/W	: BR0CR - Baud Rate Generator 1 Control Register?
+0053 B	R/W	: BR0CR - Baud Rate Generator 0 Control Register?
 				Bit 7   = 0?
 				Bit 6   = -?
 				Bit 5-4 = Baud Rate Generator 1 input clock selection?
@@ -305,8 +305,11 @@ FF0000 -> FFFFFF	BIOS
 0054 B	R/W	: SC1BUF?
 0055 B		: SC1CR?
 0056 B	R/W	: SC1MOD?
-0057 B		: BR1CR?
-0058 B	R/W	: ODE?
+0057 B		: BR1CR? - Baud Rate Generator 1 Control Register?
+0058 B	R/W	: P8-ODE? (Port8 Open Drain Enable)
+				Bit 7-2 = -
+				Bit 1   = P83, 0=CMOS, 1=Open-drain output
+				Bit 0   = P80, 0=CMOS, 1=Open-drain output
 
 005A B	R/W	: DREFCR?
 005B B		: DMEMCR?
@@ -666,7 +669,7 @@ Bit 6-4 & 2-0 is the priority, a value of 7 is the same as 0.
 				Bit 6 = ???
 				Bit 7 = Timer3 setup? : 1 = yes, 0 = no
 6DA3 B		: ??? not used?
-6DA4 B		: Inverted value of command sent to Z80?
+6DA4 B		: Inverted value of data sent to Z80?
 
 6E80 B		: ??? Watchdog running? Something to do with Gametype & Watchdog?
 
@@ -804,8 +807,8 @@ Bit 6-4 & 2-0 is the priority, a value of 7 is the same as 0.
 6FD8 L		: 08:Timer Interrupt (8 bit timer 1)		(uDMA start = 0x11)
 6FDC L		: 09:Timer Interrupt (8 bit timer 2)		(uDMA start = 0x12)
 6FE0 L		: 10:Timer Interrupt (8 bit timer 3)		(uDMA start = 0x13)
-6FE4 L		: 11:Serial Transmission Interrupt			(uDMA start = 0x18)
-6FE8 L		: 12:Serial Reception Interrupt				(uDMA start = 0x19)
+6FE4 L		: 11:Serial Reception Interrupt				(uDMA start = 0x18)
+6FE8 L		: 12:Serial Transmission Interrupt			(uDMA start = 0x19)
 6FEC L		: 13:(reserved)
 6FF0 L		: 14:End Micro DMA Int (MicroDMA 0)
 6FF4 L		: 15:End Micro DMA Int (MicroDMA 1)
@@ -1041,7 +1044,7 @@ Interrupt sources:
 	INTT6? unused,		vector 0x16,	address 0xFFFF58
 	INTT7? unused,		vector 0x17,	address 0xFFFF5C
 	INTRX0 Serial 0 rx,	vector 0x18,	address 0xFFFF60
-	INTTX0 Serial 0 tc,	vector 0x19,	address 0xFFFF64
+	INTTX0 Serial 0 tx,	vector 0x19,	address 0xFFFF64
 	INTRX1? unused,		vector 0x1A,	address 0xFFFF68
 	INTTX1? unused,		vector 0x1B,	address 0xFFFF6C
 	INTAD,				vector 0x1C,	address 0xFFFF70, Battery AD interrupt.

@@ -177,7 +177,7 @@ void loadNVRAM() {
 	int i;
 	NgfHeader header;
 	NgfBlock block;
-	char flashName[FILENAMEMAXLENGTH];
+	char flashName[FILENAME_MAX_LENGTH];
 	bool canCopy;
 
 	if (findFolder(folderName)) {
@@ -251,7 +251,7 @@ void saveNVRAM() {
 	int totalBlocks = MAX_BLOCKS;
 	int i;
 	int chip;
-	char flashName[FILENAMEMAXLENGTH];
+	char flashName[FILENAME_MAX_LENGTH];
 
 	int bytes;
 	int chipCount = (flashSize != 0x400000) ? 1 : 2;
@@ -465,7 +465,7 @@ void ejectCart() {
 
 //---------------------------------------------------------------------------------
 static int loadBIOS(void *dest, const char *fPath, const int size) {
-	char tempString[FILEPATHMAXLENGTH];
+	char tempString[FILEPATH_MAX_LENGTH];
 	char *sPtr;
 
 	cls(0);
@@ -504,9 +504,9 @@ static bool selectBios(char *dest, const char *fileTypes) {
 	const char *biosName = browseForFileType(fileTypes);
 
 	if ( biosName ) {
-		strlcpy(dest, currentDir, FILEPATHMAXLENGTH);
-		strlcat(dest, "/", FILEPATHMAXLENGTH);
-		strlcat(dest, biosName, FILEPATHMAXLENGTH);
+		strlcpy(dest, currentDir, FILEPATH_MAX_LENGTH);
+		strlcat(dest, "/", FILEPATH_MAX_LENGTH);
+		strlcat(dest, biosName, FILEPATH_MAX_LENGTH);
 		return true;
 	}
 	return false;

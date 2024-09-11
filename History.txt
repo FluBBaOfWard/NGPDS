@@ -2,7 +2,7 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.8 - 2024-05-12 (FluBBa)
+V0.5.8 - 2024-09-11 (FluBBa)
 	Optimized BS1B opcode.
 
 V0.5.7 - 2024-01-24 (FluBBa)

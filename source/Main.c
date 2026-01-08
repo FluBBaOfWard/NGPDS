@@ -67,8 +67,8 @@ int main(int argc, char **argv) {
 	}
 	maxRomSize = allocatedRomMemSize;
 	romSpacePtr = allocatedRomMem;
-	setupGraphics();
 
+	setupGraphics();
 	setupStream();
 	irqSet(IRQ_VBLANK, myVblank);
 	setupGUI();
@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
 
 	while (1) {
 		waitVBlank();
-		checkTimeOut();
+//		checkTimeOut();
 		guiRunLoop();
 		if (!pauseEmulation) {
 			run();

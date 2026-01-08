@@ -65,12 +65,12 @@ int initSettings() {
 }
 
 bool updateSettingsFromNGP() {
-	int val;
-	bool changed = false;
 	if (g_BIOSBASE_COLOR == NULL && g_BIOSBASE_BNW == NULL) {
-		return changed;
+		return false;
 	}
 
+	bool changed = false;
+	int val;
 	val = t9LoadBX(0x6F8B);
 	if (cfg.birthYear != val) {
 		cfg.birthYear = val;

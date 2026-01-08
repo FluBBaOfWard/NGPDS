@@ -4,6 +4,8 @@
 #include "ARMZ80/ARMZ80.i"
 #include "K2GE/K2GE.i"
 
+//#define EMBEDDED_ROM
+
 	.extern reset				;@ from bios.c
 
 	.global gRomSize
@@ -40,6 +42,7 @@
 	.section .rodata
 	.align 2
 
+#ifdef EMBEDDED_ROM
 ROM_Space:
 //	.incbin "ngproms/Bust-A-Move Pocket (U).ngc"
 //	.incbin "ngproms/Cool Boarders Pocket (JE) (M2).ngc"
@@ -52,9 +55,11 @@ ROM_Space:
 //	.incbin "ngproms/Metal Slug - 1st Mission (JUE) (M2).ngc"
 //	.incbin "ngproms/SNK Gals' Fighters (UE).ngc"
 //	.incbin "ngproms/Sonic the Hedgehog - Pocket Adventure (JUE).ngc"
-//biosSpace:
+ROM_SpaceEnd:
+rawBios:
 //	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket (J).ngp"
 //	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket Color (JE).ngp"
+#endif
 
 	.align 2
 ;@----------------------------------------------------------------------------
@@ -63,11 +68,23 @@ machineInit: 				;@ Called from C
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4,t9ptr,lr}
 
-	ldr r1,=romSpacePtr
-//	ldr r0,=ROM_Space
-//	str r0,[r1]
-	ldr r0,[r1]
-
+	ldr r4,=romSpacePtr
+#ifdef EMBEDDED_ROM
+	ldr r0,=ROM_Space
+	str r0,[r4]
+	mov r0,#ROM_SpaceEnd-ROM_Space
+	ldr r1,=gRomSize
+	str r0,[r1]
+//	ldr r0,=biosSpace
+	ldr r0,=biosSpaceColor
+//	ldr r1,=g_BIOSBASE_BNW
+	ldr r1,=g_BIOSBASE_COLOR
+	str r0,[r1]
+	ldr r1,=rawBios
+	mov r2,#0x10000
+	bl memcpy
+#endif
+	ldr r0,[r4]
 	bl tlcs9000MemInit
 
 	ldr r4,=gMachine
@@ -105,7 +122,7 @@ skipBiosSettings:
 	ldmfd sp!,{r4,t9ptr,lr}
 	bx lr
 
-	.section .ewram,"ax"
+	.section .ewram, "ax", %progbits
 	.align 2
 ;@----------------------------------------------------------------------------
 loadCart: 					;@ Called from C:  r0=emuflags
@@ -234,7 +251,11 @@ romSize:
 maxRomSize:
 	.long 0
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
 ngpRAM:
 	.space 0x4000
 biosSpace:

@@ -167,7 +167,11 @@ muteSoundChip:
 	.byte 0
 	.space 2
 
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
 	.section .bss
+#endif
 	.align 2
 k2Audio_0:
 	.space snSize

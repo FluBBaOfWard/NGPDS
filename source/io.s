@@ -253,7 +253,9 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	bxpl lr
 
 	stmfd sp!,{r12,lr}
-	blx getBatteryLevel			;@ Get NDS battery level.
+	;@ Get NDS battery level. 0-15, bit 7 charging.
+	;@ Original DS only 3 & 15.
+	blx getBatteryLevel
 	ldmfd sp!,{r12,lr}
 	ldrb r1,lastBattery
 	strb r0,lastBattery
@@ -261,10 +263,10 @@ updateSlowIO:				;@ Call once every frame, updates rtc and battery levels.
 	eor r1,r1,r0
 	tst r1,#0xF
 	beq notLowBatt
-	ands r0,r0,#0xC
-	bne notLowBatt
-	cmp r2,#0x8400
-	movcs r2,#0x8400
+	adr r1,ds2NGPBattery
+	ldr r1,[r1,r0,lsl#2]
+	cmp r2,r1
+	movcs r2,r1
 notLowBatt:
 	subs r2,r2,#1
 	movmi r2,#1
@@ -380,6 +382,24 @@ batteryLevel:
 								;@ Bad < 0x7880 (0x1E2)
 								;@ Shutdown <= 0x74C0 (0x1D3)
 								;@ Alarm minimum = 0x5B80 (0x16E)
+;@----------------------------------------------------------------------------
+ds2NGPBattery:
+	.long 0x5B80				;@ 0 Alarm minimum
+	.long 0x74C0				;@ 1 Shutdown
+	.long 0x7880				;@ 2 Bad
+	.long 0x8000				;@ 3 Low
+	.long 0x8400				;@ 4 To start
+	.long 0x8F45				;@ 5
+	.long 0x9A8A				;@ 6
+	.long 0xA5CF				;@ 7
+	.long 0xB114				;@ 8
+	.long 0xBC59				;@ 9
+	.long 0xC79E				;@ 10
+	.long 0xD2E3				;@ 11
+	.long 0xDE28				;@ 12
+	.long 0xE96D				;@ 13
+	.long 0xF4B2				;@ 14
+	.long 0xFFFF				;@ 15
 ;@----------------------------------------------------------------------------
 systemMemory:
 	.space 0x100

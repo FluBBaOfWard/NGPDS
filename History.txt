@@ -2,7 +2,9 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
-V0.5.8 - 2026-01-08 (FluBBa)
+V0.5.8 - 2026-01-09 (FluBBa)
+	Fixed saving of language.
+	Fixed saving of system (mono/color).
 	Tweaked NDS to NGP battery mapping.
 
 V0.5.7 - 2024-01-24 (FluBBa)

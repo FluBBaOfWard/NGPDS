@@ -26,6 +26,7 @@ ConfigData cfg;
 //---------------------------------------------------------------------------------
 int initSettings() {
 	cfg.gammaValue = 0;
+	cfg.config = 0;
 	cfg.emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM;
 	cfg.sleepTime = 60*60*5;
 	cfg.controller = 0;					// Don't swap A/B
@@ -35,6 +36,7 @@ int initSettings() {
 	cfg.birthMonth = PersonalData->birthMonth;
 	cfg.birthYear = 99;
 	cfg.language = (PersonalData->language == 0) ? 0 : 1;
+	gLang        = cfg.language;
 	int col = 0;		// Black n White
 	switch (PersonalData->theme & 0xF) {
 		case 1:
@@ -137,7 +139,13 @@ int loadSettings() {
 		return 1;
 	}
 
-	gGammaValue = cfg.gammaValue;
+	gGammaValue  = cfg.gammaValue;
+	gLang        = cfg.language;
+	gPaletteBank = cfg.palette;
+	gConfig      = cfg.config;
+	int mach     = gConfig & 3;
+	if (mach == 3) mach = 0;
+	gMachineSet  = mach;
 	emuSettings  = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
 	sleepTime    = cfg.sleepTime;
 	joyCfg       = (joyCfg & ~0x400)|((cfg.controller & 1)<<10);
@@ -154,7 +162,8 @@ void saveSettings() {
 	cfg.gammaValue  = gGammaValue;
 	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;		// Clear speed setting.
 	cfg.sleepTime   = sleepTime;
-	cfg.controller  = (joyCfg>>10)&1;
+	cfg.config      = (cfg.config & ~3)|gMachineSet;
+	cfg.controller  = (joyCfg>>10) & 1;
 	strlcpy(cfg.currentPath, currentDir, sizeof(cfg.currentPath));
 
 	if (findFolder(folderName)) {

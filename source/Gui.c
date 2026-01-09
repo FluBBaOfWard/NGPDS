@@ -326,7 +326,7 @@ void paletteChange() {
 	if (gPaletteBank > 4) {
 		gPaletteBank = 0;
 	}
-	monoPalInit();
+	monoPalInit(gPaletteBank);
 	paletteTxAll();
 	fixBiosSettings();
 	settingsChanged = true;

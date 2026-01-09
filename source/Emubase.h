@@ -19,7 +19,7 @@ typedef struct {				//(config struct)
 	u8 birthMonth;
 	u8 birthYear;
 	u8 language;
-	u8 palette;
+	u8 palette;					// bit 0-2 NGPC B&W palette.
 	char currentPath[256];
 	char biosPath[256];
 	char biosPathColor[256];

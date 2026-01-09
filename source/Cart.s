@@ -176,7 +176,7 @@ z80MemInit:
 	mov r3,#8
 z80MemLoop0:
 	str r2,[r0,#32]				;@ z80WriteTbl
-	str r1,[r0],#4
+	str r1,[r0],#4				;@ z80ReadTbl
 	subs r3,r3,#1
 	bne z80MemLoop0
 
@@ -219,7 +219,7 @@ emuFlags:
 cartFlags:
 	.byte 0 					;@ cartflags
 gConfig:
-	.byte 0						;@ Config, bit 7=BIOS on/off
+	.byte 0						;@ Config, bit 0,1=machine, 7=BIOS auto/off
 gMachineSet:
 	.byte HW_AUTO
 gMachine:

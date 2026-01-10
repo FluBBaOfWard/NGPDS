@@ -1,6 +1,6 @@
 NGPDS Todo
 
-	Save language and machine in settings. #11
+	Better palette mapping, make it look real.
 	Save settings for Swap A-B.
 	Use CLZ for memory mapping.
 	Emulate second flash chip!

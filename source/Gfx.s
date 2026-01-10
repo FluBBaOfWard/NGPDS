@@ -51,7 +51,28 @@ gfxInit:					;@ Called from machineInit
 	mov r2,#0x100
 	bl memset_
 
+	mov r1,#REG_BASE
+	mov r0,#0x003F				;@ WinIN0, Everything enabled inside Win0
+	orr r0,r0,#0x2800			;@ WinIN1, Only BG3 & COL inside Win1
+	strh r0,[r1,#REG_WININ]
+	mov r0,#0x002C				;@ WinOUT, BG2, BG3 & COL enabled outside Windows.
+	strh r0,[r1,#REG_WINOUT]
+	;@ Horizontal start-end
+	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
+	strh r0,[r1,#REG_WIN1H]
+	;@ Vertical start-end
+	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
+	strh r0,[r1,#REG_WIN1V]
+
+	ldr geptr,=k2GE_0
+	ldr r0,=setVBlankInterrupt
+	ldr r1,=clockTimer0
+	ldr r2,=k2geRAM
+	ldr r3,=gSOC
+	ldrb r3,[r3]
 	bl k2GEInit
+	ldrb r0,gBufferEnable
+	bl k2GEEnableBufferMode
 
 	ldmfd sp!,{pc}
 
@@ -64,29 +85,6 @@ gfxReset:					;@ Called with CPU reset
 	ldr r1,=0x6960/4			;@ VRAM and dirty tiles
 	bl memclr_					;@ Clear GFX regs
 
-	mov r1,#REG_BASE
-	;@ Horizontal start-end
-	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
-	strh r0,[r1,#REG_WIN0H]
-	;@ Vertical start-end
-	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
-	strh r0,[r1,#REG_WIN0V]
-
-	mov r0,#0x003F				;@ WinIN0, Everything enabled inside Win0
-	orr r0,r0,#0x2800			;@ WinIN1, Only BG3 & COL inside Win1
-	strh r0,[r1,#REG_WININ]
-	mov r0,#0x002C				;@ WinOUT, BG2, BG3 & COL enabled outside Windows.
-	strh r0,[r1,#REG_WINOUT]
-	ldr r0,=0x14AC30D0
-	strh r0,[r1,#REG_WIN1H]
-	mov r0,r0,lsr#16
-	strh r0,[r1,#REG_WIN1V]
-
-	ldr r0,=setVBlankInterrupt
-	ldr r1,=clockTimer0
-	ldr r2,=k2geRAM
-	ldr r3,=gSOC
-	ldrb r3,[r3]
 	bl k2GEReset0
 	ldrb r0,gBufferEnable
 	bl k2GEEnableBufferMode
@@ -320,45 +318,45 @@ updateLED:
 vblIrqHandler:
 	.type vblIrqHandler STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r8,lr}
+	stmfd sp!,{r4-r5,lr}
 	bl calculateFPS
 
-	mov r6,#REG_BASE
-	strh r6,[r6,#REG_DMA0CNT_H]	;@ DMA0 stop
+	mov r5,#REG_BASE
+	strh r5,[r5,#REG_DMA0CNT_H]	;@ DMA0 stop
 
-	add r1,r6,#REG_DMA0SAD
-	ldr r2,dmaScroll			;@ Setup DMA buffer for scrolling:
-	ldmia r2!,{r4-r5}			;@ Read
-	add r3,r6,#REG_BG0HOFS		;@ DMA0 always goes here
-	stmia r3,{r4-r5}			;@ Set 1st value manually, HBL is AFTER 1st line
-	ldr r4,=0x96600002			;@ noIRQ hblank 32bit repeat incsrc inc_reloaddst, 2 word
-	stmia r1,{r2-r4}			;@ DMA0 go
+	add r0,r5,#REG_DMA0SAD
+	ldr r1,dmaScroll			;@ Setup DMA buffer for scrolling:
+	ldmia r1!,{r3-r4}			;@ Read
+	add r2,r5,#REG_BG0HOFS		;@ DMA0 always goes here
+	stmia r2,{r3-r4}			;@ Set 1st value manually, HBL is AFTER 1st line
+	ldr r3,=0x96600002			;@ noIRQ hblank 32bit repeat incsrc inc_reloaddst, 2 word
+	stmia r0,{r1-r3}			;@ DMA0 go
 
-	add r1,r6,#REG_DMA3SAD
+	add r0,r5,#REG_DMA3SAD
 
-	ldr r2,dmaOamBuffer			;@ DMA3 src, OAM transfer:
-	mov r3,#OAM					;@ DMA3 dst
-	mov r4,#0x84000000			;@ noIRQ 32bit incsrc incdst
-	orr r4,r4,#64*2				;@ 64 sprites * 2 longwords
-	stmia r1,{r2-r4}			;@ DMA3 go
+	ldr r1,dmaOamBuffer			;@ DMA3 src, OAM transfer:
+	mov r2,#OAM					;@ DMA3 dst
+	mov r3,#0x84000000			;@ noIRQ 32bit incsrc incdst
+	orr r3,r3,#64*2				;@ 64 sprites * 2 longwords
+	stmia r0,{r1-r3}			;@ DMA3 go
 
-	ldr r2,=EMUPALBUFF			;@ DMA3 src, Palette transfer:
-	mov r3,#BG_PALETTE			;@ DMA3 dst
-	mov r4,#0x84000000			;@ noIRQ 32bit incsrc incdst
-	orr r4,r4,#0x100			;@ 256 words (1024 bytes)
-	stmia r1,{r2-r4}			;@ DMA3 go
+	ldr r1,=EMUPALBUFF			;@ DMA3 src, Palette transfer:
+	mov r2,#BG_PALETTE			;@ DMA3 dst
+	mov r3,#0x84000000			;@ noIRQ 32bit incsrc incdst
+	orr r3,r3,#0x100			;@ 256 words (1024 bytes)
+	stmia r0,{r1-r3}			;@ DMA3 go
 
 	ldr r0,=GFX_DISPCNT
 	ldr r0,[r0]
 	ldrb r2,gGfxMask
 	bic r0,r0,r2,lsl#8
-	strh r0,[r6,#REG_DISPCNT]
+	strh r0,[r5,#REG_DISPCNT]
 
 	adr geptr,k2GE_0
 	ldr r0,[geptr,#windowData]
-	strh r0,[r6,#REG_WIN0H]
+	strh r0,[r5,#REG_WIN0H]
 	mov r0,r0,lsr#16
-	strh r0,[r6,#REG_WIN0V]
+	strh r0,[r5,#REG_WIN0V]
 
 	ldrb r0,frameDone
 	cmp r0,#0
@@ -371,7 +369,7 @@ vblIrqHandler:
 nothingNew:
 
 	blx scanKeys
-	ldmfd sp!,{r4-r8,pc}
+	ldmfd sp!,{r4-r5,pc}
 
 
 ;@----------------------------------------------------------------------------

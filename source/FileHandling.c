@@ -125,7 +125,7 @@ int loadSettings() {
 	if (findFolder(folderName)) {
 		return 1;
 	}
-	if ( (file = fopen(settingName, "r")) ) {
+	if ((file = fopen(settingName, "r"))) {
 		fread(&cfg, 1, sizeof(ConfigData), file);
 		fclose(file);
 		if (!strstr(cfg.magic,"cfg")) {
@@ -160,16 +160,18 @@ void saveSettings() {
 
 	strcpy(cfg.magic,"cfg");
 	cfg.gammaValue  = gGammaValue;
+	cfg.language    = gLang;
+	cfg.palette     = gPaletteBank;
+	cfg.config      = (cfg.config & ~3)|gMachineSet;
 	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;		// Clear speed setting.
 	cfg.sleepTime   = sleepTime;
-	cfg.config      = (cfg.config & ~3)|gMachineSet;
 	cfg.controller  = (joyCfg>>10) & 1;
 	strlcpy(cfg.currentPath, currentDir, sizeof(cfg.currentPath));
 
 	if (findFolder(folderName)) {
 		return;
 	}
-	if ( (file = fopen(settingName, "w")) ) {
+	if ((file = fopen(settingName, "w"))) {
 		fwrite(&cfg, 1, sizeof(ConfigData), file);
 		fclose(file);
 		infoOutput("Settings saved.");
@@ -193,7 +195,7 @@ void loadNVRAM() {
 		return;
 	}
 	setFileExtension(flashName, currentFilename, ".fla", sizeof(flashName));
-	if ( !(ngfFile = fopen(flashName, "r")) ) {
+	if (!(ngfFile = fopen(flashName, "r"))) {
 		infoOutput("Couldn't open flash file:");
 		infoOutput(flashName);
 		return;
@@ -290,7 +292,7 @@ void saveNVRAM() {
 		return;
 	}
 	setFileExtension(flashName, currentFilename, ".fla", sizeof(flashName));
-	if ( !(ngfFile = fopen(flashName, "w")) ) {
+	if (!(ngfFile = fopen(flashName, "w"))) {
 		infoOutput("Couldn't open file:");
 		infoOutput(flashName);
 		return;
@@ -351,7 +353,7 @@ static void turnPowerOff(void) {
 	int i;
 	if (g_BIOSBASE_COLOR != NULL || g_BIOSBASE_BNW != NULL) {
 		EMUinput = 0;
-		for (i = 0; i < 100; i++ ) {
+		for (i = 0; i < 100; i++) {
 			run();
 			EMUinput |= 4;
 			if (isConsoleSleeping()) {
@@ -479,7 +481,7 @@ static int loadBIOS(void *dest, const char *fPath, const int size) {
 
 	cls(0);
 	strlcpy(tempString, fPath, sizeof(tempString));
-	if ( (sPtr = strrchr(tempString, '/')) ) {
+	if ((sPtr = strrchr(tempString, '/'))) {
 		sPtr[0] = 0;
 		sPtr += 1;
 		chdir("/");
@@ -492,7 +494,7 @@ static int loadBIOS(void *dest, const char *fPath, const int size) {
 }
 
 int loadColorBIOS(void) {
-	if ( loadBIOS(biosSpaceColor, cfg.biosPathColor, sizeof(biosSpaceColor)) ) {
+	if (loadBIOS(biosSpaceColor, cfg.biosPathColor, sizeof(biosSpaceColor))) {
 		g_BIOSBASE_COLOR = biosSpaceColor;
 		return 1;
 	}
@@ -501,7 +503,7 @@ int loadColorBIOS(void) {
 }
 
 int loadBnWBIOS(void) {
-	if ( loadBIOS(biosSpace, cfg.biosPath, sizeof(biosSpace)) ) {
+	if (loadBIOS(biosSpace, cfg.biosPath, sizeof(biosSpace))) {
 		g_BIOSBASE_BNW = biosSpace;
 		return 1;
 	}
@@ -512,7 +514,7 @@ int loadBnWBIOS(void) {
 static bool selectBios(char *dest, const char *fileTypes) {
 	const char *biosName = browseForFileType(fileTypes);
 
-	if ( biosName ) {
+	if (biosName) {
 		strlcpy(dest, currentDir, FILEPATH_MAX_LENGTH);
 		strlcat(dest, "/", FILEPATH_MAX_LENGTH);
 		strlcat(dest, biosName, FILEPATH_MAX_LENGTH);
@@ -523,7 +525,7 @@ static bool selectBios(char *dest, const char *fileTypes) {
 
 void selectColorBios() {
 	pauseEmulation = true;
-	if ( selectBios(cfg.biosPathColor, ".ngp.ngc.zip") ) {
+	if (selectBios(cfg.biosPathColor, ".ngp.ngc.zip")) {
 		loadColorBIOS();
 		machineInit();
 	}
@@ -531,7 +533,7 @@ void selectColorBios() {
 }
 
 void selectBnWBios() {
-	if ( selectBios(cfg.biosPath, ".ngp.ngc.zip") ) {
+	if (selectBios(cfg.biosPath, ".ngp.ngc.zip")) {
 		loadBnWBIOS();
 		machineInit();
 	}

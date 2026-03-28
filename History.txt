@@ -2,6 +2,10 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.5.9 - 2026-03-28 (FluBBa)
+	Fixed noise channel period.
+	Cleaned up settings code.
+
 V0.5.8 - 2026-01-12 (FluBBa)
 	Fixed saving of language.
 	Fixed saving of system (mono/color).

@@ -24,19 +24,42 @@ static const char *const settingName = "settings.cfg";
 ConfigData cfg;
 
 //---------------------------------------------------------------------------------
-int initSettings() {
-	cfg.gammaValue = 0;
-	cfg.config = 0;
-	cfg.emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM;
-	cfg.sleepTime = 60*60*5;
-	cfg.controller = 0;					// Don't swap A/B
-	cfg.alarmHour = PersonalData->alarmHour;
-	cfg.alarmMinute = PersonalData->alarmMinute;
-	cfg.birthDay = PersonalData->birthDay;
-	cfg.birthMonth = PersonalData->birthMonth;
-	cfg.birthYear = 99;
-	cfg.language = (PersonalData->language == 0) ? 0 : 1;
+void applyConfigData(void) {
+	emuSettings  = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
+	gGammaValue  = cfg.gammaValue;
 	gLang        = cfg.language;
+	gPaletteBank = cfg.palette;
+	gConfig      = cfg.config;
+	int mach     = gConfig & 3;
+	if (mach == 3) mach = 0;
+	gMachineSet  = mach;
+	sleepTime    = cfg.sleepTime;
+	joyCfg       = (joyCfg & ~0x400) | ((cfg.controller & 1) << 10);
+	strlcpy(currentDir, cfg.currentPath, sizeof(currentDir));
+}
+
+void updateConfigData(void) {
+	strcpy(cfg.magic, "cfg");
+	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;		// Clear speed setting.
+	cfg.gammaValue  = gGammaValue;
+	cfg.language    = gLang;
+	cfg.palette     = gPaletteBank;
+	cfg.config      = (cfg.config & ~3) | gMachineSet;
+	cfg.sleepTime   = sleepTime;
+	cfg.controller  = (joyCfg >> 10) & 1;
+	strlcpy(cfg.currentPath, currentDir, sizeof(cfg.currentPath));
+}
+
+void initSettings() {
+	memset(&cfg, 0, sizeof(ConfigData));
+	cfg.emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS | AUTOSLEEP_OFF;
+	cfg.sleepTime   = 60*60*5;
+	cfg.alarmHour   = PersonalData->alarmHour;
+	cfg.alarmMinute = PersonalData->alarmMinute;
+	cfg.birthDay    = PersonalData->birthDay;
+	cfg.birthMonth  = PersonalData->birthMonth;
+	cfg.birthYear   = 99;
+	cfg.language    = (PersonalData->language == 0) ? 0 : 1;
 	int col = 0;		// Black n White
 	switch (PersonalData->theme & 0xF) {
 		case 1:
@@ -62,8 +85,8 @@ int initSettings() {
 			break;
 	}
 	cfg.palette = col;
-	gPaletteBank = col;
-	return 0;
+
+	applyConfigData();
 }
 
 bool updateSettingsFromNGP() {
@@ -121,65 +144,44 @@ bool updateSettingsFromNGP() {
 
 int loadSettings() {
 	FILE *file;
-
-	if (findFolder(folderName)) {
-		return 1;
-	}
-	if ((file = fopen(settingName, "r"))) {
-		fread(&cfg, 1, sizeof(ConfigData), file);
+	if (!findFolder(folderName)
+		&& (file = fopen(settingName, "r"))) {
+		int len = fread(&cfg, 1, sizeof(ConfigData), file);
 		fclose(file);
-		if (!strstr(cfg.magic,"cfg")) {
-			infoOutput("Error in settings file.");
-			return 1;
+		if (strstr(cfg.magic, "cfg") && len == sizeof(ConfigData)) {
+			applyConfigData();
+			infoOutput("Settings loaded.");
+			return 0;
 		}
+		updateConfigData();
+		infoOutput("Error in settings file.");
 	}
 	else {
 		infoOutput("Couldn't open file:");
 		infoOutput(settingName);
-		return 1;
 	}
-
-	gGammaValue  = cfg.gammaValue;
-	gLang        = cfg.language;
-	gPaletteBank = cfg.palette;
-	gConfig      = cfg.config;
-	int mach     = gConfig & 3;
-	if (mach == 3) mach = 0;
-	gMachineSet  = mach;
-	emuSettings  = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
-	sleepTime    = cfg.sleepTime;
-	joyCfg       = (joyCfg & ~0x400)|((cfg.controller & 1)<<10);
-	strlcpy(currentDir, cfg.currentPath, sizeof(currentDir));
-
-	infoOutput("Settings loaded.");
-	return 0;
+	return 1;
 }
 
-void saveSettings() {
+int saveSettings() {
+	updateConfigData();
+
 	FILE *file;
-
-	strcpy(cfg.magic,"cfg");
-	cfg.gammaValue  = gGammaValue;
-	cfg.language    = gLang;
-	cfg.palette     = gPaletteBank;
-	cfg.config      = (cfg.config & ~3)|gMachineSet;
-	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;		// Clear speed setting.
-	cfg.sleepTime   = sleepTime;
-	cfg.controller  = (joyCfg>>10) & 1;
-	strlcpy(cfg.currentPath, currentDir, sizeof(cfg.currentPath));
-
-	if (findFolder(folderName)) {
-		return;
-	}
-	if ((file = fopen(settingName, "w"))) {
-		fwrite(&cfg, 1, sizeof(ConfigData), file);
+	if (!findFolder(folderName)
+		&& (file = fopen(settingName, "w"))) {
+		int len = fwrite(&cfg, 1, sizeof(ConfigData), file);
 		fclose(file);
-		infoOutput("Settings saved.");
+		if (len == sizeof(ConfigData)) {
+			infoOutput("Settings saved.");
+			return 0;
+		}
+		infoOutput("Couldn't save settings.");
 	}
 	else {
 		infoOutput("Couldn't open file:");
 		infoOutput(settingName);
 	}
+	return 1;
 }
 
 void loadNVRAM() {

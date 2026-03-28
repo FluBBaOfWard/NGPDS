@@ -3,6 +3,7 @@
 #include "Gui.h"
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
+#include "EmuBase.h"
 #include "Main.h"
 #include "FileHandling.h"
 #include "Cart.h"
@@ -15,9 +16,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.8 2026-01-12"
-
-#define ALLOW_SPEED_HACKS	(1<<17)
+#define EMUVERSION "V0.5.9 2026-03-28"
 
 void hacksInit(void);
 
@@ -60,7 +59,7 @@ const MItem fileItems[] = {
 	{"Load Flash", loadNVRAM},
 	{"Save Flash", saveNVRAM},
 	{"Save Settings", saveSettings},
-	{"Eject Game", ejectGame},
+	{"Eject Game", ejectCart},
 	{"Reset Console", resetConsole},
 	{"Quit Emulator", ui9},
 };
@@ -142,7 +141,6 @@ const char *const cpuSpeedTxt[]  = {"Full Speed", "Half Speed", "1/4 Speed", "1/
 
 /// This is called at the start of the emulator
 void setupGUI() {
-	emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS | AUTOSLEEP_OFF;
 	keysSetRepeat(25, 4);	// Delay, repeat.
 	menu1.itemCount = ARRSIZE(fileItems) - (enableExit?0:1);
 	openMenu();
@@ -234,10 +232,6 @@ void nullUIDebug(int key) {
 	if (key & KEY_TOUCH) {
 		openMenu();
 	}
-}
-
-void ejectGame() {
-	ejectCart();
 }
 
 void resetConsole() {

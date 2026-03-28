@@ -74,8 +74,9 @@ int main(int argc, char **argv) {
 	setupGUI();
 	getInput();
 	initSettings();
-	if (initFileHelper()) {
-		loadSettings();
+	bool fsOk = initFileHelper();
+	loadSettings();
+	if (fsOk) {
 		loadBnWBIOS();
 		loadColorBIOS();
 		redrawUI();
@@ -98,11 +99,11 @@ int main(int argc, char **argv) {
 
 	while (1) {
 		waitVBlank();
-//		checkTimeOut();
 		guiRunLoop();
 		if (!pauseEmulation) {
 			run();
 		}
+//		checkTimeOut();
 	}
 	return 0;
 }

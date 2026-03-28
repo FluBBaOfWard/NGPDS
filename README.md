@@ -1,4 +1,4 @@
-# NGPDS V0.5.8
+# NGPDS V0.5.9
 
 <img align="right" width="220" src="./logo.png" />
 
@@ -89,7 +89,7 @@ Some dumb info about the game and emulator...
 * NDS Start & X is mapped to NeoGeo Pocket Option.
 * NDS Select & Y is mapped to NeoGeo Pocket Power.
 * NDS d-pad is mapped to NeoGeo Pocket d-pad.
-* NDS L button is mapped to NeoGeo Pocket D (debug).
+* NDS L button is mapped to NeoGeo D (debug).
 
 ## Games
 

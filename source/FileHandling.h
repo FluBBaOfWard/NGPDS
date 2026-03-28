@@ -39,10 +39,10 @@ typedef struct
 
 extern ConfigData cfg;
 
-int initSettings(void);
+void initSettings(void);
 bool updateSettingsFromNGP(void);
 int loadSettings(void);
-void saveSettings(void);
+int saveSettings(void);
 bool loadGame(const char *gameName);
 void checkMachine(void);
 void loadNVRAM(void);

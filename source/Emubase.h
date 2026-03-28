@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#define ALLOW_SPEED_HACKS	(1<<17)
+
 typedef struct {				//(config struct)
 	char magic[4];				//="CFG",0
 	int emuSettings;

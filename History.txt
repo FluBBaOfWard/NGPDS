@@ -2,6 +2,9 @@ NGPDS revision history
 -=-=-=-=-=-=-=-=-=-=-=-
 
 
+V0.6.0 - 2026-08-16 (FluBBa)
+	Ported from devkitARM to BlocksDS, smaller binary.
+
 V0.5.9 - 2026-03-28 (FluBBa)
 	Fixed noise channel period.
 	Cleaned up settings code.

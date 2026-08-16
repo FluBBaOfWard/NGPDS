@@ -35,4 +35,4 @@ void tlcs9000MemInit(u8 *romPtr);
 } // extern "C"
 #endif
 
-#endif // CART_HEADER
+#endif // !CART_HEADER

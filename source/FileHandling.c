@@ -33,9 +33,9 @@ void applyConfigData(void) {
 	int mach     = gConfig & 3;
 	if (mach == 3) mach = 0;
 	gMachineSet  = mach;
-	sleepTime    = cfg.sleepTime;
 	joyCfg       = (joyCfg & ~0x400) | ((cfg.controller & 1) << 10);
 	strlcpy(currentDir, cfg.currentPath, sizeof(currentDir));
+	pauseEmulation = (emuSettings & AUTOPAUSE_EMULATION);
 }
 
 void updateConfigData(void) {
@@ -45,7 +45,6 @@ void updateConfigData(void) {
 	cfg.language    = gLang;
 	cfg.palette     = gPaletteBank;
 	cfg.config      = (cfg.config & ~3) | gMachineSet;
-	cfg.sleepTime   = sleepTime;
 	cfg.controller  = (joyCfg >> 10) & 1;
 	strlcpy(cfg.currentPath, currentDir, sizeof(cfg.currentPath));
 }
@@ -53,7 +52,6 @@ void updateConfigData(void) {
 void initSettings() {
 	memset(&cfg, 0, sizeof(ConfigData));
 	cfg.emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS | AUTOSLEEP_OFF;
-	cfg.sleepTime   = 60*60*5;
 	cfg.alarmHour   = PersonalData->alarmHour;
 	cfg.alarmMinute = PersonalData->alarmMinute;
 	cfg.birthDay    = PersonalData->birthDay;

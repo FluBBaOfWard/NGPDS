@@ -11,4 +11,4 @@ void resetHleBios(NgpHeader *cartHeader);
 
 void fixBiosSettings(void);
 
-#endif
+#endif // !__BIOS__

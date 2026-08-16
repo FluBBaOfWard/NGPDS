@@ -1,5 +1,5 @@
-#ifndef EMUBASE
-#define EMUBASE
+#ifndef EMUBASE_HEADER
+#define EMUBASE_HEADER
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,7 +10,7 @@ extern "C" {
 typedef struct {				//(config struct)
 	char magic[4];				//="CFG",0
 	int emuSettings;
-	int sleepTime;				// autoSleepTime
+	int unused;					// unused
 	u8 gammaValue;				// from gfx.s
 	u8 sprites;					// from gfx.s
 	u8 config;					// from cart.s
@@ -31,4 +31,4 @@ typedef struct {				//(config struct)
 } // extern "C"
 #endif
 
-#endif // EMUBASE
+#endif // !EMUBASE_HEADER

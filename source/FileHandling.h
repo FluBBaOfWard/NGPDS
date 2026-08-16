@@ -60,4 +60,4 @@ int loadBnWBIOS(void);
 } // extern "C"
 #endif
 
-#endif // FILEHANDLING_HEADER
+#endif // !FILEHANDLING_HEADER

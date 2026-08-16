@@ -59,4 +59,4 @@ void system_comms_write(u8 data);
 } // extern "C"
 #endif
 
-#endif	// IO_HEADER
+#endif // !IO_HEADER

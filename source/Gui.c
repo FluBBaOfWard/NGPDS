@@ -16,7 +16,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.5.9 2026-03-28"
+#define EMUVERSION "V0.6.0 2026-08-12"
 
 void hacksInit(void);
 
@@ -186,7 +186,7 @@ void uiAbout() {
 	drawMenuText("ARMZ80       " ARMZ80VERSION, 20, 0);
 	drawMenuText("ARMTLCS-900H " TLCS900VERSION, 21, 0);
 	drawMenuText("ARMK2GE      " K2GEVERSION, 22, 0);
-	drawMenuText("ARMK2Audio   " ARMK2AUDIOVERSION, 23, 0);
+	drawMenuText("ARMSNGG76496 " ARMSNGGVERSION, 23, 0);
 }
 
 void uiDisplay() {

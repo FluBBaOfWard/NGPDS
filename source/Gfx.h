@@ -36,4 +36,4 @@ void k2GE_0EnableBufferMode(bool enable);
 } // extern "C"
 #endif
 
-#endif // GFX_HEADER
+#endif // !GFX_HEADER

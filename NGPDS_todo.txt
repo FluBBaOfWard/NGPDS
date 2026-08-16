@@ -1,5 +1,6 @@
 NGPDS Todo
 
+	Fix stereo for sample playing.
 	Add border image for NGP mono.
 	Better palette mapping, make it look real.
 	BIOS setting Auto/Off?

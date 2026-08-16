@@ -8,8 +8,8 @@
 
 	.global soundInit
 	.global soundReset
-	.global VblSound2
-	.global setMuteSoundGUI
+	.global soundRender
+	.global soundSetMuteGUI
 	.global setMuteT6W28
 	.global soundUpdate
 	.global T6W28_R_W
@@ -40,14 +40,15 @@ soundInit:
 soundReset:
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{lr}
-	ldr r0,=k2Audio_0
+	mov r0,#0
+	ldr r1,=k2Audio_0
 	bl sn76496Reset			;@ sound
 	ldmfd sp!,{lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------
-setMuteSoundGUI:
-	.type   setMuteSoundGUI STT_FUNC
+soundSetMuteGUI:
+	.type   soundSetMuteGUI STT_FUNC
 ;@----------------------------------------------------------------------------
 	ldr r1,=pauseEmulation		;@ Output silence when emulation paused.
 	ldrb r0,[r1]
@@ -63,7 +64,7 @@ setMuteT6W28:
 	strbeq r0,muteSoundChip
 	bx lr
 ;@----------------------------------------------------------------------------
-VblSound2:					;@ r0=length, r1=pointer
+soundRender:					;@ r0=length, r1=pointer
 ;@----------------------------------------------------------------------------
 ;@	mov r11,r11
 	ldr r2,muteSound
@@ -139,19 +140,13 @@ T6W28_DAC_R_W:
 ;@----------------------------------------------------------------------------
 T6W28_R_W:				;@ Sound right write
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r3,lr}
 	ldr r1,=k2Audio_0
-	bl sn76496W
-	ldmfd sp!,{r3,lr}
-	bx lr
+	b sn76496W
 ;@----------------------------------------------------------------------------
 T6W28_L_W:				;@ Sound left write
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r3,lr}
 	ldr r1,=k2Audio_0
-	bl sn76496L_W
-	ldmfd sp!,{r3,lr}
-	bx lr
+	b sn76496LW
 
 ;@----------------------------------------------------------------------------
 pcmWritePtr:	.long 0
@@ -179,4 +174,4 @@ WAVBUFFER:
 	.space WAV_BUFFER_SIZE*2
 ;@----------------------------------------------------------------------------
 	.end
-#endif // #ifdef __arm__
+#endif // __arm__

@@ -29,7 +29,7 @@
 	.global g_BIOSBASE_BNW
 	.global cartFlags
 	.global romStart
-	.global isBiosLoaded
+	.global isRealBios
 
 	.global machineInit
 	.global loadCart
@@ -59,7 +59,7 @@ ROM_SpaceEnd:
 rawBios:
 //	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket (J).ngp"
 //	.incbin "ngproms/[BIOS] SNK Neo Geo Pocket Color (JE).ngp"
-#endif
+#endif // EMBEDDED_ROM
 
 	.align 2
 ;@----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ machineInit: 				;@ Called from C
 	ldr r1,=rawBios
 	mov r2,#0x10000
 	bl memcpy
-#endif
+#endif // EMBEDDED_ROM
 	ldr r0,[r4]
 	bl tlcs9000MemInit
 
@@ -175,7 +175,7 @@ z80MemInit:
 	ldr r2,=empty_W
 	mov r3,#8
 z80MemLoop0:
-	str r2,[r0,#32]				;@ z80WriteTbl
+	str r2,[r0,#8*4]			;@ z80WriteTbl
 	str r1,[r0],#4				;@ z80ReadTbl
 	subs r3,r3,#1
 	bne z80MemLoop0
@@ -230,7 +230,7 @@ gLang:
 	.byte 1						;@ language
 gPaletteBank:
 	.byte 0						;@ palettebank
-isBiosLoaded:
+isRealBios:
 	.byte 0
 //	.space 1					;@ alignment.
 
@@ -264,4 +264,4 @@ biosSpaceColor:
 	.space 0x10000
 ;@----------------------------------------------------------------------------
 	.end
-#endif // #ifdef __arm__
+#endif // __arm__

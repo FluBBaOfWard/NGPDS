@@ -1,4 +1,4 @@
-# NGPDS V0.5.9
+# NGPDS V0.6.0
 
 <img align="right" width="220" src="./logo.png" />
 

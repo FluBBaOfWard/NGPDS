@@ -1,6 +1,6 @@
 [submodule "source/K2Audio"]
 	path = source/K2Audio
-url=https://github.com/FluBBaOfWard/SN76496.git
+	url = https://github.com/FluBBaOfWard/SN76496.git
 [submodule "source/K2GE"]
 	path = source/K2GE
 	url = https://github.com/FluBBaOfWard/K2GE.git

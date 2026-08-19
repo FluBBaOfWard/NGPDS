@@ -16,7 +16,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.6.0 2026-08-12"
+#define EMUVERSION "V0.6.0 2026-08-19"
 
 void hacksInit(void);
 
@@ -83,6 +83,7 @@ const MItem displayItems[] = {
 const MItem machineItems[] = {
 	{"Language:", languageSet, getLanguageText},
 	{"Machine:", machineSet, getMachineText},
+//	{"NGPC B&W Palette:", ngpcPalSet, getNgpPalText},
 	{"Change Batteries", batteryChange},
 	{"Change Sub Battery", subBatteryChange},
 	{"Cpu Speed Hacks:", speedHackSet, getSpeedHackText},

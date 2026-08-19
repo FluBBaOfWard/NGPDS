@@ -1,6 +1,6 @@
 # NGPDS V0.6.0
 
-<img align="right" width="220" src="./logo.png" />
+<img align="right" width="220" src="./logo.png" alt="The NeoGeo Pocket P" />
 
 This is a SNK Neogeo Pocket (Color) emulator for the Nintendo DS(i)/3DS.
 
@@ -95,15 +95,15 @@ Some dumb info about the game and emulator...
 
 * Memories of - Pure: Glitches everywhere.
 * Neo Poke Pro Yakyuu: Sprite multiplexing doesn't work.
-* Pachi-Slot Aruze Oukoku Pocket - Azteca (J)			: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Dekahel 2 (J)		: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Delsol 2 (J)			: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - e-Cup (J)			: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Hanabi (J) (v1.02)	: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Hanabi (J) (v1.04)	: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Oohanabi (J)			: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Porcano 2 (J)		: Palette glitches.
-* Pachi-Slot Aruze Oukoku Pocket - Ward of Lights (J)	: Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Azteca (J): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Dekahel 2 (J): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Delsol 2 (J): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - e-Cup (J): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Hanabi (J) (v1.02): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Hanabi (J) (v1.04): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Oohanabi (J): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Porcano 2 (J): Palette glitches.
+* Pachi-Slot Aruze Oukoku Pocket - Ward of Lights (J): Palette glitches.
 * Sonic The Hedgehog: First boss sometimes disappear, try to use a save state soon before the boss and reload and try again.
 * Super Real Mahjong - Premium Collection: Sprite multiplexing & palette updates doesn't' work, game play locks up.
 

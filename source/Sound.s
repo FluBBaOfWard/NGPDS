@@ -157,7 +157,7 @@ dacRight:		.byte 0
 
 muteSound:
 muteSoundGUI:
-	.byte 0
+	.byte 0xFF
 muteSoundChip:
 	.byte 0
 	.space 2

@@ -16,7 +16,7 @@
 #include "K2GE/Version.h"
 #include "K2Audio/Version.h"
 
-#define EMUVERSION "V0.6.0 2026-08-19"
+#define EMUVERSION "V0.6.0 2026-09-17"
 
 void hacksInit(void);
 
@@ -58,7 +58,7 @@ const MItem fileItems[] = {
 	{"Save State", saveState},
 	{"Load Flash", loadNVRAM},
 	{"Save Flash", saveNVRAM},
-	{"Save Settings", saveSettings},
+	{"Save Settings", (void(*)(void))saveSettings},
 	{"Eject Game", ejectCart},
 	{"Reset Console", resetConsole},
 	{"Quit Emulator", ui9},

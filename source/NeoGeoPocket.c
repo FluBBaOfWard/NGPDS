@@ -1,6 +1,7 @@
 #include <nds.h>
 
 #include "NeoGeoPocket.h"
+#include "NGPBorder.h"
 #include "Cart.h"
 #include "Gfx.h"
 #include "Sound.h"
@@ -41,4 +42,10 @@ int getStateSize() {
 	size += Z80GetStateSize();
 	size += tlcs900HGetStateSize();
 	return size;
+}
+
+void setupEmuBackground() {
+	decompress(NGPBorderTiles, BG_TILE_RAM(1), LZ77Vram);
+	decompress(NGPBorderMap, BG_MAP_RAM(2), LZ77Vram);
+	memcpy(EMUPALBUFF, NGPBorderPal, NGPBorderPalLen);
 }

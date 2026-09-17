@@ -1,5 +1,6 @@
 NGPDS Todo
 
+	Saving is not working in DeltaWarp.
 	Fix stereo for sample playing.
 	Add border image for NGP mono.
 	Better palette mapping, make it look real.

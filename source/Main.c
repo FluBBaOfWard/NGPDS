@@ -8,7 +8,6 @@
 #include "Gui.h"
 #include "FileHandling.h"
 #include "EmuFont.h"
-#include "NGPBorder.h"
 #include "Cart.h"
 #include "cpu.h"
 #include "Gfx.h"
@@ -72,7 +71,6 @@ int main(int argc, char **argv) {
 	setupStream();
 	irqSet(IRQ_VBLANK, myVblank);
 	setupGUI();
-	getInput();
 	initSettings();
 	bool fsOk = initFileHelper();
 	loadSettings();
@@ -92,10 +90,12 @@ int main(int argc, char **argv) {
 	}
 	checkMachine();
 	machineInit();
+	setupEmuBackground();
 	if (argc > 1) {
 		loadGame(argv[1]);
 		soundSetMuteGUI();
 	}
+	getInput();
 
 	while (1) {
 		waitVBlank();
@@ -207,9 +207,6 @@ static void setupGraphics() {
 	map0sub = BG_MAP_RAM_SUB(0);
 	map1sub = BG_MAP_RAM_SUB(1);
 
-	decompress(NGPBorderTiles, BG_TILE_RAM(1), LZ77Vram);
-	decompress(NGPBorderMap, BG_MAP_RAM(2), LZ77Vram);
-	memcpy(EMUPALBUFF, NGPBorderPal, NGPBorderPalLen);
 	decompress(EmuFontTiles, BG_GFX_SUB+0x1200, LZ77Vram);
 	setupMenuPalette();
 }

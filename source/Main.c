@@ -100,6 +100,10 @@ int main(int argc, char **argv) {
 	while (1) {
 		waitVBlank();
 		guiRunLoop();
+		if (!persistenceCanRun()) {
+			pauseEmulation = true;
+			soundSetMuteGUI();
+		}
 		if (!pauseEmulation) {
 			run();
 		}

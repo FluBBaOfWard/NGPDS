@@ -3,7 +3,7 @@
 #include "Gui.h"
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
-#include "EmuBase.h"
+#include "Emubase.h"
 #include "Main.h"
 #include "FileHandling.h"
 #include "Cart.h"
@@ -11,6 +11,7 @@
 #include "io.h"
 #include "cpu.h"
 #include "bios.h"
+#include "Sound.h"
 #include "TLCS900H/Version.h"
 #include "ARMZ80/Version.h"
 #include "K2GE/Version.h"
@@ -58,7 +59,7 @@ const MItem fileItems[] = {
 	{"Save State", saveState},
 	{"Load Flash", loadNVRAM},
 	{"Save Flash", saveNVRAM},
-	{"Save Settings", (void(*)(void))saveSettings},
+	{"Save Settings", saveSettingsManual},
 	{"Eject Game", ejectCart},
 	{"Reset Console", resetConsole},
 	{"Quit Emulator", ui9},
@@ -95,7 +96,8 @@ const MItem setItems[] = {
 	{"Speed:", speedSet, getSpeedText},
 	{"Autoload State:", autoStateSet, getAutoStateText},
 	{"Autoload Flash:", autoNVRAMSet, getAutoNVRAMText},
-	{"Autosave Settings:", autoSettingsSet, getAutoSettingsText},
+    {"Autosave Flash:", saveNVRAMSet, getSaveNVRAMText},
+	{"Autosave Settings:", autosaveSettingsSet, getAutoSettingsText},
 	{"Autopause Game:", autoPauseGameSet, getAutoPauseGameText},
 	{"Powersave 2nd Screen:", powerSaveSet, getPowerSaveText},
 	{"Emulator on Bottom:", screenSwapSet, getScreenSwapText},
@@ -109,7 +111,7 @@ const MItem debugItems[] = {
 	{"Step Frame", stepFrame},
 };
 const MItem quitItems[] = {
-	{"Yes ", exitEmulator},
+	{"Yes ", exitGameSafely},
 	{"No ", backOutOfMenu},
 };
 
@@ -149,14 +151,14 @@ void setupGUI() {
 
 /// This is called when going from emu to ui.
 void enterGUI() {
-	if (updateSettingsFromNGP() && (emuSettings & AUTOSAVE_SETTINGS)) {
-		saveSettings();
-		settingsChanged = false;
-	}
+    if(emuSettings&AUTOPAUSE_EMULATION){pauseEmulation=true;soundSetMuteGUI();}
+    updateSettingsFromNGP();
+    if(emuSettings&AUTOSAVE_SETTINGS)saveSettings();
 }
-
-/// This is called going from ui to emu.
 void exitGUI() {
+    /* Compare actual config bytes, including BIOS paths and unflagged input
+     * changes. No rewrite if identical, independent of Shared's dirty flag. */
+    if(emuSettings&AUTOSAVE_SETTINGS)saveSettings();
 }
 
 void quickSelectGame(void) {
@@ -237,7 +239,7 @@ void nullUIDebug(int key) {
 
 void resetConsole() {
 	checkMachine();
-	loadCart(0);
+	resetCartridgePreservingFlash(false);
 }
 
 void updateGameInfo() {
@@ -326,7 +328,7 @@ void paletteChange() {
 	settingsChanged = true;
 }
 const char *getPaletteText() {
-	return palTxt[gPaletteBank];
+	return gPaletteBank<5?palTxt[gPaletteBank]:"BIOS palette";
 }
 
 void bufferModeSet() {

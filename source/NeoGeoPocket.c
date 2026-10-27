@@ -4,6 +4,7 @@
 #include "NGPBorder.h"
 #include "Cart.h"
 #include "Gfx.h"
+#include "RasterSprites.h"
 #include "Sound.h"
 #include "io.h"
 #include "TLCS900H/TLCS900H.h"
@@ -23,6 +24,7 @@ int packState(void *statePtr) {
 }
 
 void unpackState(const void *statePtr) {
+	rasterSpritesReset();
 	int size = 0;
 	memcpy(ngpRAM, statePtr+size, sizeof(ngpRAM));
 	size += sizeof(ngpRAM);

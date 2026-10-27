@@ -86,6 +86,7 @@ NoZ80Now:
 ;@--------------------------------------
 	bl soundUpdate
 	ldr geptr,=k2GE_0
+	bl gfxRecordBackground
 	bl k2GEDoScanline
 	cmp r0,#0
 	bne ngpFrameLoop
@@ -145,6 +146,7 @@ NoZ80Step:
 	bl tlcsRestoreAndRunXCycles
 ;@--------------------------------------
 	ldr geptr,=k2GE_0
+	bl gfxRecordBackground
 	bl k2GEDoScanline
 	cmp r0,#0
 	bne ngpStepLoop

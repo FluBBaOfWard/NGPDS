@@ -8,8 +8,10 @@
 	.global gfxReset
 	.global monoPalInit
 	.global paletteInit
+	.global MAPPED_RGB
 	.global paletteTxAll
 	.global refreshGfx
+	.global gfxRecordBackground
 	.global endFrameGfx
 	.global vblIrqHandler
 
@@ -96,6 +98,9 @@ gfxReset:					;@ Called with CPU reset
 	ldrb r0,[r0]
 	bl paletteInit				;@ Do palette mapping
 	bl paletteTxAll				;@ Transfer it
+	stmfd sp!,{geptr,lr}
+	blx rasterSpritesReset
+	ldmfd sp!,{geptr,lr}
 	bl updateLED
 
 	ldmfd sp!,{pc}
@@ -196,7 +201,7 @@ paletteTxAll:				;@ Called from ui.c
 	.type paletteTxAll STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r11,lr}
-	adr geptr,k2GE_0
+	ldr geptr,=k2GE_0
 	ldr r2,=0x1FFE
 	ldr r3,[geptr,#paletteRAM]	;@ Colour palette
 	ldr r7,[geptr,#paletteMonoRAM]	;@ Mono palette
@@ -314,6 +319,73 @@ updateLED:
 	strh r1,[r0]
 	bx lr
 
+;@ Record the visible line's backdrop before the game can change it in VBlank.
+;@ Only r0-r3 are scratch; geptr is already set by the CPU scanline loop.
+gfxRecordBackground:
+	ldr r0,[geptr,#scanline]
+	cmp r0,#GAME_HEIGHT
+	bxhs lr
+	ldr r1,[geptr,#paletteMonoRAM]
+	ldrb r1,[r1,#0x18]
+	and r1,r1,#7
+	ldr r2,[geptr,#paletteRAM]
+	add r2,r2,#0x1E0
+	mov r1,r1,lsl#1
+	ldrh r1,[r2,r1]
+	ldrb r2,[geptr,#kgeBGCol]
+	tst r2,#0x80
+	ldrne r2,=0xFFF
+	eorne r1,r1,r2
+	mov r1,r1,lsl#1
+	ldr r2,=0x1FFE
+	and r1,r1,r2
+	ldr r2,=MAPPED_RGB
+	ldrh r1,[r2,r1]
+	ldr r2,tmpBackground
+	add r0,r0,#(SCREEN_HEIGHT-GAME_HEIGHT)/2
+	mov r0,r0,lsl#1
+	strh r1,[r2,r0]
+
+	;@ Sample the final scroll registers for this guest line. The K2GE
+	;@ write-time span filler can overwrite the preceding raster line.
+	ldr r0,[geptr,#scanline]
+	ldr r1,=RASTERSCROLLBUFF
+	add r1,r1,r0,lsl#3
+	ldr r2,[geptr,#kgeFGXScroll]
+	ldr r3,[geptr,#kgeBGXScroll]
+	stmia r1,{r2,r3}
+
+	;@ Per-line sprite inputs. The native OAM path remains for stable frames.
+	ldr r0,[geptr,#scanline]
+	ldr r1,=spriteRasterLines
+	ldrh r2,[geptr,#kgeSprXOfs]
+	ldrb r3,[geptr,#kgeMode]
+	orr r2,r2,r3,lsl#16
+	str r2,[r1,r0,lsl#2]
+	ldr r1,=spriteRasterWindows
+	ldr r2,[geptr,#kgeWinXPos]
+	str r2,[r1,r0,lsl#2]
+	ldr r1,=spriteRasterDirty
+	ldr r1,[r1]
+	cmp r0,#0
+	beq spriteSnapshotNeeded
+	cmp r1,#0
+	beq spriteSnapshotDone
+spriteSnapshotNeeded:
+	ldr r1,[geptr,#sprRAM]
+	stmfd sp!,{geptr,lr}
+	blx rasterSpritesSnapshot
+	ldmfd sp!,{geptr,lr}
+spriteSnapshotDone:
+	;@ Retain palette values for generic sparse raster palette changes.
+	ldr r0,[geptr,#paletteRAM]
+	ldr r1,[geptr,#scanline]
+	ldrb r2,[geptr,#kgeBGCol]
+	ldrb r3,[geptr,#kgeMode]
+	stmfd sp!,{geptr,lr}
+	blx rasterPaletteCapture
+	ldmfd sp!,{geptr,pc}
+
 ;@----------------------------------------------------------------------------
 vblIrqHandler:
 	.type vblIrqHandler STT_FUNC
@@ -323,6 +395,9 @@ vblIrqHandler:
 
 	mov r5,#REG_BASE
 	strh r5,[r5,#REG_DMA0CNT_H]	;@ DMA0 stop
+	strh r5,[r5,#REG_DMA1CNT_H]	;@ Stop the previous backdrop stream
+	strh r5,[r5,#REG_DMA2CNT_H]	;@ Sparse palette streams
+	strh r5,[r5,#REG_DMA3CNT_H]
 
 	add r0,r5,#REG_DMA0SAD
 	ldr r1,dmaScroll			;@ Setup DMA buffer for scrolling:
@@ -357,6 +432,20 @@ vblIrqHandler:
 	strh r0,[r5,#REG_WIN0H]
 	mov r0,r0,lsr#16
 	strh r0,[r5,#REG_WIN0V]
+
+	;@ Like the scroll stream, HBlank DMA supplies the following display line.
+	ldr r1,dmaBackground
+	ldrh r0,[r1],#2
+	ldr r2,=BG_PALETTE+0x40
+	strh r0,[r2]
+	add r0,r5,#REG_DMA1SAD
+	ldr r3,=0x92400001	;@ HBlank, repeat, halfword, fixed destination
+	stmia r0,{r1-r3}
+
+	stmfd sp!,{geptr,lr}
+	blx rasterSpritesVBlank
+	blx rasterPaletteVBlank
+	ldmfd sp!,{geptr,lr}
 
 	ldrb r0,frameDone
 	cmp r0,#0
@@ -394,9 +483,30 @@ endFrameGfx:				;@ Called just before screen end (~line 152)	(r0-r3 safe to use)
 	bl updateSlowIO				;@ RTC/Alarm and more
 	bl updateLED
 	ldr r0,tmpScroll
+	;@ Reuse the upstream map/wrap conversion with the sampled line values.
+	ldr r1,[geptr,#scrollBuff]
+	stmfd sp!,{r1,geptr}
+	ldr r1,=RASTERSCROLLBUFF
+	str r1,[geptr,#scrollBuff]
 	bl copyScrollValues
+	ldmfd sp!,{r1,geptr}
+	str r1,[geptr,#scrollBuff]
 	bl paletteTxAll
+	stmfd sp!,{geptr,lr}
+	ldr r0,[geptr,#gfxRAMBuffPtr]
+	add r0,r0,#0x1000
+	blx rasterSpritesFinish
+	ldmfd sp!,{geptr,lr}
+	stmfd sp!,{geptr,lr}
+	blx rasterPaletteFinish
+	ldmfd sp!,{geptr,lr}
 ;@--------------------------
+	;@ Publish the complete sprite, palette, scroll and backdrop frame atomically.
+	ldr r2,=0x04000208
+	ldr r3,[r2]
+	mov r0,#0
+	str r0,[r2]
+	stmfd sp!,{r2-r3}
 
 	ldr r0,dmaOamBuffer
 	ldr r1,tmpOamBuffer
@@ -408,8 +518,20 @@ endFrameGfx:				;@ Called just before screen end (~line 152)	(r0-r3 safe to use)
 	str r0,tmpScroll
 	str r1,dmaScroll
 
+	ldr r0,dmaBackground
+	ldr r1,tmpBackground
+	str r0,tmpBackground
+	str r1,dmaBackground
+
+
+	stmfd sp!,{geptr,lr}
+	blx rasterSpritesPublish
+	blx rasterPalettePublish
+	ldmfd sp!,{geptr,lr}
 	mov r0,#1
 	strb r0,frameDone
+	ldmfd sp!,{r2-r3}
+	str r3,[r2]
 
 	ldmfd sp!,{lr}
 	bx lr
@@ -419,6 +541,10 @@ DMA0BUFPTR:		.long 0
 
 tmpOamBuffer:	.long OAM_BUFFER1
 dmaOamBuffer:	.long OAM_BUFFER2
+tmpBackground:
+	.long BACKGROUNDBUFF1
+dmaBackground:
+	.long BACKGROUNDBUFF2
 tmpScroll:		.long SCROLLBUFF1
 dmaScroll:		.long SCROLLBUFF2
 
@@ -443,12 +569,65 @@ k2GE_0W:					;@ K2GE write byte, 0x8000-0x8FFF
 ;@----------------------------------------------------------------------------
 	mov r1,t9Mem
 	adr geptr,k2GE_0
+	and r2,r1,#0x0F00
+	cmp r2,#0x800
+	cmpne r2,#0xC00
+	ldreq r2,=spriteRasterDirty
+	moveq r3,#1
+	streq r3,[r2]
+	sub r2,r1,#0x8200
+	cmp r2,#0x180
+	bhs k2GE_W
+	ldr r3,[geptr,#paletteRAM]
+	ldrb r3,[r3,r2]
+	cmp r0,r3
+	beq k2GE_W
+	ldr r3,[geptr,#scanline]
+	cmp r3,#0
+	beq k2GE_W
+	cmp r3,#GAME_HEIGHT
+	bhs k2GE_W
+	stmfd sp!,{r0-r3,geptr,lr}
+	mov r1,r0
+	mov r0,r2
+	mov r2,r3
+	ldr r3,[geptr,#paletteRAM]
+	blx rasterPaletteMemoryWrite
+	ldmfd sp!,{r0-r3,geptr,lr}
 	b k2GE_W
 ;@----------------------------------------------------------------------------
 k2GE_0W_W:					;@ K2GE write word, 0x8000-0x8FFF
 ;@----------------------------------------------------------------------------
 	mov r1,t9Mem
 	adr geptr,k2GE_0
+	and r2,r1,#0x0F00
+	cmp r2,#0x800
+	cmpne r2,#0xC00
+	ldreq r2,=spriteRasterDirty
+	moveq r3,#1
+	streq r3,[r2]
+	sub r2,r1,#0x8200
+	cmp r2,#0x180
+	bhs k2GE_W_W
+	tst r2,#1
+	bne rasterWordChanged
+	ldr r3,[geptr,#paletteRAM]
+	ldrh r3,[r3,r2]
+	cmp r0,r3
+	beq k2GE_W_W
+rasterWordChanged:
+	ldr r3,[geptr,#scanline]
+	cmp r3,#0
+	beq k2GE_W_W
+	cmp r3,#GAME_HEIGHT
+	bhs k2GE_W_W
+	stmfd sp!,{r0-r3,geptr,lr}
+	mov r1,r0
+	orr r0,r2,#0x10000
+	mov r2,r3
+	ldr r3,[geptr,#paletteRAM]
+	blx rasterPaletteMemoryWrite
+	ldmfd sp!,{r0-r3,geptr,lr}
 	b k2GE_W_W
 ;@----------------------------------------------------------------------------
 k2GE_0EnableBufferMode:		;@ K2GE Enable/disable buffer mode
@@ -478,6 +657,12 @@ OAM_BUFFER1:
 	.space 0x400
 OAM_BUFFER2:
 	.space 0x400
+BACKGROUNDBUFF1:
+	.space (SCREEN_HEIGHT+2)*2
+BACKGROUNDBUFF2:
+	.space (SCREEN_HEIGHT+2)*2
+RASTERSCROLLBUFF:
+	.space GAME_HEIGHT*8
 SCROLLBUFF1:
 	.space 0x100*8				;@ Scrollbuffer.
 SCROLLBUFF2:

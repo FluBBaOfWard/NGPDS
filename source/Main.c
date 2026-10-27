@@ -172,8 +172,9 @@ static void setupGraphics() {
 	vramSetBankC(VRAM_C_MAIN_BG_0x06040000);
 	vramSetBankD(VRAM_D_MAIN_BG_0x06060000);
 	vramSetBankE(VRAM_E_MAIN_SPRITE);
-	vramSetBankF(VRAM_F_LCD);
-	vramSetBankG(VRAM_G_LCD);
+	// Extend native OBJ tiles into unused F/G banks for the sparse raster atlas.
+	vramSetBankF(VRAM_F_MAIN_SPRITE_0x06410000);
+	vramSetBankG(VRAM_G_MAIN_SPRITE_0x06414000);
 	vramSetBankH(VRAM_H_SUB_BG);
 	vramSetBankI(VRAM_I_SUB_SPRITE);
 

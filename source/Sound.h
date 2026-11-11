@@ -16,6 +16,7 @@ extern SN76496 k2Audio_0;
 void soundInit(void);
 void soundSetMuteGUI(void);
 mm_word soundRender(mm_word length, mm_addr dest, mm_stream_formats format);
+mm_word soundRenderStartup(mm_word length, mm_addr dest, mm_stream_formats format);
 
 #ifdef __cplusplus
 } // extern "C"

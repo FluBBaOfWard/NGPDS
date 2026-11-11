@@ -385,6 +385,24 @@ static void turnPowerOn(void) {
 	}
 }
 
+void resetConsole(void) {
+	checkMachine();
+	bool realBios = gMachine == HW_NGPMONO ?
+		g_BIOSBASE_BNW != NULL : g_BIOSBASE_COLOR != NULL;
+	if (!realBios) {
+		loadCart(0);
+		return;
+	}
+
+	/* loadCart skips the CPU reset with a real BIOS and clears the Flash
+	 * dirty flags. Power-cycle the already inserted cartridge instead. */
+	if (isConsoleRunning()) {
+		turnPowerOff();
+	}
+	turnPowerOn();
+	EMUinput = 0;
+}
+
 //---------------------------------------------------------------------------------
 bool loadGame(const char *gameName) {
 	if (gameName) {

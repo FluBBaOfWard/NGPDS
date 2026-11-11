@@ -235,11 +235,6 @@ void nullUIDebug(int key) {
 	}
 }
 
-void resetConsole() {
-	checkMachine();
-	loadCart(0);
-}
-
 void updateGameInfo() {
 	char catalog[8];
 	strlMerge(gameInfoString, "Game Name: ", ngpHeader->name, sizeof(gameInfoString));
